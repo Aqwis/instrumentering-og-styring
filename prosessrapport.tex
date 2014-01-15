@@ -1,0 +1,92 @@
+% vim: set fileencoding=latin1 tw=80 ts=4 sw=4 et wrap: 
+
+\documentclass[a4paper, 11pt]{article} 
+\usepackage[T1]{fontenc} % Vise norske tegn 
+\usepackage[latin1]{inputenc} % For å kunne skrive norske tegn 
+\usepackage{graphicx} % For å inkludere grafikk 
+\usepackage{amsmath,amssymb,amsfonts,amsthm} % Ekstra matematikkfunksjoner 
+\usepackage{siunitx} % gir \SI{måltall}{enhet} f.eks. \SI{5}{cm} 
+\usepackage{refstyle} % gir eqref, figref, tabref
+\usepackage{lscape}
+\usepackage{epstopdf}
+\usepackage{fourier}
+\usepackage{float} % gir H som plassering, HERE 
+\usepackage{url} % Skriver URL-er fint.
+\usepackage{booktabs} % Gir fine tables\usepackage{mathtools} % for bmatrix*, krever pakken texlive-latex3
+\usepackage{algorithm} % en float som inneholder algoritme + caption
+\floatname{algorithm}{Algoritme}
+\usepackage{algpseudocode} % for pseudokode
+\usepackage{enumitem} % mer kompakte lister (bruk f.eks. itemize*)
+\setlist{nolistsep}
+\usepackage{extarrows} % Langt =-tegn. \xlongequal
+% Highlighting START
+% Kilde: http://www.tjansson.dk/?p=419
+\usepackage{listings}
+\usepackage{color}
+\usepackage{bm} % gir \pmb: bold tegn i math mode
+\usepackage{textcomp}
+\usepackage[small]{caption}
+\definecolor{listinggray}{gray}{0.9}
+\definecolor{lbcolor}{rgb}{0.9,0.9,0.9}
+\newtheorem{define}{Definition}
+\newtheorem{theorem}{Theorem}
+\newcount\colveccount
+\newcommand*\colvec[1]{
+        \global\colveccount#1
+        \begin{pmatrix}
+        \colvecnext
+}
+\def\colvecnext#1{
+        #1
+        \global\advance\colveccount-1
+        \ifnum\colveccount>0
+                \\
+                \expandafter\colvecnext
+        \else
+                \end{pmatrix}
+        \fi
+}
+\lstset{
+	%backgroundcolor=\color{lbcolor},
+	tabsize=4,
+	rulecolor=,
+	language=R,
+    basicstyle=\scriptsize,
+    upquote=true,
+    aboveskip={1.5\baselineskip},
+    columns=fixed,
+    showstringspaces=false,
+    extendedchars=true,
+    breaklines=true,
+    prebreak = \raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+    frame=single,
+    showtabs=false,
+    showspaces=false,
+    showstringspaces=false,
+    identifierstyle=\ttfamily,
+    keywordstyle=\color[rgb]{0,0,1},
+    commentstyle=\color[rgb]{0.133,0.545,0.133},
+    stringstyle=\color[rgb]{0.627,0.126,0.941},
+}
+% Highlighting SLUTT
+\setlength{\parindent}{0.0in} % Paragraph word indentation 
+\setlength{\parskip}{0.1in} % Paragraph distance 
+\begin{document} 
+ 
+\title{Instrumentering og styring over Internett\\Eksperter i Team\\\\Prosessrapport}
+\author{Gruppe 1}
+\date{\today}
+\maketitle 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{thebibliography}{9}
+
+%%%%%
+
+\end{thebibliography}
+
+\end{document}
