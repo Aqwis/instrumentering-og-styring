@@ -1,5 +1,6 @@
 *.pdf
 *.acn
+.DS_Store
 *.acr
 *.alg
 *.aux
