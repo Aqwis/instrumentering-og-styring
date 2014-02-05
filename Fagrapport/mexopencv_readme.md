@@ -9,6 +9,12 @@ for eksempel
 
     cmake -D MATLAB_ROOT_DIR=/usr/lib/matlab2012a/ -D CMAKE_INSTALL_PREFIX=/home/birkeland/trygvwii
 
+og
+
+    make
+
+    make install
+
 Sjekk så mexopencv ut fra Github og kompiler med
 
     make MATLABDIR=/usr/lib/matlab2012a
