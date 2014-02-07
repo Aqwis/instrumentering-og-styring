@@ -3,11 +3,11 @@ Oppsett av mexopencv
 
 Denne guiden antar at du installerer i hjemmemappen din. Dersom du installerer system-wide blir alt mye lettere. mexopencv krever OpenCV versjon 2.4. Sjekk ut fra Github og kompiler med
 
-    cmake -D MATLAB_ROOT_DIR=<matlab path> -D CMAKE_INSTALL_PREFIX=<home-mappe>
+    cmake -D MATLAB_ROOT_DIR=<matlab path> -D CMAKE_INSTALL_PREFIX=<home-mappe> .
 
 for eksempel
 
-    cmake -D MATLAB_ROOT_DIR=/usr/lib/matlab2012a/ -D CMAKE_INSTALL_PREFIX=/home/birkeland/trygvwii
+    cmake -D MATLAB_ROOT_DIR=/usr/lib/matlab2012a/ -D CMAKE_INSTALL_PREFIX=/home/birkeland/trygvwii .
 
 og
 
