@@ -19,6 +19,10 @@ Sjekk så mexopencv ut fra Github og kompiler med
 
     make MATLABDIR=/usr/lib/matlab2012a
 
+Du må potensielt skrive følgende for å kunne kompilere mexopencv, dersom du installerte opencv i hjemmemappen din:
+
+    export PKG_CONFIG_PATH=<hjemmemappe>/lib/pkgconfig
+
 lib-mappen du installerte må inkluderes i LD_LIBRARY_PATH. Skriv
 
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<hjemmemappe>/lib
