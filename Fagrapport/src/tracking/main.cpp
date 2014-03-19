@@ -1,7 +1,7 @@
-
 #include <sstream>
 #include <string>
 #include <iostream>
+#include <thread>
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 
@@ -145,12 +145,27 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
             else {
                 putText(cameraFeed, "TOO MUCH NOISE! ADJUST FILTER", Point(0,50), 1, 2, Scalar(0,0,255), 2);
             }
-
         }
-
     }
+}
 
 
+
+int user_input() {
+    std::string input = "";
+    while (true) {
+        std::cout << ">";
+        std::cin >> input;
+        if (input == "exit") {
+            return 0;
+        } else if (input != "") {
+            std::cout << "INPUT!\n";
+        } else {
+            std::cout << "\n";
+        }
+        input = "";
+    }
+    return 1;
 }
 
 int main(int argc, char* argv[]) {
@@ -173,8 +188,11 @@ int main(int argc, char* argv[]) {
     // Open capture object at location zero (default for webcam)
     capture.open(0);
 
-    capture.set(CV_CAP_PROP_FRAME_WIDTH,FRAME_WIDTH);
     capture.set(CV_CAP_PROP_FRAME_HEIGHT,FRAME_HEIGHT);
+    capture.set(CV_CAP_PROP_FRAME_WIDTH,FRAME_WIDTH);
+
+    // Thread for console commands
+    std::thread user_input_thread(user_input);
 
     while (1) {
         // Fetch frame from camera
@@ -193,7 +211,6 @@ int main(int argc, char* argv[]) {
         if (trackObjects) {
             trackFilteredObject(x, y, threshold, cameraFeed);
         }
-
 
         // Show frames
         imshow(windowThreshold, threshold);
