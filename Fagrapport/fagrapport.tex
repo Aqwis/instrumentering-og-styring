@@ -34,6 +34,9 @@
 \newcommand{\RS}{Raymond Dyngeset Selvik} 
 \newcommand{\EL}{Endre Larsen} 
 %%%%%%%%%%%%%%%%%%%
+\usepackage{epstopdf}
+\epstopdfDeclareGraphicsRule{.gif}{png}{.png}{convert gif:#1 png:\OutputFile}
+\AppendGraphicsExtensions{.gif}
 
 \newcommand{\hilight}[1]{\colorbox{yellow}{#1}}
 \usepackage{color}
@@ -104,5 +107,51 @@
  \newpage
 \section{Innledning}
 
+
+%----------------------------------------------------------------------------------------
+%  Resultat
+%----------------------------------------------------------------------------------------
+ \newpage
+\section{Resultat}
+
+\subsection{Optimalisering av kamerarigg}
+Bla bla
+
+\subsection{Bildegjenkjenning}
+
+Kompleksiteten øker proporsjonalt med kompleksiteten i legemet. Flere forsøk viser at det oppstår problemer med gjenkjenning av objekter når vinklene i objektet øker. En illustrasjon av objektene er gitt i figur \ref{fig:platonic}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=4in]{figurer/platonic-solids.gif}
+\caption{Illustrasjon av økt kompleksitet ved økende antall hjørner. \cite{platonic} }
+\label{fig:platonic}
+\end{figure}
+
+%----------------------------------------------------------------------------------------
+%  Diskusjon
+%----------------------------------------------------------------------------------------
+ \newpage
+\section{Diskusjon}
+
+
+
+
+%----------------------------------------------------------------------------------------
+%  Bibliography
+%----------------------------------------------------------------------------------------
+\newpage
+\bibliographystyle{unsrt}
+\bibliography{fagrapport.bib}
+
+%----------------------------------------------------------------------------------------
+%  Vedlegg
+%----------------------------------------------------------------------------------------
+ \newpage
+\section{Vedlegg}
+
+\subsection{Kode for bildegjenkjenning (C++)}
+
+\subsection{Kode for styring av rigg (C++)}
 
 \end{document}
