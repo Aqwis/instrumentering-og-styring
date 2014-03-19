@@ -14,12 +14,14 @@ const int MAX_NUM_OBJECTS = 50;
 const int MIN_OBJECT_AREA = 20*20;
 const int MAX_OBJECT_AREA = FRAME_HEIGHT*FRAME_WIDTH/1.5;
 // initial min and max HSV filter values. these will be changed using trackbars.
+// Decent values for tracking a red object;
+// H: 0/249 S: 99/200 V: 62/122
 int H_MIN = 0;
-int H_MAX = 256;
-int S_MIN = 0;
-int S_MAX = 256;
-int V_MIN = 0;
-int V_MAX = 256;
+int H_MAX = 249;
+int S_MIN = 99;
+int S_MAX = 200;
+int V_MIN = 62;
+int V_MAX = 122;
 // Window names
 const string windowOriginal = "Original Image";
 const string windowHSV = "HSV Image";
@@ -27,10 +29,7 @@ const string windowThreshold = "Threshold Image";
 const string windowMorph = "After Morphological Operations";
 const string trackbarWindowName = "Trackbars";
 
-void on_trackbar( int, void* )
-{//This function gets called whenever a
-    // trackbar position is changed
-
+void on_trackbar( int sliderNewValue, void* object ) {
 }
 
 void createTrackbars() {
@@ -39,12 +38,12 @@ void createTrackbars() {
         
     //create memory to store trackbar name on window
     char TrackbarName[50];
-    sprintf( TrackbarName, "H_MIN", H_MIN);
-    sprintf( TrackbarName, "H_MAX", H_MAX);
-    sprintf( TrackbarName, "S_MIN", S_MIN);
-    sprintf( TrackbarName, "S_MAX", S_MAX);
-    sprintf( TrackbarName, "V_MIN", V_MIN);
-    sprintf( TrackbarName, "V_MAX", V_MAX);
+    sprintf( TrackbarName, "H_MIN");
+    sprintf( TrackbarName, "H_MAX");
+    sprintf( TrackbarName, "S_MIN");
+    sprintf( TrackbarName, "S_MAX");
+    sprintf( TrackbarName, "V_MIN");
+    sprintf( TrackbarName, "V_MAX");
 
     createTrackbar( "H_MIN", trackbarWindowName, &H_MIN, H_MAX, on_trackbar );
     createTrackbar( "H_MAX", trackbarWindowName, &H_MAX, H_MAX, on_trackbar );
@@ -199,9 +198,21 @@ int main(int argc, char* argv[]) {
         imshow(windowThreshold, threshold);
         imshow(windowOriginal, cameraFeed);
         imshow(windowHSV, hsv);
+        
+        /*
+        std::vector<int> past {-1, -1, -1, -1, -1, -1};
+        std::vector<int> current { H_MIN, H_MAX, S_MIN, S_MAX, V_MIN, V_MAX };
+
+        if (current != past) {
+            std::vector<int> past { H_MIN, H_MAX, S_MIN, S_MAX, V_MIN, V_MAX };
+            std::cout << "min/max - H: " << H_MIN << "/" << H_MAX << " S: " << S_MIN << "/" << S_MAX << " V: " << V_MIN << "/" << V_MAX << '\n';
+        }
+        */
 
         waitKey(33);
 
     }
+
+
 
 }
