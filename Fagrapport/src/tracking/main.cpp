@@ -2,6 +2,9 @@
 
 using namespace cv;
 
+// Thread handling
+bool INPUT_THREAD_EXISTS = false;
+
 // Dimensions
 const int FRAME_WIDTH = 640;
 const int FRAME_HEIGHT = 480;
@@ -147,20 +150,17 @@ int user_input() {
     std::string input = "";
     while (true) {
         std::cout << ">";
-        std::cin >> input;
+        std::getline(std::cin, input);
         if (input == "exit") {
-            clean_up_and_exit(0);
+            INPUT_THREAD_EXISTS = false;
+            return 0;
 		} else if (COMMANDS.find(input) != COMMANDS.end()) {
-            std::cout << "INPUT!";
+            std::cout << "INPUT!\n";
         }
-		std::cout << "\n";
         input = "";
     }
+    INPUT_THREAD_EXISTS = false;
     return 1;
-}
-
-void clean_up_and_exit(int success_value) {
-	std::exit(success_value);
 }
 
 int main(int argc, char* argv[]) {
@@ -168,32 +168,26 @@ int main(int argc, char* argv[]) {
     // Some controls for functions in the program
     bool trackObjects = true;
     bool useMorphOps = true;
-    // Matrix for the camera feed images
-    Mat cameraFeed;
-    // Matrix for HSV image
-    Mat hsv;
-    // Matrix for threshold threshold image
-    Mat threshold;
-    // x and y coordinates for the object
-    int x=0, y=0;
-    // Create the sliders for HSV filtering
-    createTrackbars();
-    // Video capture object for camera feed
-    VideoCapture capture;
-    // Open capture object at location zero (default for webcam)
-    capture.open(1);
 
-    capture.set(CV_CAP_PROP_FRAME_HEIGHT,FRAME_HEIGHT);
-    capture.set(CV_CAP_PROP_FRAME_WIDTH,FRAME_WIDTH);
+    Mat cameraFeed; // Matrix for the camera feed images
+    Mat hsv; // Matrix for HSV image
+    Mat threshold; // Matrix for threshold threshold image
+
+    int x=0, y=0; // x and y coordinates for the object
+    createTrackbars(); // Create the sliders for HSV filtering
+    VideoCapture capture; // Video capture object for camera feed
+    capture.open(1); // Open capture object at location 0 (i.e. the first camera)
+
+    capture.set(CV_CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT);
+    capture.set(CV_CAP_PROP_FRAME_WIDTH, FRAME_WIDTH);
 
     // Thread for console commands
-    std::thread user_input_thread(user_input);
+    INPUT_THREAD_EXISTS = true;
+    std::thread (user_input).detach();
 
-    while (1) {
-        // Fetch frame from camera
-        capture.read(cameraFeed);
-        // Convert from BGR to HSV colorspace
-        cvtColor(cameraFeed,hsv,COLOR_BGR2HSV);
+    while (INPUT_THREAD_EXISTS) {
+        capture.read(cameraFeed); // Fetch frame from camera
+        cvtColor(cameraFeed,hsv,COLOR_BGR2HSV); // Convert from BGR to HSV colorspace
         // Filter HSV image between values and store filtered images to threshold materix
         inRange(hsv, Scalar(H_MIN, S_MIN, V_MIN), Scalar(H_MAX, S_MAX, V_MAX), threshold);
         
@@ -216,4 +210,5 @@ int main(int argc, char* argv[]) {
 
     }
 
+    return 0;
 }

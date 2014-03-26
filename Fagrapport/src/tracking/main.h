@@ -1,7 +1,9 @@
+#include <cstdlib>
 #include <string>
 #include <sstream>
 #include <iostream>
 #include <thread>
+
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 
@@ -15,9 +17,11 @@ void drawObject(int x, int y, cv::Mat &frame);
 void trackFilteredObject(int &x, int &y, cv::Mat threshold, cv::Mat &cameraFeed);
 
 int user_input();
-void clean_up_and_exit(int success_value);
 
 //// DEFINED IN main.cpp ////
+
+// Thread handling
+extern bool INPUT_THREAD_EXISTS;
 
 // Dimensions
 extern const int FRAME_WIDTH;
