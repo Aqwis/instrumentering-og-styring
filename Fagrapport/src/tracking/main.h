@@ -3,9 +3,12 @@
 #include <sstream>
 #include <iostream>
 #include <thread>
+#include <typeinfo>
 
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
+
+struct ImageStruct;
 
 //// FUNCTION DECLARATIONS ////
 
@@ -16,7 +19,7 @@ void morphOps(cv::Mat &thresh);
 void drawObject(int x, int y, cv::Mat &frame);
 void trackFilteredObject(int &x, int &y, cv::Mat threshold, cv::Mat &cameraFeed);
 
-int user_input();
+int user_input(ImageStruct *image_struct);
 
 //// DEFINED IN main.cpp ////
 

@@ -27,6 +27,12 @@ const string windowThreshold = "Threshold Image";
 const string windowMorph = "After Morphological Operations";
 const string trackbarWindowName = "Trackbars";
 
+struct ImageStruct {
+    Mat *cameraFeed;
+    Mat *hsv;
+    Mat *threshold;
+};
+
 void on_trackbar( int, void* ) {
     // This function gets called whenever a
     // trackbar position is changed
@@ -142,7 +148,36 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
     }
 }
 
-int user_input() {
+double use_center_color(Mat hsv_image) {
+    const int h_margin = 10;
+    const int s_margin = 10;
+    const int v_margin = 35;
+
+    Size image_size = hsv_image.size();
+
+    int vertical_center = image_size.height/2;
+    int horizontal_center = image_size.width/2;
+    unsigned char *center_triple = (unsigned char*) hsv_image.row(vertical_center).col(horizontal_center).data;
+
+    int center_h = center_triple[0];
+    int center_s = center_triple[1];
+    int center_v = center_triple[2];
+
+    //std::cout << "HSV: " << center_h << "," << center_s << "," << center_v << std::endl;
+
+    setTrackbarPos( "H_MIN", trackbarWindowName, center_h - h_margin );
+    setTrackbarPos( "H_MAX", trackbarWindowName, center_h + h_margin );
+
+    setTrackbarPos( "S_MIN", trackbarWindowName, center_s - s_margin );
+    setTrackbarPos( "S_MAX", trackbarWindowName, center_s + s_margin );
+
+    setTrackbarPos( "V_MIN", trackbarWindowName, center_v - v_margin );
+    setTrackbarPos( "V_MAX", trackbarWindowName, center_v + v_margin );
+
+    return 0;
+}
+
+int user_input(ImageStruct *image_struct) {
 	std::string COMMANDS_[] = {"pick"};
 	const std::set<std::string> COMMANDS(COMMANDS_, COMMANDS_ + sizeof(COMMANDS_)/sizeof(COMMANDS_[0]));
 	const std::string HELP_TEXT = "Commands:\n* exit\n*pick\n";
@@ -154,6 +189,8 @@ int user_input() {
         if (input == "exit") {
             INPUT_THREAD_EXISTS = false;
             return 0;
+        } else if (input == "center") {
+            use_center_color(*(image_struct->hsv));
 		} else if (COMMANDS.find(input) != COMMANDS.end()) {
             std::cout << "INPUT!\n";
         }
@@ -161,6 +198,17 @@ int user_input() {
     }
     INPUT_THREAD_EXISTS = false;
     return 1;
+}
+
+void draw_center_crosshair(Mat *image) {
+    int screenHeight;
+    int screenWidth;
+
+    Size image_size = image->size();
+    screenHeight = image_size.height;
+    screenWidth = image_size.width;
+    line(*image, Point((screenWidth/2)-20, screenHeight/2), Point((screenWidth/2)+20, screenHeight/2), Scalar(0,0,0), 2, 8);
+    line(*image, Point(screenWidth/2, (screenHeight/2)-20), Point(screenWidth/2, (screenHeight/2)+20), Scalar(0,0,0), 2, 8);
 }
 
 int main(int argc, char* argv[]) {
@@ -182,14 +230,19 @@ int main(int argc, char* argv[]) {
     capture.set(CV_CAP_PROP_FRAME_WIDTH, FRAME_WIDTH);
 
     // Thread for console commands
+    ImageStruct image_struct = {&cameraFeed, &hsv, &threshold};
     INPUT_THREAD_EXISTS = true;
-    std::thread (user_input).detach();
+    std::thread user_input_thread(user_input, &image_struct);
+    user_input_thread.detach();
 
     while (INPUT_THREAD_EXISTS) {
         capture.read(cameraFeed); // Fetch frame from camera
         cvtColor(cameraFeed,hsv,COLOR_BGR2HSV); // Convert from BGR to HSV colorspace
         // Filter HSV image between values and store filtered images to threshold materix
         inRange(hsv, Scalar(H_MIN, S_MIN, V_MIN), Scalar(H_MAX, S_MAX, V_MAX), threshold);
+
+        // Draw crosshair in the middle of the image
+        draw_center_crosshair(&cameraFeed);
         
         // Morph to smooth image
         if (useMorphOps) {
@@ -206,7 +259,7 @@ int main(int argc, char* argv[]) {
         imshow(windowOriginal, cameraFeed);
         imshow(windowHSV, hsv);
 
-        waitKey(33);
+        waitKey(10);
 
     }
 
