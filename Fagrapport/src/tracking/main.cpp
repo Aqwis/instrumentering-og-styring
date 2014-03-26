@@ -1,9 +1,4 @@
-#include <sstream>
-#include <string>
-#include <iostream>
-#include <thread>
-#include <opencv/cv.h>
-#include <opencv/highgui.h>
+#include "main.h"
 
 using namespace cv;
 
@@ -13,6 +8,7 @@ const int FRAME_HEIGHT = 480;
 const int MAX_NUM_OBJECTS = 50;
 const int MIN_OBJECT_AREA = 20*20;
 const int MAX_OBJECT_AREA = FRAME_HEIGHT*FRAME_WIDTH/1.5;
+
 // initial min and max HSV filter values. these will be changed using trackbars.
 int H_MIN = 0;
 int H_MAX = 256;
@@ -20,6 +16,7 @@ int S_MIN = 0;
 int S_MAX = 256;
 int V_MIN = 0;
 int V_MAX = 256;
+
 // Window names
 const string windowOriginal = "Original Image";
 const string windowHSV = "HSV Image";
@@ -27,10 +24,9 @@ const string windowThreshold = "Threshold Image";
 const string windowMorph = "After Morphological Operations";
 const string trackbarWindowName = "Trackbars";
 
-void on_trackbar( int, void* )
-{//This function gets called whenever a
+void on_trackbar( int, void* ) {
+    // This function gets called whenever a
     // trackbar position is changed
-
 }
 
 void createTrackbars() {
@@ -68,13 +64,7 @@ void morphOps(Mat &thresh) {
     dilate(thresh, thresh, dilateElement);
 }
 
-string intToString(int number){
-    std::stringstream ss;
-    ss << number;
-    return ss.str();
-}
-
-void drawObject(int x, int y, Mat &frame){
+void drawObject(int x, int y, Mat &frame) {
 
     //use some of the openCV drawing functions to draw crosshairs
     //on your tracked image!
@@ -97,7 +87,7 @@ void drawObject(int x, int y, Mat &frame){
     line(frame,Point(x,y),Point(x+25,y),Scalar(0,255,0),2);
     else line(frame,Point(x,y),Point(FRAME_WIDTH,y),Scalar(0,255,0),2);
 
-    putText(frame,intToString(x)+","+intToString(y),Point(x,y+30),1,1,Scalar(0,255,0),2);
+    putText(frame,std::to_string(x)+","+std::to_string(y),Point(x,y+30),1,1,Scalar(0,255,0),2);
 
 }
 
@@ -149,23 +139,28 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
     }
 }
 
-
-
 int user_input() {
+	std::string COMMANDS_[] = {"pick"};
+	const std::set<std::string> COMMANDS(COMMANDS_, COMMANDS_ + sizeof(COMMANDS_)/sizeof(COMMANDS_[0]));
+	const std::string HELP_TEXT = "Commands:\n* exit\n*pick\n";
+
     std::string input = "";
     while (true) {
         std::cout << ">";
         std::cin >> input;
         if (input == "exit") {
-            return 0;
-        } else if (input != "") {
-            std::cout << "INPUT!\n";
-        } else {
-            std::cout << "\n";
+            clean_up_and_exit(0);
+		} else if (COMMANDS.find(input) != COMMANDS.end()) {
+            std::cout << "INPUT!";
         }
+		std::cout << "\n";
         input = "";
     }
     return 1;
+}
+
+void clean_up_and_exit(int success_value) {
+	std::exit(success_value);
 }
 
 int main(int argc, char* argv[]) {
@@ -186,7 +181,7 @@ int main(int argc, char* argv[]) {
     // Video capture object for camera feed
     VideoCapture capture;
     // Open capture object at location zero (default for webcam)
-    capture.open(0);
+    capture.open(1);
 
     capture.set(CV_CAP_PROP_FRAME_HEIGHT,FRAME_HEIGHT);
     capture.set(CV_CAP_PROP_FRAME_WIDTH,FRAME_WIDTH);
