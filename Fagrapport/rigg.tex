@@ -1,0 +1,95 @@
+
+For å kunne sørge for at kameraet til en hver tid kan se ned mot et objekt trengs en referanse slik at en cpu kan regne ut hvor flyet har beveget seg i forhold til dette objektet. Derfor ble det bestemt å bruke et gyroskop. Med bakgrunn i vekt å størrelse, ble det valgt å gå for et elektronisk gyroskop til fordel for et mekanisk. Gyroskopet som ble valgt er et GYROGYRO. Dette gyroskopet er av typen MEMS, Microelectromechanical systems. Et vanlig gyroskop har et roterende objekt som vil roter rundt samme akse til enhver tid, slik at om gyroen plasseres på en platform som ikke er i ro vil alikevel aksen gjennom det roterende objektet peke i samme retning.Et MEMS gyroskop har istede for et roterende objekt et vibrerende objekt. Det viser seg at et vibrerende objekt vil vibrere i samme retning uansett hvordan det vris eller orienteres etter vibreringend er startet. [REF Wikipedia, MEMS gyro]. Dermed kan retningen på vibrasjonen brukes som referanse.  
+
+Arduino eren plattform for prototyping av elektronikk[Ref. Wikipedia]. Kjernen er en mikrokontroller, som i tilfelle for Arduino uno, er en 8 bits Atmel AVR. Videre har den flere I/O porter som kan gi ut digitale signal eller analoge signal ved hjelp av PWM og den har også innebygget 10- bit ADC for å kunne ta inn analoge signaler. 
+
+En Arduino Uno ble tatt i bruk for å styre servoene ved hjelp av PWM. Dette viste seg å fungere godt og alle tre servoer kunne styres samtidig jevnt og kontrollert. Det viste seg imidlertid at når gyroskopet skulle leses samtidig som servoer skulle styres gjennom en og samme arduino ble PWM signalene ujevne og servoene beveget seg ukontrollert og tilfeldig i alle retninger. Det viste seg at biblioteket for å styre sevoene og for å lese gyroskopet brukte samme timer noe som skapte konflikt og gjorde tidsavlesningene ustabile. Det ble derfor gjort et forsøk på å styre servoene og lese gyroskopet hver for seg på to forskjellige Arduino Uno kort for så å la disse kommunisere sammen ved hjelp av I2C bussen på kortet. Dette viste seg imidlertid ikke å fungere og di samme problemene oppsto. Mulige årsaker kan være at ATmega328 ikke støtter multithreading noe som gjør at det blir problemer når flere oppgaver skal utføres på samme tid. Et annet problem kan igjen være at I2C bussen også brukker samme timer som servo biblioteket.  
+
+Etter dette ble den opprinnelige planen med å bruke Arduino Uno til å kontrollere funnet for dårlig og det ble bestemt å gå for en Rasberry PI for å lese gyroskop og styre servoene. Dette fordi Rasberry PI i utgangspunktet har en mye kraftigere hardware og mulighet for multithreading. Prisen er omtrent den samme som for Arduino, det skiller kun 100NOK. Vekten og størrelsen er også omtrent lik. En ulempe med Rasberry PI er effektforbruket. Ved 5v supply trekker den 700mA når den står på, dette gir et effektforbruk på 3.5W. En Arduino Uno bruker ca. 50mA ved 5V supply uten last på noen porter, dette gir et effektforbruk på 250mW. Rasberry PI har dermed 14 ganger så høyt effektforbruk. RAsberry PI har også mange innbygde funksjoner og enheter som det ikke er behov for i dette prosjektet som GPU og porter for lyd og bilde. På den andre siden kan den kjøre linux slik at bildegjennkjennings programmet kan kjøres direkte på denne uten noen form for ekstern maskin, dermed kan det være behov for GPU allikevel.  
+
+
+Mikrokontroller
+ATmega328
+
+Operating Voltage
+5
+V
+Digital I/O pins
+14 (6 with PWM)
+
+Analog Input Pins
+6
+
+DC current per I/0 Pin
+40
+mA
+Flash Memory
+32
+KB
+SRAM
+2
+KB
+EEPROM
+1
+KB
+Clock Speed
+16
+MHZ
+Weigth
+30
+g
+Size
+75mm x 53mm
+
+Pris
+ Ca.300 NOK
+
+
+
+ 
+Rasberry PI er en datamaskin på et enkelt PCB kort. Den kan kjøre Linux og drives av en ARM prosessor. Det finnes to typer , Model A og Model B. Spesifikasjoner for model B finnes i Tabell[1]
+
+Prosessor (CPU)
+700MHz ARM1176JZF-S
+
+Grafikk (GPU)
+Broadcom VideoCoreIV @250MHz
+
+Minne
+512MB
+
+Lager
+SD card
+
+I/O porter
+8
+
+I2C porter
+2
+
+Operating Voltage
+5V
+
+Power consumption
+3.5W
+
+Weight
+45g
+
+Size
+86.6mm x 53.98mm
+
+Pris
+Ca 400 NOK
+
+
+
+
+Rigg:
+For å kunne justere hvilken retning kameraet ser ned fra flyet, ble det bestemt at en rigg for dette formålet skulle lages. Det ble bestemt at dette kun skulle være en prototype slik at det skulle være mulig å vise visuelt at bildegjenkjenningen fungerer og kan fortelle en rigg hvordan den skal bevege seg. Dermed ble det valgt å bruke enkle små servoer og bygge den ved hlep av MDF plater. Det viktigeste var at den skulle kunne bevege seg i alle retninger. Det ble derfor valgt å bruke to servoer for å kunne vri kameraet i x og y- retning og en for å heve og senke det. Et gyro ble tatt med for å vise hvordan det er mulig å styre kameraet uten at flyets bevegelser innvirker på hvilken retning kameraet ser. Servoen for å heve å senke kameraet ble tatt med for å vise hvordan det ble tenkt at riggen skal kunne implementeres i flyet selv om det skal buklande. 
+
+Bilder Bilder Bilder!!!!!!
+
+
+Servoer:
+Servoene som ble brukt i riggen for å kunne justere vinkler er av typen PowerHD HD-1600A MicroServo. Dette er en billig servo beregnet for bruk i radiostyrte modellfly. En fordel med disse er lav vekt og pris, men de har begrensinger når det gjelder kraft og oppløsning. De styres ved hjelp av PWM, puls bredde modulasjon, hvor en puls på 1,5 ms er definert som utslag på 0 grader, maks utslag er 180 grader, +90 og -90 grader fra 0. -90 grader representeres ved en puls på 1ms og +90 grader ved en puls på 2 ms. Lendgen på hvert symbol er ikke kritisk, men 20ms fungerer bra.
