@@ -103,6 +103,46 @@
 %----------------------------------------------------------------------------------------
  \newpage
 \section{Innledning}
+Denne rapporten inneholder vår løsning på problemet fremstilt av Kongsberg Gruppen. Oppgaven gikk ut på å lage et system for bildegjenkjenning og å lage en fysisk rigg for å demonstrere at bildegjenkjenningen virker. Bildegjenkjenningen er gjort ved hjelp av programmet "OpenCV". Riggen er satt sammen av tre RC-servoer styrt av en Arduino som igjen får vinklene til hver servo gjennom USB porten.
+
+%-----------------------------------------------------------------------------
+%Bakgrunn
+%-----------------------------------------------------------------------------
+\newpage
+\section{Bakgrunn}
+\subsection{Landsbyens målsetning}
+ 
+\subsection{Kongesbergs problemer}
+
+\subsection{Probelmstilling}
+
+%-----------------------------------------------------------------------------
+% Teori
+%-----------------------------------------------------------------------------
+\newpage
+\section{Teori}
+%Bildegjenkjenning
+\subsection{Bildegjenkjenning}
+\subsubsection{OpenCV}
+
+%Rigg
+\subsection{Kamera stabiliserings rigg}
+Når flyet skal gjøre en sving vil er flyet avhenigig av å gjøre en roll. Dette fører til at buken til flyet ikke lengre peker rett ned mot bakken. Et kamera i en låst posisjon, vil i denne situasjonen kunne oppleve at objektet det skulle ha i bildet forsvinner ut av bildekanten. Ved å feste kameraet til en rigg som kan kompensesere for at flyet beveger seg vil dette problemet kunne løses. 
+
+\subsubsection{Krav}
+For å beskytte kameraet ble det bestemt at kameraet skal kunne trekkes inn i flyet ved landing. Siden målene på fullskala fly ikke er fremstilt fra Kongsberg ble det bestemt å følge målene på modellen i presentasjonen sendt fra Kongsberg. Denne viser at plassen inne i er maksimalt 10.5 cm i høyden og 7.2 cm i bredden. Kravet for riggen ble dermed at den ikke kunne oppta større plass i bredde og høyde enn dette med kameraet tilfestet. Det ble antatt at det for modellens skyld kunne brukes et lite kamera, på størrelse med et mobilkamera. Den andre grunnen til å bygge en liten rigg er for å hindre at vekten blir for stor.
+ 
+\subsubsection{Servoer}
+Hva er og hvordan virker en servo. \\
+Hvorfor valgte vi (Endre) disse servoene. \\
+Hvilke alternativer. \\
+Fordeler ulemper mellom disse. \\
+Hvordan kontrolere (PWM). og andre kontrollprinsipper. \\
+
+En servomotor er en inretning som lar en kontrolere og holde på en vinkelposisjon. En servomotor er bygget opp av en elektrisk motor, en vinkelsensor og en kontroll enhet. Et signal påtrykkes inngangen og motoren begynner å gå. Vinkelsensoren vil fortelle vinkelen og når vinkelen som koresponderer til inngangssignalet er nådd vil motoren stoppe. Vinkelsensoren oppfører seg derfor som en tilbakekobling som returenerer feilen    
+
+\subsubsection{Kontroll enhet}
+\subsubsection{Gyroskop}
 
 
 \end{document}
