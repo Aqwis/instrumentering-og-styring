@@ -12,6 +12,7 @@
 #include <opencv/highgui.h>
 
 struct ImageStruct;
+struct DegreeStruct;
 
 //// FUNCTION DECLARATIONS ////
 
@@ -23,6 +24,9 @@ void drawObject(int x, int y, cv::Mat &frame);
 void trackFilteredObject(int &x, int &y, cv::Mat threshold, cv::Mat &cameraFeed);
 
 int user_input(ImageStruct *image_struct);
+
+DegreeStruct *degrees_from_center(int x, int y);
+void print_object_degrees_from_center();
 
 //// DEFINED IN main.cpp ////
 
