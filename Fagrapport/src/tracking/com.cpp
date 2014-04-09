@@ -1,3 +1,8 @@
+// com.h
+// ---
+// Arduino COM communication library
+// From http://playground.arduino.cc/Interfacing/CPPWindows
+
 #include "com.h"
 
 Serial::Serial(char *portName)
