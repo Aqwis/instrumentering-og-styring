@@ -1,3 +1,8 @@
+// com.h
+// ---
+// Arduino COM communication library
+// From http://playground.arduino.cc/Interfacing/CPPWindows
+
 #ifndef SERIALCLASS_H_INCLUDED
 #define SERIALCLASS_H_INCLUDED
 

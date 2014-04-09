@@ -9,6 +9,9 @@ Serial *SIO;
 // Thread handling
 std::atomic<bool> input_thread_done(false);
 
+// Features on/off
+bool follow_object = false;
+
 // Dimensions
 const int FRAME_WIDTH = 640;
 const int FRAME_HEIGHT = 480;
@@ -31,12 +34,18 @@ const string windowThreshold = "Threshold Image";
 const string windowMorph = "After Morphological Operations";
 const string trackbarWindowName = "Trackbars";
 
-// Image data
+// Video data
 Mat cameraFeed; // Matrix for the camera feed images
+
+bool objectFound = false; // Has an object been detected?
 
 // Current object location
 int x_location = 0;
 int y_location = 0;
+
+int angle_a = 90; // plane axis 1 (motor 1)
+int angle_b = 15; // rotation in the plane
+int angle_c = 10; // plane axis 2 (motor 2)
 
 struct ImageStruct {
     Mat *cameraFeed;
@@ -48,6 +57,14 @@ struct DegreeStruct {
     int horizontal;
     int vertical;
 };
+
+double copysign(double x, double y) {
+    if (y >= 0) {
+        return abs(x);
+    } else {
+        return -abs(x);
+    }
+}
 
 void on_trackbar( int, void* ) {
     // This function gets called whenever a
@@ -127,7 +144,6 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
     findContours(temp, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
     // Use moments method to find our filtered object
     double refArea = 0;
-    bool objectFound = false;
     if (hierarchy.size() > 0) { 
         int numObjects = hierarchy.size();
         // If number of objects greater than MAX_NUM_OBJECTS we have a noisy filter
@@ -156,12 +172,14 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
             if (objectFound == true) {
                 putText(cameraFeed, "Tracking Object", Point(0,50), 2, 1, Scalar(0, 255, 0), 2);
                 drawObject(x, y, cameraFeed);
+                return;
             }
             else {
                 putText(cameraFeed, "TOO MUCH NOISE! ADJUST FILTER", Point(0,50), 1, 2, Scalar(0,0,255), 2);
             }
         }
     }
+    objectFound = false;
 }
 
 double use_center_color(Mat hsv_image) {
@@ -199,7 +217,7 @@ void sendSerialString(std::string message) {
 }
 
 int user_input(ImageStruct *image_struct) {
-	const std::string HELP_TEXT = "Commands:\n* help\n* center\n* exit\n* serial\n* distance\n* move\n";
+	const std::string HELP_TEXT = "Commands:\n* help\n* center\n* exit\n* serial\n* distance\n* follow\n";
 
     std::string input = "";
     while (true) {
@@ -220,6 +238,8 @@ int user_input(ImageStruct *image_struct) {
             sendSerialString(argument);
         } else if (command == "distance") {
             print_object_degrees_from_center();
+        } else if (command == "follow") {
+            follow_object = true;
         } else {
             std::cout << "Unrecognized input!\n";
         }
@@ -259,7 +279,7 @@ DegreeStruct *degrees_from_center(int x, int y) {
     int vertical_center = screenHeight/2;
 
     degrees->horizontal = horizontal_degrees_per_pixel*(x-horizontal_center);
-    degrees->vertical = vertical_degrees_per_pixel*(y-vertical_center);
+    degrees->vertical = vertical_degrees_per_pixel*(vertical_center-y);
 
     return degrees;
 }
@@ -271,12 +291,46 @@ void print_object_degrees_from_center() {
     delete degr;
 }
 
+void center_camera() {
+    DegreeStruct *degr = degrees_from_center(x_location, y_location);
+
+    // Distance from center
+    Size image_size = cameraFeed.size();
+    int distance_y = (y_location - image_size.height/2);
+    int distance_x = (x_location - image_size.width/2);
+
+    double rotation_angle_abs = angle_b - atan2(distance_y, distance_x) * 180 / PI;
+    double radius_abs = angle_a - sqrt(pow(degr->horizontal, 2) + pow(degr->vertical, 2));
+
+    int rotation_angle = floor(copysign(rotation_angle_abs, distance_y));
+    int radius = floor(copysign(radius_abs, distance_x));
+
+    angle_b = rotation_angle;
+    angle_a = radius_abs;
+
+    // Adjust angles a and b
+    sendSerialString(std::to_string(rotation_angle) + "b " + std::to_string(radius) + "a");
+}
+
+void center_camera_simple() {
+    DegreeStruct *degr = degrees_from_center(x_location, y_location);
+
+    angle_a = angle_a + degr->horizontal;
+    angle_c = angle_c + degr->vertical;
+
+    sendSerialString(std::to_string(angle_a) + "a " + std::to_string(angle_c) + "c");
+}
+
 int main(int argc, char* argv[]) {
 
     // Set up Serial I/O
     SIO = new Serial("\\\\.\\COM13");
     if (!SIO->IsConnected()) {
         std::cout << "Could not connect to COM device!" << std::endl;
+    } else {
+        sendSerialString(std::to_string(angle_a) + "a");
+        sendSerialString(std::to_string(angle_b) + "b");
+        sendSerialString(std::to_string(angle_c) + "c");
     }
     
     // Some controls for functions in the program
@@ -318,12 +372,17 @@ int main(int argc, char* argv[]) {
             trackFilteredObject(x_location, y_location, threshold, cameraFeed);
         }
 
+        // Center camera on tracked object
+        if (follow_object && objectFound) {
+            center_camera_simple();
+        }
+
         // Show frames
         imshow(windowThreshold, threshold);
         imshow(windowOriginal, cameraFeed);
         imshow(windowHSV, hsv);
 
-        waitKey(10);
+        waitKey(100);
 
     }
 

@@ -4,9 +4,8 @@
 #include <iostream>
 #include <thread>
 #include <atomic>
-
+#include <cmath>
 #include <cstdio>
-//#include <tchar>
 
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
@@ -15,6 +14,8 @@ struct ImageStruct;
 struct DegreeStruct;
 
 //// FUNCTION DECLARATIONS ////
+
+const int PI = 3.14159265;
 
 void on_trackbar( int, void* );
 void createTrackbars();
