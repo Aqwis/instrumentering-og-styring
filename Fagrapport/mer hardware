@@ -1,0 +1,58 @@
+Hardware
+I prosjektet sto valget av hardware mellom Raspberr
+y Pi og Arduino. Forskjellene mellom
+disse diskuteres i de følgende avsnittene.
+Kort om hardware
+Raspberry pi
+-
+ARM-basert cpu:
+ARM1176JZF-S
+(
+ARMv6
+k
+) 700 MHz
+-
+512MB minne
+-
+Har GPU
+-
+Støtter de fleste linuxbaserte OS.
+Arduino
+-
+Basert på 8bit ATMega328
+-
+Ingen mulithreading
+-
+Dårlig støtte for OS
+Multithreading
+I et system hvor vi har flere prosesser, er det en
+fordel å ha støtte for multithreading. De
+ulike prosessene vil da kunne proseseres uavhengig
+av hverandre. Dette er svært ideelt når
+man har flere I/O-prosesser. Men som følge av dett
+e, kreves det en annen struktur på
+koden.
+Sanntidskrav
+Et datasystem som forholder seg til den virkelige v
+erden gjennom in- og output, vil ofte ha
+krav til hvor raskt og sikkert ting skal håndteres.
+Ulike datasystemer vil ha ulike krav. Det
+skilles mellom tre ulike typer sanntidssytemer.
+Hard-Realtime krever at alle prosserer ikke mister
+deadlinen sin. Firm kan miste deadlines,
+men etter en deadline miss, er det ubrukelig.
+Soft tar ikke direkte hensyn til deadlines, men jo
+lengre den overskrider jo dårligere blir det.
+//***************MÅ SKRIVES OM ********************
+***********************//
+Et system som bildegjenkjenningssystemet vil ha kra
+v til Firm-Realtime. En deadlinemiss vil
+ikke være en fatal hendelse. Men siden systemet kre
+ver en viss nøyaktighet på vinkelinput,
+vil man ikke kunne benytte seg av verdien om den ko
+mmer for seint.
+Sanntidskravet kan man oppnå ved å installere et sa
+nntids-OS på vår hardware. Både
+Arduino og RaspberryPi har støtte for sanntids OS,
+men støtten er noe dårlig for førstnevnte.
+

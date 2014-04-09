@@ -31,9 +31,12 @@
 \newcommand{\HS}{Håvard Slettvold} 
 \newcommand{\AF}{Adrian Finvold} 
 \newcommand{\TW}{Trygve Bertelsen Wiig} 
-\newcommand{\RS}{Raymond Dyngeset Selvik} 
+\newcommand{\RS}{Raymond Dyngeseth Selvik} 
 \newcommand{\EL}{Endre Larsen} 
 %%%%%%%%%%%%%%%%%%%
+\usepackage{epstopdf}
+\epstopdfDeclareGraphicsRule{.gif}{png}{.png}{convert gif:#1 png:\OutputFile}
+\AppendGraphicsExtensions{.gif}
 
 \newcommand{\hilight}[1]{\colorbox{yellow}{#1}}
 \usepackage{color}
@@ -144,5 +147,57 @@ En servomotor er en inretning som lar en kontrolere og holde på en vinkelposisj
 \subsubsection{Kontroll enhet}
 \subsubsection{Gyroskop}
 
+\begin{malsetning}
+\input{malsetning.tex}
+\end{malsetning}
+
+
+%----------------------------------------------------------------------------------------
+%  Resultat
+%----------------------------------------------------------------------------------------
+ \newpage
+\section{Resultat}
+
+\subsection{Optimalisering av kamerarigg}
+Bla bla
+\begin{rigg}
+\input{rigg.tex}
+\end{rigg}
+\subsection{Bildegjenkjenning}
+
+Kompleksiteten øker proporsjonalt med kompleksiteten i legemet. Flere forsøk viser at det oppstår problemer med gjenkjenning av objekter når vinklene i objektet øker. En illustrasjon av objektene er gitt i figur \ref{fig:platonic}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=4in]{figurer/platonic-solids.gif}
+\caption{Illustrasjon av økt kompleksitet ved økende antall hjørner. \cite{platonic} }
+\label{fig:platonic}
+\end{figure}
+
+%----------------------------------------------------------------------------------------
+%  Diskusjon
+%----------------------------------------------------------------------------------------
+ \newpage
+\section{Diskusjon}
+
+
+
+
+%----------------------------------------------------------------------------------------
+%  Bibliography
+%----------------------------------------------------------------------------------------
+\newpage
+\bibliographystyle{unsrt}
+\bibliography{fagrapport.bib}
+
+%----------------------------------------------------------------------------------------
+%  Vedlegg
+%----------------------------------------------------------------------------------------
+ \newpage
+\section{Vedlegg}
+
+\subsection{Kode for bildegjenkjenning (C++)}
+
+\subsection{Kode for styring av rigg (C++)}
 
 \end{document}

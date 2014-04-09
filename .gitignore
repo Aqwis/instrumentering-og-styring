@@ -34,3 +34,10 @@
 *.tdo
 *.pdf
 TSWLatexianTemp_*
+*.vcxproj
+*.vcxproj.*
+*.sln
+*.v11*
+Win32
+Debug
+*.swp

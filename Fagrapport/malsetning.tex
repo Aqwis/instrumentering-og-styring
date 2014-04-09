@@ -1,0 +1,9 @@
+ndreing av målsetning:
+Opprinnelig: Kongsbergs Lokal Hawk er et UAV som skal følge og filme et billøp. I denne forbindelse er det behov for et system som kan gjøre det mulig for kameraet å detektere og følge en bil på en bane. Fordi flyet har begrenset manøvreringsegenskaper er det nødvendig at kameraet er plassert i en rigg slik at kameraet kan beveges uavhengig av flyets bevegelser. Målet med oppgaven er derfor å lage et bildegjennkjennings program som kan kjenne igjen et objekt, for eksempel en bil på en bane, og som kan gi tilbakemelding på hvor mye objektet har beveget seg i bildet. Denne tilbakemeldingen skal ssendes tilbake til riggen som skal vri på kameraet slik at objektet havner i midten av bildet igjen. Riggen skal også styres ved hjelp av et gyroskop slik at kamearet til en hver tid peker ned, avviket fra å peke rett ned skal kunne bestemmes av input fra bildegjennkjenningen. 
+
+Systembilde!!!
+
+Endringer:
+-Kameraet som ble tilsendt fra kongsberg viste seg å være større en først antatt og målet om å feste kameraet direkte på riggen ble derfor droppet. Det ble bestemt at man heller kunne feste en pinne for å vise hvilken retning kameraet skulle ha pekt for å kunne demostrere funksjonaliteten. 
+
+-Det viste seg at bildegjenkjenningen var mer komplisert enn først antatt. Det viste seg at å kjenne igjen et objekt som ikke er ensfarget og som har en geometri som endres med innsynsvinkel  var meget vanskelig. Hvis bakgrunnen itillegg endrer seg ble dette en for stor jobb for den avsatte tiden. Det ble derfor besluttet av dette sluttproduktet skal være en prototype for å vise at det er mulig å bruke et kamera til å følge et enkelt objekt og at dette kan brukes til å styre noen servoer for å visualisere at programmet følger objektet. Målet ble derfor å klare og kjenne igjen et rød kule og kunne følge denne i bildet. Deretter skal dette brukes for å kontrollere kameraene. 

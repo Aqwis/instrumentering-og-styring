@@ -1,0 +1,47 @@
+\subsection{Hardware}
+For å kunne sørge for at kameraet til en hver tid kan se ned mot et objekt trengs en referanse slik at en cpu kan regne ut hvor flyet har beveget seg i forhold til dette objektet. Derfor ble det bestemt å bruke et gyroskop. Med bakgrunn i vekt å størrelse, ble det valgt å gå for et elektronisk gyroskop til fordel for et mekanisk. Gyroskopet som ble valgt er et GYROGYRO. Dette gyroskopet er av typen MEMS, Microelectromechanical systems. Et vanlig gyroskop har et roterende objekt som vil roter rundt samme akse til enhver tid, slik at om gyroen plasseres på en platform som ikke er i ro vil alikevel aksen gjennom det roterende objektet peke i samme retning.Et MEMS gyroskop har istede for et roterende objekt et vibrerende objekt. Det viser seg at et vibrerende objekt vil vibrere i samme retning uansett hvordan det vris eller orienteres etter vibreringend er startet. [REF Wikipedia, MEMS gyro]. Dermed kan retningen på vibrasjonen brukes som referanse.
+
+\subsubsection{Arduino}
+Arduino eren plattform for prototyping av elektronikk[Ref. Wikipedia]. Kjernen er en mikrokontroller, som i tilfelle for Arduino uno, er en 8 bits Atmel AVR. Videre har den flere I/O porter som kan gi ut digitale signal eller analoge signal ved hjelp av PWM og den har også innebygget 10- bit ADC for å kunne ta inn analoge signaler.
+
+\begin{table}
+    \begin{tabular}{lll}
+    	Mikrokontroller & ATmega 328 & ~ \\
+    	Operating voltage & 5 & V \\
+ 	Digital I/O-pins & 14 (6 with PWM) & ~ \\
+   	Analog output pins & 6 & ~ \\
+	DC current per I/0 Pin & 40 & mA\\
+	Flash Memory & 32 & KB \\
+	SRAM & 2 & KB \\
+	EEPROM & 1 & KB \\
+	Clock Speed & 16 & MHZ \\
+	Weigth & 30 & g \\
+	Size & 75mm x 53mm & \\
+	Pris & Ca.300 NOK & \\
+    \end{tabular}
+\end{table}
+
+\subsubsection{Rasberry Pi}
+Rasberry PI er en datamaskin på et enkelt PCB kort. Den kan kjøre Linux og drives av en ARM prosessor. Det finnes to typer , Model A og Model B. Spesifikasjoner for model B finnes i Tabell[1]
+
+\begin{table}
+    \begin{tabular}{lll}
+    	Prosessor & 700MHz ARM1176JZF-S & ~ \\
+    	GPU & Broadcom VideoCoreIV @250MHz &  \\
+	Minne & 512 & MB \\
+   	Lagring & SD-kort & ~ \\
+	I/O-porter & 	8 & \\
+	I\pow{2}C-porter & 2 &  \\
+	Operating votage & 5 & V \\
+	Power consumption & 3.5 & W \\
+	Weight & 45 & g \\
+	Size &86.6mm x 53.98mm &  \\
+	Pris & Ca.400 NOK & \\
+    \end{tabular}
+\end{table}
+
+\subsubsection{Sammenligning}
+- Strømforbruk
+- Fysisk størrelse
+- Hardwaremessige ting
+- Softwaremessige ting
