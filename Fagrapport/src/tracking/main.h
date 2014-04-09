@@ -3,7 +3,10 @@
 #include <sstream>
 #include <iostream>
 #include <thread>
-#include <typeinfo>
+#include <atomic>
+
+#include <cstdio>
+//#include <tchar>
 
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
@@ -24,7 +27,7 @@ int user_input(ImageStruct *image_struct);
 //// DEFINED IN main.cpp ////
 
 // Thread handling
-extern bool INPUT_THREAD_EXISTS;
+extern std::atomic<bool> input_thread_done;
 
 // Dimensions
 extern const int FRAME_WIDTH;

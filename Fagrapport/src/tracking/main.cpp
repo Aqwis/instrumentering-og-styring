@@ -1,9 +1,13 @@
 #include "main.h"
+#include "com.h"
 
 using namespace cv;
 
+// Serial I/O
+Serial *SIO;
+
 // Thread handling
-bool INPUT_THREAD_EXISTS = false;
+std::atomic<bool> input_thread_done(false);
 
 // Dimensions
 const int FRAME_WIDTH = 640;
@@ -177,26 +181,37 @@ double use_center_color(Mat hsv_image) {
     return 0;
 }
 
+void sendSerialString(std::string message) {
+    bool success = SIO->WriteData((char *) message.c_str(), message.length());
+    char incoming[256] = "";
+}
+
 int user_input(ImageStruct *image_struct) {
-	std::string COMMANDS_[] = {"pick"};
-	const std::set<std::string> COMMANDS(COMMANDS_, COMMANDS_ + sizeof(COMMANDS_)/sizeof(COMMANDS_[0]));
-	const std::string HELP_TEXT = "Commands:\n* exit\n*pick\n";
+	const std::string HELP_TEXT = "Commands:\n* help\n* center\n* exit\n";
 
     std::string input = "";
     while (true) {
         std::cout << ">";
         std::getline(std::cin, input);
-        if (input == "exit") {
-            INPUT_THREAD_EXISTS = false;
+        int first_space_index = input.find_first_of(" ");
+        std::string command = input.substr(0, first_space_index);
+        std::string argument = input.substr(first_space_index+1);
+        // Interpret input
+        if (command == "exit") {
+            input_thread_done = true;
             return 0;
-        } else if (input == "center") {
+        } else if (command == "help" || command == "?") {
+            std::cout << HELP_TEXT;
+        } else if (command == "center") {
             use_center_color(*(image_struct->hsv));
-		} else if (COMMANDS.find(input) != COMMANDS.end()) {
-            std::cout << "INPUT!\n";
+        } else if (command == "serial") {
+            sendSerialString(argument);
+        } else {
+            std::cout << "Unrecognized input!\n";
         }
         input = "";
     }
-    INPUT_THREAD_EXISTS = false;
+    input_thread_done = true;
     return 1;
 }
 
@@ -212,6 +227,9 @@ void draw_center_crosshair(Mat *image) {
 }
 
 int main(int argc, char* argv[]) {
+
+    // Set up Serial I/O
+    SIO = new Serial("\\\\.\\COM13");
     
     // Some controls for functions in the program
     bool trackObjects = true;
@@ -226,16 +244,16 @@ int main(int argc, char* argv[]) {
     VideoCapture capture; // Video capture object for camera feed
     capture.open(1); // Open capture object at location 0 (i.e. the first camera)
 
+    // For some reason, with some cameras, these settings
+    // have no effect on the actual image size
     capture.set(CV_CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT);
     capture.set(CV_CAP_PROP_FRAME_WIDTH, FRAME_WIDTH);
 
     // Thread for console commands
     ImageStruct image_struct = {&cameraFeed, &hsv, &threshold};
-    INPUT_THREAD_EXISTS = true;
     std::thread user_input_thread(user_input, &image_struct);
-    user_input_thread.detach();
 
-    while (INPUT_THREAD_EXISTS) {
+    while (!input_thread_done) {
         capture.read(cameraFeed); // Fetch frame from camera
         cvtColor(cameraFeed,hsv,COLOR_BGR2HSV); // Convert from BGR to HSV colorspace
         // Filter HSV image between values and store filtered images to threshold materix
@@ -263,5 +281,6 @@ int main(int argc, char* argv[]) {
 
     }
 
+    user_input_thread.detach();
     return 0;
 }
