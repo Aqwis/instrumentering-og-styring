@@ -31,10 +31,22 @@ const string windowThreshold = "Threshold Image";
 const string windowMorph = "After Morphological Operations";
 const string trackbarWindowName = "Trackbars";
 
+// Image data
+Mat cameraFeed; // Matrix for the camera feed images
+
+// Current object location
+int x_location = 0;
+int y_location = 0;
+
 struct ImageStruct {
     Mat *cameraFeed;
     Mat *hsv;
     Mat *threshold;
+};
+
+struct DegreeStruct {
+    int horizontal;
+    int vertical;
 };
 
 void on_trackbar( int, void* ) {
@@ -183,11 +195,11 @@ double use_center_color(Mat hsv_image) {
 
 void sendSerialString(std::string message) {
     bool success = SIO->WriteData((char *) message.c_str(), message.length());
-    char incoming[256] = "";
+    std::cout << "Wrote " << message << std::endl;
 }
 
 int user_input(ImageStruct *image_struct) {
-	const std::string HELP_TEXT = "Commands:\n* help\n* center\n* exit\n";
+	const std::string HELP_TEXT = "Commands:\n* help\n* center\n* exit\n* serial\n* distance\n* move\n";
 
     std::string input = "";
     while (true) {
@@ -206,6 +218,8 @@ int user_input(ImageStruct *image_struct) {
             use_center_color(*(image_struct->hsv));
         } else if (command == "serial") {
             sendSerialString(argument);
+        } else if (command == "distance") {
+            print_object_degrees_from_center();
         } else {
             std::cout << "Unrecognized input!\n";
         }
@@ -226,20 +240,52 @@ void draw_center_crosshair(Mat *image) {
     line(*image, Point(screenWidth/2, (screenHeight/2)-20), Point(screenWidth/2, (screenHeight/2)+20), Scalar(0,0,0), 2, 8);
 }
 
+DegreeStruct *degrees_from_center(int x, int y) {
+    // Compute the number of degrees away from the center
+    // the given pixel location is
+
+    const int H_FOV = 60; // horizontal field of view of camera
+    const int V_FOV = 45; // vertical field of view of camera
+    DegreeStruct *degrees = new DegreeStruct();
+
+    Size image_size = cameraFeed.size();
+    int screenHeight = image_size.height;
+    int screenWidth = image_size.width;
+
+    float horizontal_degrees_per_pixel = (float) H_FOV/screenWidth;
+    float vertical_degrees_per_pixel = (float) V_FOV/screenHeight;
+
+    int horizontal_center = screenWidth/2;
+    int vertical_center = screenHeight/2;
+
+    degrees->horizontal = horizontal_degrees_per_pixel*(x-horizontal_center);
+    degrees->vertical = vertical_degrees_per_pixel*(y-vertical_center);
+
+    return degrees;
+}
+
+void print_object_degrees_from_center() {
+    DegreeStruct *degr = degrees_from_center(x_location, y_location);
+    std::cout << "Horizontal: " << degr->horizontal << std::endl;
+    std::cout << "Vertical: " << degr->vertical << std::endl;
+    delete degr;
+}
+
 int main(int argc, char* argv[]) {
 
     // Set up Serial I/O
     SIO = new Serial("\\\\.\\COM13");
+    if (!SIO->IsConnected()) {
+        std::cout << "Could not connect to COM device!" << std::endl;
+    }
     
     // Some controls for functions in the program
     bool trackObjects = true;
     bool useMorphOps = true;
 
-    Mat cameraFeed; // Matrix for the camera feed images
     Mat hsv; // Matrix for HSV image
     Mat threshold; // Matrix for threshold threshold image
 
-    int x=0, y=0; // x and y coordinates for the object
     createTrackbars(); // Create the sliders for HSV filtering
     VideoCapture capture; // Video capture object for camera feed
     capture.open(1); // Open capture object at location 0 (i.e. the first camera)
@@ -269,7 +315,7 @@ int main(int argc, char* argv[]) {
 
         // Track objects
         if (trackObjects) {
-            trackFilteredObject(x, y, threshold, cameraFeed);
+            trackFilteredObject(x_location, y_location, threshold, cameraFeed);
         }
 
         // Show frames
