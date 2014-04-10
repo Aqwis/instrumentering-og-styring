@@ -22,7 +22,7 @@ void createTrackbars();
 
 void morphOps(cv::Mat &thresh);
 void drawObject(int x, int y, cv::Mat &frame);
-void trackFilteredObject(int &x, int &y, cv::Mat threshold, cv::Mat &cameraFeed);
+bool trackFilteredObject(int &x, int &y, cv::Mat threshold, cv::Mat &cameraFeed);
 
 int user_input(ImageStruct *image_struct);
 

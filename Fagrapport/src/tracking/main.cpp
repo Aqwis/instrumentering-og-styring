@@ -37,8 +37,6 @@ const string trackbarWindowName = "Trackbars";
 // Video data
 Mat cameraFeed; // Matrix for the camera feed images
 
-bool objectFound = false; // Has an object been detected?
-
 // Current object location
 int x_location = 0;
 int y_location = 0;
@@ -133,59 +131,61 @@ void drawObject(int x, int y, Mat &frame) {
 
 }
 
-void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
-    
+bool trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
     Mat temp;
-    threshold.copyTo(temp);
-    // Vectors are needed for output of findContours
-    vector< vector<Point> > contours;
-    vector<Vec4i> hierarchy;
-    // Find contours of filtered image using OpenCV findContours function
-    findContours(temp, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
-    // Use moments method to find our filtered object
+    Moments moment;
+    int numObjects;
+    double area;
+
+    bool objectFound = false;
     double refArea = 0;
-    if (hierarchy.size() > 0) { 
-        int numObjects = hierarchy.size();
+
+    // Vectors are needed for output of findContours
+    vector<vector<Point>> contours;
+    vector<Vec4i> hierarchy;
+
+    // Find contours of filtered image using OpenCV findContours function
+    threshold.copyTo(temp);
+    findContours(temp, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
+
+    // Use moments method to find our filtered object
+    numObjects = hierarchy.size();
+
+    if (numObjects > 0 && numObjects < MAX_NUM_OBJECTS) { 
         // If number of objects greater than MAX_NUM_OBJECTS we have a noisy filter
-        if (numObjects < MAX_NUM_OBJECTS) {
-            for (int index=0; index >= 0; index = hierarchy[index][0]) {
-                Moments moment = moments((cv::Mat)contours[index]);
-                double area = moment.m00;
+        for (int index=0; index >= 0; index = hierarchy[index][0]) {
+            moment = moments((cv::Mat) contours[index]);
+            area = moment.m00;
 
-                // If the area is less than 20*20 pixels it's probably just noise.
-                // If the area is the same as 2/3 of the images size, probably a bad filter
-                // We want only the object with the largest area so we can save a reference area each
-                // iteration and compare it to the area in the next iteration
-                if (area > MIN_OBJECT_AREA && area < MAX_OBJECT_AREA && area > refArea) {
-                    x = moment.m10/area;
-                    y = moment.m01/area;
-                    objectFound = true;
-                    refArea = area;
-                }
-                else {
-                    objectFound = false;
-                }
-
-            }
-
-            // Let the user know an object has been found
-            if (objectFound == true) {
-                putText(cameraFeed, "Tracking Object", Point(0,50), 2, 1, Scalar(0, 255, 0), 2);
-                drawObject(x, y, cameraFeed);
-                return;
-            }
-            else {
-                putText(cameraFeed, "TOO MUCH NOISE! ADJUST FILTER", Point(0,50), 1, 2, Scalar(0,0,255), 2);
+            // If the area is less than 20*20 pixels it's probably just noise.
+            // If the area is the same as 2/3 of the images size, probably a bad filter
+            // We want only the object with the largest area so we can save a reference area each
+            // iteration and compare it to the area in the next iteration
+            //if (area > MIN_OBJECT_AREA && area < MAX_OBJECT_AREA && area > refArea) {
+            if (area > 0 && area < MAX_OBJECT_AREA && area > refArea) {
+                x = moment.m10/area;
+                y = moment.m01/area;
+                objectFound = true;
+                refArea = area;
             }
         }
     }
-    objectFound = false;
+
+    // Let the user know an object has been found
+    if (objectFound == true) {
+        putText(cameraFeed, "Tracking Object", Point(0,50), 2, 1, Scalar(0, 255, 0), 2);
+        drawObject(x, y, cameraFeed);
+    } else {
+        putText(cameraFeed, "TOO MUCH NOISE! ADJUST FILTER", Point(0,50), 1, 2, Scalar(0,0,255), 2);
+    }
+
+    return objectFound;
 }
 
 double use_center_color(Mat hsv_image) {
-    const int h_margin = 10;
-    const int s_margin = 10;
-    const int v_margin = 35;
+    const int h_margin = 30;
+    const int s_margin = 30;
+    const int v_margin = 30;
 
     Size image_size = hsv_image.size();
 
@@ -338,7 +338,9 @@ int main(int argc, char* argv[]) {
     bool useMorphOps = true;
 
     Mat hsv; // Matrix for HSV image
+    Mat lab; // LAB color image
     Mat threshold; // Matrix for threshold threshold image
+    bool objectFound = false; // Did we find a matching object?
 
     createTrackbars(); // Create the sliders for HSV filtering
     VideoCapture capture; // Video capture object for camera feed
@@ -369,7 +371,7 @@ int main(int argc, char* argv[]) {
 
         // Track objects
         if (trackObjects) {
-            trackFilteredObject(x_location, y_location, threshold, cameraFeed);
+            objectFound = trackFilteredObject(x_location, y_location, threshold, cameraFeed);
         }
 
         // Center camera on tracked object
@@ -382,7 +384,7 @@ int main(int argc, char* argv[]) {
         imshow(windowOriginal, cameraFeed);
         imshow(windowHSV, hsv);
 
-        waitKey(100);
+        waitKey(20);
 
     }
 
