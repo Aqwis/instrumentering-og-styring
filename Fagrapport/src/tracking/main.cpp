@@ -19,17 +19,17 @@ const int MAX_NUM_OBJECTS = 50;
 const int MIN_OBJECT_AREA = 20*20;
 const int MAX_OBJECT_AREA = FRAME_HEIGHT*FRAME_WIDTH/1.5;
 
-// initial min and max HSV filter values. these will be changed using trackbars.
-int H_MIN = 0;
-int H_MAX = 256;
-int S_MIN = 0;
-int S_MAX = 256;
-int V_MIN = 0;
-int V_MAX = 256;
+// initial min and max LAB filter values. these will be changed using trackbars.
+int L_MIN = 0;
+int L_MAX = 256;
+int A_MIN = 0;
+int A_MAX = 256;
+int B_MIN = 0;
+int B_MAX = 256;
 
 // Window names
 const string windowOriginal = "Original Image";
-const string windowHSV = "HSV Image";
+const string windowLAB = "LAB Image";
 const string windowThreshold = "Threshold Image";
 const string windowMorph = "After Morphological Operations";
 const string trackbarWindowName = "Trackbars";
@@ -47,7 +47,7 @@ int angle_c = 10; // plane axis 2 (motor 2)
 
 struct ImageStruct {
     Mat *cameraFeed;
-    Mat *hsv;
+    Mat *LAB;
     Mat *threshold;
 };
 
@@ -75,19 +75,19 @@ void createTrackbars() {
         
     //create memory to store trackbar name on window
     char TrackbarName[50];
-    sprintf( TrackbarName, "H_MIN", H_MIN);
-    sprintf( TrackbarName, "H_MAX", H_MAX);
-    sprintf( TrackbarName, "S_MIN", S_MIN);
-    sprintf( TrackbarName, "S_MAX", S_MAX);
-    sprintf( TrackbarName, "V_MIN", V_MIN);
-    sprintf( TrackbarName, "V_MAX", V_MAX);
+    sprintf( TrackbarName, "L_MIN", L_MIN);
+    sprintf( TrackbarName, "L_MAX", L_MAX);
+    sprintf( TrackbarName, "A_MIN", A_MIN);
+    sprintf( TrackbarName, "A_MAX", A_MAX);
+    sprintf( TrackbarName, "B_MIN", B_MIN);
+    sprintf( TrackbarName, "B_MAX", B_MAX);
 
-    createTrackbar( "H_MIN", trackbarWindowName, &H_MIN, H_MAX, on_trackbar );
-    createTrackbar( "H_MAX", trackbarWindowName, &H_MAX, H_MAX, on_trackbar );
-    createTrackbar( "S_MIN", trackbarWindowName, &S_MIN, S_MAX, on_trackbar );
-    createTrackbar( "S_MAX", trackbarWindowName, &S_MAX, S_MAX, on_trackbar );
-    createTrackbar( "V_MIN", trackbarWindowName, &V_MIN, V_MAX, on_trackbar );
-    createTrackbar( "V_MAX", trackbarWindowName, &V_MAX, V_MAX, on_trackbar );
+    createTrackbar( "L_MIN", trackbarWindowName, &L_MIN, L_MAX, on_trackbar );
+    createTrackbar( "L_MAX", trackbarWindowName, &L_MAX, L_MAX, on_trackbar );
+    createTrackbar( "A_MIN", trackbarWindowName, &A_MIN, A_MAX, on_trackbar );
+    createTrackbar( "A_MAX", trackbarWindowName, &A_MAX, A_MAX, on_trackbar );
+    createTrackbar( "B_MIN", trackbarWindowName, &B_MIN, B_MAX, on_trackbar );
+    createTrackbar( "B_MAX", trackbarWindowName, &B_MAX, B_MAX, on_trackbar );
 
 }
 
@@ -161,8 +161,7 @@ bool trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
             // If the area is the same as 2/3 of the images size, probably a bad filter
             // We want only the object with the largest area so we can save a reference area each
             // iteration and compare it to the area in the next iteration
-            //if (area > MIN_OBJECT_AREA && area < MAX_OBJECT_AREA && area > refArea) {
-            if (area > 0 && area < MAX_OBJECT_AREA && area > refArea) {
+            if (area > MIN_OBJECT_AREA && area < MAX_OBJECT_AREA && area > refArea) {
                 x = moment.m10/area;
                 y = moment.m01/area;
                 objectFound = true;
@@ -182,31 +181,31 @@ bool trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
     return objectFound;
 }
 
-double use_center_color(Mat hsv_image) {
-    const int h_margin = 30;
-    const int s_margin = 30;
-    const int v_margin = 30;
+double use_center_color(Mat LAB_image) {
+    const int l_margin = 10;
+    const int a_margin = 10;
+    const int b_margin = 10;
 
-    Size image_size = hsv_image.size();
+    Size image_size = LAB_image.size();
 
     int vertical_center = image_size.height/2;
     int horizontal_center = image_size.width/2;
-    unsigned char *center_triple = (unsigned char*) hsv_image.row(vertical_center).col(horizontal_center).data;
+    unsigned char *center_triple = (unsigned char*) LAB_image.row(vertical_center).col(horizontal_center).data;
 
-    int center_h = center_triple[0];
-    int center_s = center_triple[1];
-    int center_v = center_triple[2];
+    int center_l = center_triple[0];
+    int center_a = center_triple[1];
+    int center_b = center_triple[2];
 
-    //std::cout << "HSV: " << center_h << "," << center_s << "," << center_v << std::endl;
+    //std::cout << "LAB: " << center_h << "," << center_s << "," << center_v << std::endl;
 
-    setTrackbarPos( "H_MIN", trackbarWindowName, center_h - h_margin );
-    setTrackbarPos( "H_MAX", trackbarWindowName, center_h + h_margin );
+    setTrackbarPos( "L_MIN", trackbarWindowName, center_l - l_margin );
+    setTrackbarPos( "L_MAX", trackbarWindowName, center_l + l_margin );
 
-    setTrackbarPos( "S_MIN", trackbarWindowName, center_s - s_margin );
-    setTrackbarPos( "S_MAX", trackbarWindowName, center_s + s_margin );
+    setTrackbarPos( "A_MIN", trackbarWindowName, center_a - a_margin );
+    setTrackbarPos( "A_MAX", trackbarWindowName, center_a + a_margin );
 
-    setTrackbarPos( "V_MIN", trackbarWindowName, center_v - v_margin );
-    setTrackbarPos( "V_MAX", trackbarWindowName, center_v + v_margin );
+    setTrackbarPos( "B_MIN", trackbarWindowName, center_b - b_margin );
+    setTrackbarPos( "B_MAX", trackbarWindowName, center_b + b_margin );
 
     return 0;
 }
@@ -233,7 +232,7 @@ int user_input(ImageStruct *image_struct) {
         } else if (command == "help" || command == "?") {
             std::cout << HELP_TEXT;
         } else if (command == "center") {
-            use_center_color(*(image_struct->hsv));
+            use_center_color(*(image_struct->LAB));
         } else if (command == "serial") {
             sendSerialString(argument);
         } else if (command == "distance") {
@@ -337,12 +336,12 @@ int main(int argc, char* argv[]) {
     bool trackObjects = true;
     bool useMorphOps = true;
 
-    Mat hsv; // Matrix for HSV image
+    Mat LAB; // Matrix for LAB image
     Mat lab; // LAB color image
     Mat threshold; // Matrix for threshold threshold image
     bool objectFound = false; // Did we find a matching object?
 
-    createTrackbars(); // Create the sliders for HSV filtering
+    createTrackbars(); // Create the sliders for LAB filtering
     VideoCapture capture; // Video capture object for camera feed
     capture.open(1); // Open capture object at location 0 (i.e. the first camera)
 
@@ -352,14 +351,14 @@ int main(int argc, char* argv[]) {
     capture.set(CV_CAP_PROP_FRAME_WIDTH, FRAME_WIDTH);
 
     // Thread for console commands
-    ImageStruct image_struct = {&cameraFeed, &hsv, &threshold};
+    ImageStruct image_struct = {&cameraFeed, &LAB, &threshold};
     std::thread user_input_thread(user_input, &image_struct);
 
     while (!input_thread_done) {
         capture.read(cameraFeed); // Fetch frame from camera
-        cvtColor(cameraFeed,hsv,COLOR_BGR2HSV); // Convert from BGR to HSV colorspace
-        // Filter HSV image between values and store filtered images to threshold materix
-        inRange(hsv, Scalar(H_MIN, S_MIN, V_MIN), Scalar(H_MAX, S_MAX, V_MAX), threshold);
+        cvtColor(cameraFeed,LAB,COLOR_BGR2Lab); // Convert from BGR to LAB colorspace
+        // Filter LAB image between values and store filtered images to threshold materix
+        inRange(LAB, Scalar(L_MIN, A_MIN, B_MIN), Scalar(L_MAX, A_MAX, B_MAX), threshold);
 
         // Draw crosshair in the middle of the image
         draw_center_crosshair(&cameraFeed);
@@ -382,7 +381,7 @@ int main(int argc, char* argv[]) {
         // Show frames
         imshow(windowThreshold, threshold);
         imshow(windowOriginal, cameraFeed);
-        imshow(windowHSV, hsv);
+        imshow(windowLAB, LAB);
 
         waitKey(20);
 

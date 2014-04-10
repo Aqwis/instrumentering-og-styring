@@ -41,7 +41,7 @@ extern const int MAX_NUM_OBJECTS;
 extern const int MIN_OBJECT_AREA;
 extern const int MAX_OBJECT_AREA;
 
-// initial min and max HSV filter values. these will be changed using trackbars.
+// initial min and max LAB filter values. these will be changed using trackbars.
 extern int H_MIN;
 extern int H_MAX;
 extern int S_MIN;
@@ -51,7 +51,7 @@ extern int V_MAX;
 
 // Window names
 extern const std::string windowOriginal;
-extern const std::string windowHSV;
+extern const std::string windowLAB;
 extern const std::string windowThreshold;
 extern const std::string windowMorph;
 extern const std::string trackbarWindowName;
