@@ -358,6 +358,12 @@ void center_camera_simple() {
         degr->vertical = copysign(2, degr->vertical);
     }
 
+    if (std::abs(angle_a + degr->horizontal) > 175 || std::abs(angle_a + degr->horizontal) < 15) {
+        return;
+    } else if (std::abs(angle_c + degr->vertical) > 140 || std::abs(angle_c + degr->vertical) < 10) {
+        return;
+    }
+
     angle_a = angle_a + degr->horizontal;
     angle_c = angle_c + degr->vertical;
 
