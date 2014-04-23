@@ -351,11 +351,19 @@ void center_camera() {
 void center_camera_simple() {
     DegreeStruct *degr = degrees_from_center(x_location, y_location);
 
-    if (std::abs(degr->horizontal) > 2) {
+    if (std::abs(degr->horizontal) > 6) {
         degr->horizontal = copysign(2, degr->horizontal);
+    } else if (std::abs(degr->horizontal) > 3) {
+        degr->horizontal = copysign(1, degr->horizontal);
+    } else if (std::abs(degr->horizontal) > 0) {
+        degr->horizontal = 0;
     }
-    if (std::abs(degr->vertical) > 2) {
+    if (std::abs(degr->vertical) > 6) {
         degr->vertical = copysign(2, degr->vertical);
+    } else if (std::abs(degr->vertical) > 3) {
+        degr->vertical = copysign(1, degr->vertical);
+    } else if (std::abs(degr->vertical) > 0) {
+        degr->vertical = 0;
     }
 
     if (std::abs(angle_a + degr->horizontal) > 175 || std::abs(angle_a + degr->horizontal) < 15) {
