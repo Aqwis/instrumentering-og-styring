@@ -194,7 +194,7 @@ bool trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
 }
 
 double use_center_color(Mat LAB_image) {
-    const int l_margin = 10;
+    const int l_margin = 50;
     const int a_margin = 10;
     const int b_margin = 10;
 
@@ -220,6 +220,31 @@ double use_center_color(Mat LAB_image) {
     setTrackbarPos( "B_MAX", trackbarWindowName, center_b + b_margin );
 
     return 0;
+}
+
+void onClick(int event, int x, int y, int flags, void *LAB_image_v) {
+    if (event == EVENT_LBUTTONDOWN) {
+        std::cout << "clicked!" << std::endl;
+        const int l_margin = 50;
+        const int a_margin = 10;
+        const int b_margin = 10;
+
+        Mat *LAB_image = (Mat*) LAB_image_v;
+
+        unsigned char *triple = (unsigned char*) LAB_image->row(y).col(x).data;
+        int l = triple[0];
+        int a = triple[1];
+        int b = triple[2];
+
+        setTrackbarPos( "L_MIN", trackbarWindowName, l - l_margin );
+        setTrackbarPos( "L_MAX", trackbarWindowName, l + l_margin );
+
+        setTrackbarPos( "A_MIN", trackbarWindowName, a - a_margin );
+        setTrackbarPos( "A_MAX", trackbarWindowName, a + a_margin );
+
+        setTrackbarPos( "B_MIN", trackbarWindowName, b - b_margin );
+        setTrackbarPos( "B_MAX", trackbarWindowName, b + b_margin );
+    }
 }
 
 void sendSerialString(std::string message) {
@@ -326,6 +351,13 @@ void center_camera() {
 void center_camera_simple() {
     DegreeStruct *degr = degrees_from_center(x_location, y_location);
 
+    if (std::abs(degr->horizontal) > 2) {
+        degr->horizontal = copysign(2, degr->horizontal);
+    }
+    if (std::abs(degr->vertical) > 2) {
+        degr->vertical = copysign(2, degr->vertical);
+    }
+
     angle_a = angle_a + degr->horizontal;
     angle_c = angle_c + degr->vertical;
 
@@ -349,7 +381,7 @@ int main(int argc, char* argv[]) {
     bool useMorphOps = true;
 
     Mat LAB; // Matrix for LAB image
-    Mat lab; // LAB color image
+    //Mat lab; // LAB color image
     Mat threshold; // Matrix for threshold threshold image
     bool objectFound = false; // Did we find a matching object?
 
@@ -365,6 +397,12 @@ int main(int argc, char* argv[]) {
     // Thread for console commands
     ImageStruct image_struct = {&cameraFeed, &LAB, &threshold};
     std::thread user_input_thread(user_input, &image_struct);
+
+    // Mouse clicks in window should detect color
+    namedWindow(windowThreshold, 1);
+    namedWindow(windowOriginal, 2);
+    namedWindow(windowLAB, 3);
+    setMouseCallback(windowOriginal, onClick, &LAB);
 
     while (!input_thread_done) {
         capture.read(cameraFeed); // Fetch frame from camera
