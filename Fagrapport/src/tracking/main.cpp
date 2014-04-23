@@ -1,38 +1,22 @@
+#include <cstdlib>
+#include <string>
+#include <sstream>
+#include <iostream>
+#include <thread>
+#include <cmath>
+#include <cstdio>
+
+#include <opencv/cv.h>
+#include <opencv/highgui.h>
+
 #include "main.h"
-#include "com.h"
+#include "util.h"
+#include "const.h"
 
 using namespace cv;
 
-// Serial I/O
-Serial *SIO;
-
-// Thread handling
-std::atomic<bool> input_thread_done(false);
-
 // Features on/off
 bool follow_object = false;
-
-// Dimensions
-const int FRAME_WIDTH = 640;
-const int FRAME_HEIGHT = 480;
-const int MAX_NUM_OBJECTS = 50;
-const int MIN_OBJECT_AREA = 20*20;
-const int MAX_OBJECT_AREA = FRAME_HEIGHT*FRAME_WIDTH/1.5;
-
-// initial min and max LAB filter values. these will be changed using trackbars.
-int L_MIN = 0;
-int L_MAX = 256;
-int A_MIN = 0;
-int A_MAX = 256;
-int B_MIN = 0;
-int B_MAX = 256;
-
-// Window names
-const string windowOriginal = "Original Image";
-const string windowLAB = "LAB Image";
-const string windowThreshold = "Threshold Image";
-const string windowMorph = "After Morphological Operations";
-const string trackbarWindowName = "Trackbars";
 
 // Video data
 Mat cameraFeed; // Matrix for the camera feed images
@@ -40,56 +24,6 @@ Mat cameraFeed; // Matrix for the camera feed images
 // Current object location
 int x_location = 0;
 int y_location = 0;
-
-int angle_a = 90; // plane axis 1 (motor 1)
-int angle_b = 15; // rotation in the plane
-int angle_c = 10; // plane axis 2 (motor 2)
-
-struct ImageStruct {
-    Mat *cameraFeed;
-    Mat *LAB;
-    Mat *threshold;
-};
-
-struct DegreeStruct {
-    int horizontal;
-    int vertical;
-};
-
-double copysign(double x, double y) {
-    if (y >= 0) {
-        return abs(x);
-    } else {
-        return -abs(x);
-    }
-}
-
-void on_trackbar( int, void* ) {
-    // This function gets called whenever a
-    // trackbar position is changed
-}
-
-void createTrackbars() {
-    
-    namedWindow(trackbarWindowName, 0);
-        
-    //create memory to store trackbar name on window
-    char TrackbarName[50];
-    sprintf( TrackbarName, "L_MIN", L_MIN);
-    sprintf( TrackbarName, "L_MAX", L_MAX);
-    sprintf( TrackbarName, "A_MIN", A_MIN);
-    sprintf( TrackbarName, "A_MAX", A_MAX);
-    sprintf( TrackbarName, "B_MIN", B_MIN);
-    sprintf( TrackbarName, "B_MAX", B_MAX);
-
-    createTrackbar( "L_MIN", trackbarWindowName, &L_MIN, L_MAX, on_trackbar );
-    createTrackbar( "L_MAX", trackbarWindowName, &L_MAX, L_MAX, on_trackbar );
-    createTrackbar( "A_MIN", trackbarWindowName, &A_MIN, A_MAX, on_trackbar );
-    createTrackbar( "A_MAX", trackbarWindowName, &A_MAX, A_MAX, on_trackbar );
-    createTrackbar( "B_MIN", trackbarWindowName, &B_MIN, B_MAX, on_trackbar );
-    createTrackbar( "B_MAX", trackbarWindowName, &B_MAX, B_MAX, on_trackbar );
-
-}
 
 void morphOps(Mat &thresh) {
     //create structuring element that will be used to "dilate" and "erode" image.
@@ -102,45 +36,6 @@ void morphOps(Mat &thresh) {
     
     dilate(thresh, thresh, dilateElement);
     dilate(thresh, thresh, dilateElement);
-}
-
-void drawObject(int x, int y, Mat &frame) {
-
-    //use some of the openCV drawing functions to draw crosshairs
-    //on your tracked image!
-
-    //UPDATE:JUNE 18TH, 2013
-    //added 'if' and 'else' statements to prevent
-    //memory errors from writing off the screen (ie. (-25,-25) is not within the window!)
-
-    circle(frame, Point(x,y), 20, Scalar(0,255,0), 2);
-
-    if (y-25 > 0) {
-        line(frame, Point(x,y), Point(x, y-25), Scalar(0,255,0), 2);
-    } else {
-        line(frame, Point(x,y), Point(x,0), Scalar(0,255,0), 2);
-    }
-
-    if (y+25 < FRAME_HEIGHT) {
-        line(frame, Point(x,y), Point(x, y+25), Scalar(0,255,0), 2);
-    } else {
-        line(frame, Point(x,y), Point(x, FRAME_HEIGHT), Scalar(0,255,0), 2);
-    }
-
-    if (x-25 > 0) {
-        line(frame, Point(x,y), Point(x-25, y), Scalar(0,255,0), 2);
-    } else {
-        line(frame, Point(x,y), Point(0, y), Scalar(0,255,0), 2);
-    }
-
-    if (x+25<FRAME_WIDTH) {
-        line(frame, Point(x,y), Point(x+25, y), Scalar(0,255,0), 2);
-    } else {
-        line(frame, Point(x,y), Point(FRAME_WIDTH, y), Scalar(0,255,0), 2);
-    }
-
-    putText(frame, std::to_string(x) + "," + std::to_string(y), Point(x,y + 30), 1, 1, Scalar(0,255,0), 2);
-
 }
 
 bool trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
@@ -222,93 +117,12 @@ double use_center_color(Mat LAB_image) {
     return 0;
 }
 
-void sendSerialString(std::string message) {
-    bool success = SIO->WriteData((char *) message.c_str(), message.length());
-    std::cout << "Wrote " << message << std::endl;
-}
-
-int user_input(ImageStruct *image_struct) {
-	const std::string HELP_TEXT = "Commands:\n* help\n* center\n* exit\n* serial\n* distance\n* follow\n";
-
-    std::string input = "";
-    while (true) {
-        std::cout << ">";
-        std::getline(std::cin, input);
-        int first_space_index = input.find_first_of(" ");
-        std::string command = input.substr(0, first_space_index);
-        std::string argument = input.substr(first_space_index+1);
-        // Interpret input
-        if (command == "exit") {
-            input_thread_done = true;
-            return 0;
-        } else if (command == "help" || command == "?") {
-            std::cout << HELP_TEXT;
-        } else if (command == "center") {
-            use_center_color(*(image_struct->LAB));
-        } else if (command == "serial") {
-            sendSerialString(argument);
-        } else if (command == "distance") {
-            print_object_degrees_from_center();
-        } else if (command == "follow") {
-            follow_object = true;
-        } else {
-            std::cout << "Unrecognized input!\n";
-        }
-        input = "";
-    }
-    input_thread_done = true;
-    return 1;
-}
-
-void draw_center_crosshair(Mat *image) {
-    int screenHeight;
-    int screenWidth;
-
-    Size image_size = image->size();
-    screenHeight = image_size.height;
-    screenWidth = image_size.width;
-    line(*image, Point((screenWidth/2)-20, screenHeight/2), Point((screenWidth/2)+20, screenHeight/2), Scalar(0,0,0), 2, 8);
-    line(*image, Point(screenWidth/2, (screenHeight/2)-20), Point(screenWidth/2, (screenHeight/2)+20), Scalar(0,0,0), 2, 8);
-}
-
-DegreeStruct *degrees_from_center(int x, int y) {
-    // Compute the number of degrees away from the center
-    // the given pixel location is
-
-    const int H_FOV = 60; // horizontal field of view of camera
-    const int V_FOV = 45; // vertical field of view of camera
-    DegreeStruct *degrees = new DegreeStruct();
-
-    Size image_size = cameraFeed.size();
-    int screenHeight = image_size.height;
-    int screenWidth = image_size.width;
-
-    float horizontal_degrees_per_pixel = (float) H_FOV/screenWidth;
-    float vertical_degrees_per_pixel = (float) V_FOV/screenHeight;
-
-    int horizontal_center = screenWidth/2;
-    int vertical_center = screenHeight/2;
-
-    degrees->horizontal = horizontal_degrees_per_pixel*(x-horizontal_center);
-    degrees->vertical = vertical_degrees_per_pixel*(vertical_center-y);
-
-    return degrees;
-}
-
-void print_object_degrees_from_center() {
-    DegreeStruct *degr = degrees_from_center(x_location, y_location);
-    std::cout << "Horizontal: " << degr->horizontal << std::endl;
-    std::cout << "Vertical: " << degr->vertical << std::endl;
-    delete degr;
-}
-
 void center_camera() {
     DegreeStruct *degr = degrees_from_center(x_location, y_location);
 
     // Distance from center
-    Size image_size = cameraFeed.size();
-    int distance_y = (y_location - image_size.height/2);
-    int distance_x = (x_location - image_size.width/2);
+    int distance_y = (y_location - screenHeight/2);
+    int distance_x = (x_location - screenWidth/2);
 
     double rotation_angle_abs = angle_b - atan2(distance_y, distance_x) * 180 / PI;
     double radius_abs = angle_a - sqrt(pow(degr->horizontal, 2) + pow(degr->vertical, 2));
@@ -332,17 +146,42 @@ void center_camera_simple() {
     sendSerialString(std::to_string(angle_a) + "a " + std::to_string(angle_c) + "c");
 }
 
+int user_input(ImageStruct *image_struct) {
+    const std::string HELP_TEXT = "Commands:\n* help\n* center\n* exit\n* serial\n* distance\n* follow\n";
+
+    std::string input = "";
+    while (true) {
+        std::cout << ">";
+        std::getline(std::cin, input);
+        int first_space_index = input.find_first_of(" ");
+        std::string command = input.substr(0, first_space_index);
+        std::string argument = input.substr(first_space_index+1);
+        // Interpret input
+        if (command == "exit") {
+            input_thread_done = true;
+            return 0;
+        } else if (command == "help" || command == "?") {
+            std::cout << HELP_TEXT;
+        } else if (command == "center") {
+            use_center_color(*(image_struct->LAB));
+        } else if (command == "serial") {
+            sendSerialString(argument);
+        } else if (command == "distance") {
+            print_object_degrees_from_center(x_location, y_location);
+        } else if (command == "follow") {
+            follow_object = true;
+        } else {
+            std::cout << "Unrecognized input!\n";
+        }
+        input = "";
+    }
+    input_thread_done = true;
+    return 1;
+}
+
 int main(int argc, char* argv[]) {
 
-    // Set up Serial I/O
-    SIO = new Serial("\\\\.\\COM13");
-    if (!SIO->IsConnected()) {
-        std::cout << "Could not connect to COM device!" << std::endl;
-    } else {
-        sendSerialString(std::to_string(angle_a) + "a");
-        sendSerialString(std::to_string(angle_b) + "b");
-        sendSerialString(std::to_string(angle_c) + "c");
-    }
+    bool sio_success = setup_serial_io();
     
     // Some controls for functions in the program
     bool trackObjects = true;
@@ -356,6 +195,11 @@ int main(int argc, char* argv[]) {
     createTrackbars(); // Create the sliders for LAB filtering
     VideoCapture capture; // Video capture object for camera feed
     capture.open(1); // Open capture object at location 0 (i.e. the first camera)
+
+    // Get actual image size
+    Size image_size = cameraFeed.size();
+    screenHeight = image_size.height;
+    screenWidth = image_size.width;
 
     // For some reason, with some cameras, these settings
     // have no effect on the actual image size
