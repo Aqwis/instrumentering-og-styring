@@ -41,7 +41,13 @@ Et kommandosignal, som representere en vinkelposisjon, påtrykkes inngangen, det
 
 I dette prosjektet ble det brukt servomotorer av typen HD-1600A fra PowerHD [\ref{ref:PowerHD}]. Dette er en enkel analog servomotor, beregnet for radiostyrte modellfly, som består av en DC motor, en potensiometer som vinkelsensor og en kontrollenhet av typen YT2462B. For å kontrollere denne typen servomotorer brukes puls-bredde-modulasjon (PWM). I PWM sendes firkantpulser hvor pulslengden varieres, mens grunnfrekvensen holdes konstant. Informasjonen ligger dermed i lengden av pulsen. For styring av analoge RC servoer som HD-1600A er det vanlig å bruke en grunnfrekvens på 50Hz og bulsbredde på 1ms til 2ms [\ref{ref:SerCtrl}]. Figur \ref{fig:PWM} viser hvordan servovinkel avhenger av pulsbredde.
 
-<<<<<<< HEAD
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{img/pwm_servo.jpg}
+\caption{PWM servo kontrollsignal}
+\label{fig:PWM}
+\end{figure}
+
 En servomotor er en inretning som lar en kontrolere og holde på en vinkelposisjon.
 En servomotor er bygget opp av en elektrisk motor,
 en vinkelsensor og en kontroll enhet.
@@ -54,7 +60,7 @@ Vinkelsensoren oppfører seg derfor som en tilbakekobling som returenerer feilen
 For å kunne styre riggen er det nødvendig å ha en datamaskin ombord i flyet. Det finnes en rekke alternativer på dette området, men her vil Arduino og Raspberry Pi bli presantert. Hovedoppgaven til datamskinen er å få data fra kameraet, og orientere riggen etter disse. I systemspesifikasjonene til Kongsberg Gruppen blir presisert at det allerede finnes en ekstern GPU på Local Hawk som tar av seg bildebehandling, men man kan også tenke seg en løsning hvor all funksjonalitet er samlet på en chip. Datamaskinen må også kunne håndtere flere prosessorer uten at det blir konflikt mellom dem. 
 
 \subsubsection{Arduino}
-Arduino er en open-source utviklings platform basert på 8bit \textit{atMega328}. Bruksområdet er hovedsakelig mindre prosjekter. Kortet har 14 digtale porter, samt 6 analoge in-porter. 6 av de digitale portene kan sende PWM-signaler. Servomotorer bruker disse signalene, og det er derfor mulig å koble opp til 6 servoer til Arduino. 
+Arduino er en open-source utviklings platform basert på 8bit \textit{ATmega328}. Bruksområdet er hovedsakelig mindre prosjekter. Kortet har 14 digtale porter, samt 6 analoge in-porter. 6 av de digitale portene kan sende PWM-signaler. Servomotorer bruker disse signalene, og det er derfor mulig å koble opp til 6 servoer til Arduino. 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale = 0.25]{img/arduinoBoard.jpg}
@@ -63,7 +69,13 @@ Arduino er en open-source utviklings platform basert på 8bit \textit{atMega328}
 Arduino programmeres i C++, og programmene overføres til kortet via USB. USB-porten på kortet kan også benyttes som COM-port slik at Arduinoen kan ta inn eksterne kommandoer. Disse kommandoen kan for eksempel være vinkler som servomotorer skal innstilles til. På mikrokontrolleren er det også innstallert en bootlader som inneholder en rekke bilbioteker som gjør at abstraksjonsnivået blir høyere enn generell AVR-programmering. Dataregistre trenger ikke å endres når man vil åpne opp for en funksjon fordi bilibioteket vil håndtere dette. 
 
 \subsubsection{Raspberry Pi}
-Raspberry Pi er en datamskin basert på 32-bit ARM-arkitektur. Linux er innstalert på et SD-kort, og all programmering skjer direkte på Raspberry PI. Den kan brukes ved å koble den til en monitor via HDMI, eller man kan koble den til internett via ethetnet-porten og bruke ssh fra en annen datamaskin. Kortet har 8 i/o pins, pinner som kan brukes til seriell kommunikasjon. Den er også utstyrt med 2 usb-porter.  
+Raspberry Pi er en datamskin basert på 32-bit ARM-arkitektur. Linux er innstalert på et SD-kort, og all programmering skjer direkte på Raspberry PI. Den kan brukes ved å koble den til en monitor via HDMI, eller man kan koble den til internett via ethetnet-porten og bruke ssh fra en annen datamaskin. Kortet har 8 i/o pins, pinner som kan brukes til seriell kommunikasjon. Den er også utstyrt med 2 usb-porter.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale = 0.25]{img/pi.jpg}
+\caption{Arduino Uno R3}
+\end{figure}  
 
 \subsubsection{Sammenligning mellom Arduino og Raspberry Pi}
 \begin{table}[h!]
@@ -87,12 +99,3 @@ Raspberry Pi er en datamskin basert på 32-bit ARM-arkitektur. Linux er innstale
 \end{table}
 
 
-
-=======
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{img/pwm_servo.jpg}
-\caption{PWM servo kontrollsignal}
-\label{fig:PWM}
-\end{figure}   
->>>>>>> 5f20608936041630d150b0ca519f96a0d724648d
