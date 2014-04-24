@@ -3,6 +3,7 @@
 // Arduino COM communication library
 // From http://playground.arduino.cc/Interfacing/CPPWindows
 
+#ifdef _WIN32
 #include "com.h"
 
 Serial::Serial(char *portName)
@@ -142,3 +143,4 @@ bool Serial::IsConnected()
     //Simply return the connection status
     return this->connected;
 }
+#endif
