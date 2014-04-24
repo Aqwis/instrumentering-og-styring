@@ -1,10 +1,14 @@
 #include "main.h"
+#ifdef _WIN32
 #include "com.h"
+#endif
 
 using namespace cv;
 
 // Serial I/O
+#ifdef _WIN32
 Serial *SIO;
+#endif
 
 // Thread handling
 std::atomic<bool> input_thread_done(false);
@@ -248,8 +252,10 @@ void onClick(int event, int x, int y, int flags, void *LAB_image_v) {
 }
 
 void sendSerialString(std::string message) {
+#ifdef _WIN32
     bool success = SIO->WriteData((char *) message.c_str(), message.length());
     std::cout << "Wrote " << message << std::endl;
+#endif
 }
 
 int user_input(ImageStruct *image_struct) {
@@ -381,6 +387,7 @@ void center_camera_simple() {
 int main(int argc, char* argv[]) {
 
     // Set up Serial I/O
+#ifdef _WIN32
     SIO = new Serial("\\\\.\\COM13");
     if (!SIO->IsConnected()) {
         std::cout << "Could not connect to COM device!" << std::endl;
@@ -389,6 +396,7 @@ int main(int argc, char* argv[]) {
         sendSerialString(std::to_string(angle_b) + "b");
         sendSerialString(std::to_string(angle_c) + "c");
     }
+#endif
     
     // Some controls for functions in the program
     bool trackObjects = true;
@@ -401,7 +409,16 @@ int main(int argc, char* argv[]) {
 
     createTrackbars(); // Create the sliders for LAB filtering
     VideoCapture capture; // Video capture object for camera feed
-    capture.open(1); // Open capture object at location 0 (i.e. the first camera)
+
+    try 
+    {
+        capture.open(1); // Open capture object at location 0 (i.e. the first camera)
+        cvtColor(cameraFeed,LAB,COLOR_BGR2Lab);
+    }
+    catch (cv::Exception e)  
+    {
+        capture.open(0);
+    }
 
     // For some reason, with some cameras, these settings
     // have no effect on the actual image size
