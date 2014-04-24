@@ -7,12 +7,22 @@
 
 using namespace cv;
 
+// Global settings for whether the object is found
+bool OBJECT_FOUND = false;
 // Dimensions
 const int FRAME_WIDTH = 640;
 const int FRAME_HEIGHT = 480;
 const int MAX_NUM_OBJECTS = 50;
 const int MIN_OBJECT_AREA = 20*20;
 const int MAX_OBJECT_AREA = FRAME_HEIGHT*FRAME_WIDTH/1.5;
+// Counter for how many ms has passed
+int MS_PASSED = 0;
+// Tolerance limits
+const int RIG_MOVE = 100; // pixels from the screen edge 
+bool OBJECT_IN_BOX = false; 
+// Servo angles
+int SERVO_A = 90;
+int SERVO_B = 90;
 // initial min and max HSV filter values. these will be changed using trackbars.
 // Decent values for tracking a red object;
 // H: 0/249 S: 99/200 V: 62/122
@@ -136,6 +146,8 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
 
             }
 
+            OBJECT_FOUND = objectFound;
+
             // Let the user know an object has been found
             if (objectFound == true) {
                 putText(cameraFeed, "Tracking Object", Point(0,50), 2, 1, Scalar(0, 255, 0), 2);
@@ -150,6 +162,54 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
     }
 
 
+}
+
+string tolerance(int x, int y, Mat &cameraFeed) {
+    const int RIG_X_MIN = RIG_MOVE;
+    const int RIG_X_MAX = FRAME_WIDTH - RIG_MOVE;
+    const int RIG_Y_MIN = RIG_MOVE;
+    const int RIG_Y_MAX = FRAME_HEIGHT - RIG_MOVE;
+
+    bool inside_box = true;
+    string output = "";
+
+    // The X axis is governed by Servo A
+    // 10 = far left, 180 = far right
+
+    // if x is less than the minimum value, the rig needs to pan left
+    if (x < RIG_X_MIN) {
+        if (SERVO_A == 10) {
+            putText(cameraFeed, "Servo A is at max pan left", Point(0,100), 1, 2, Scalar(0,0,255), 2);
+        }
+        else {
+            SERVO_A = SERVO_A - 10;
+            output += intToString(SERVO_A) + "a";
+        }
+        inside_box = false;
+    }
+    // if x is greater than the maximum value, the rig needs to pan right
+    if (x > RIG_X_MAX) {
+        if (SERVO_A == 180) {
+            putText(cameraFeed, "Servo A is at max pan right", Point(0,100), 1, 2, Scalar(0,0,255), 2);
+        }
+        else {
+            SERVO_A = SERVO_A + 10;
+            output += intToString(SERVO_A) + "a";
+        }
+        inside_box = false;
+    }
+
+    // The Y axis is governed by Servo B
+    // 10/180 = horizontal, 90 = vertical
+
+    if (y < RIG_Y_MIN) {
+        
+    }
+
+    // Set the global parameter for drawing the squares
+    OBJECT_IN_BOX = inside_box;
+
+    return output;
 }
 
 int main(int argc, char* argv[]) {
@@ -193,6 +253,26 @@ int main(int argc, char* argv[]) {
             trackFilteredObject(x, y, threshold, cameraFeed);
         }
 
+        MS_PASSED+=10;        
+        // Servo adjustments
+        if (MS_PASSED == 100) {
+            if (OBJECT_FOUND) {
+                string output = tolerance(x, y, cameraFeed);
+                if (!output.empty()) {
+                    std::cout << "Servo output: " << tolerance(x, y, cameraFeed) << std::endl; 
+                }
+            }
+            MS_PASSED = 0;
+        }
+
+
+        // Set the appropriate color on the square on the screen indicating object tracking tolerance
+        if (OBJECT_IN_BOX) {
+            rectangle(cameraFeed, Point(RIG_MOVE ,RIG_MOVE), Point(FRAME_WIDTH-RIG_MOVE, FRAME_HEIGHT-RIG_MOVE), Scalar(0, 255, 0), 1);
+        }
+        else {
+            rectangle(cameraFeed, Point(RIG_MOVE ,RIG_MOVE), Point(FRAME_WIDTH-RIG_MOVE, FRAME_HEIGHT-RIG_MOVE), Scalar(0, 0, 255), 1);
+        }
 
         // Show frames
         imshow(windowThreshold, threshold);
@@ -205,11 +285,12 @@ int main(int argc, char* argv[]) {
 
         if (current != past) {
             std::vector<int> past { H_MIN, H_MAX, S_MIN, S_MAX, V_MIN, V_MAX };
-            std::cout << "min/max - H: " << H_MIN << "/" << H_MAX << " S: " << S_MIN << "/" << S_MAX << " V: " << V_MIN << "/" << V_MAX << '\n';
+            //std::cout << "min/max - H: " << H_MIN << "/" << H_MAX << " S: " << S_MIN << "/" << S_MAX << " V: " << V_MIN << "/" << V_MAX << '\n';
+            std::cout << "SERVO_A: " << SERVO_A << " - SERVO_B: " << SERVO_B << '\n';
         }
         */
 
-        waitKey(33);
+        waitKey(10);
 
     }
 

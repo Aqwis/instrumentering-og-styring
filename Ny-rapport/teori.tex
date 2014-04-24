@@ -1,6 +1,18 @@
 \subsection{Bildegjenkjenning}
 
-\subsection{Mekanisk Instalasjon}
+Gjenkjenning av objekter i bilder er en kompleks prosess. Ønsket i starten av dette prosjektet var å klare å gjenkjenne en bil i varierende terreng. Vi ble anbefalt å bruke OpenCV av Kongsberg, et open source softwarebibliotek som brukes til bearbeiding av bilder og video. 
+
+For å opparbeide en forståelse for hvordan man gjenkjenning av bilder må man gjøre gjenkjenningsprosessen stegvis. Uten noen tidligere erfaring på området begynte vi med en enkel gemometrisk figur i en klar farge, for eksempel en gul ball, mot en svart bakgrunn med god belysning. En svart bakgrunn mot en klar farge er enkel å skille fra hverandre, og objektet trer lett frem slik at det kan behandles og en posisjon kan fastsettes. 
+
+Dersom dette forsøket gjennomføres uten problemer kan man øke vanskelighetsgraden ved å utvide forsøket med en annen geometrisk figur, for eksempel en boks. En ny geometrisk figur medfører noen ekstra problemer. Forskjellen på en kule og en ball er at en kule er identisk uansett hvilken vinkel den betraktes fra, mens en boks vil variere ikke bare i fasong, men også kaste skygger, noe som fører til at fargen ikke er uniform over helt objektet. Utslaget fra dette er at gjenkjenningsalgoritmen må ta høyde for to nye faktorer; fargeulikhet og form.
+
+Utforskningen kan deretter forsette ved å bevege objektet rundt i bildet, noe som fremhever fargeulikheten og gjør at objektet kan ha en ny fasong hele tiden. På dette stadiet kan man sammenligne bildegjenkjenningen med prosessering av video, der man må gjøre slik gjenkjenning for hver gang man får et bidle fra videokameraet. Her kreves det også at gjenkjenningen foregår relativt hurtig. 
+
+Etter å ha testet kanskje andre genmetriske figurer på samme måte som med en boks, hvor hver nye flate eller ulikhet kan medføre nye problemer, kan man begynne å teste med noen réelle objekter. Vi forsøkte nå med en modell av en rød bil. Etter å ha finpusset gjenkjenningen med de andre geometriske modellene var ikke bilen noen stor utfordring. Vi prøvde dermed å fjerne det svarte bakteppet og teste mot diverse bakgrunner som vi kunne finne innendørs. Dette gjorde gjenkjenningen mye vanskeligere, da selv en klar rødfarge kan dukke opp delvis i objekter rundt i rommet. Når dette skjedde fikk vi mye støy inn i det behandlede bildet.
+
+Bildebehandling er et komplisert fagfelt, og gjenkjenning av kompliserte objekter krever lang erfaring og en mengde arbeid som er urealistisk å kunne få til i den tiden vi har tigjengelig.
+
+\subsection{Mekanisk Installasjon}
 Når flyet skal svinge er flyet avhenigig av å gjøre en roll.
 Dette fører til at buken til flyet ikke lengre peker rett ned mot bakken.
 Et kamera i en låst posisjon, vil i denne situasjonen kunne oppleve at
