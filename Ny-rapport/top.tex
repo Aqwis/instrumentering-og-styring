@@ -11,6 +11,8 @@
 \reversemarginpar
 \usepackage{listings}
 \usepackage{tocloft}
+\usepackage{float}
+\usepackage{hyperref}
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 %%% Shite for instr %%%%
@@ -23,7 +25,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Layout packages %%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage[]{graphicx}
+\usepackage{graphicx}
 \usepackage{fancyhdr} % Headers and footers
 \pagestyle{fancy} % All pages have headers and footers
 \fancyhead{} % Blank out the default header
@@ -67,14 +69,25 @@
 
 \thispagestyle{fancy} % All pages have headers and footer
 
+\pagenumbering{roman}
+\setcounter{page}{1}            % Start nummereringen på rett tall
 
 \maketitle
 \newpage
+
 \begin{abstract}
 \input{abstract.tex}
 \end{abstract}
 \newpage
+
 \tableofcontents
+\newpage
+
+\listoffigures
+\newpage
+
+\pagenumbering{arabic}
+\setcounter{page}{1}            % Start nummereringen på rett tall
 \pagestyle{plain} %Normal chapter 
 
 %%HINT KOMMENTER USB OG PULSTOG%%%
