@@ -67,7 +67,46 @@ Etter at vi hadde jobbet en del med systemet fant vi ut at det var tungvindt å 
 
 \subsection{Konstruksjon av riggen}
 
-Tekst her
+\subsubsection{Planlegging}
+Riggens oppgave er å endre synsretningen til kameraet etter kommando fra bildegjennkjenningen. Synsvinkelen kan modeleres som en vektor, hvor retningen til vektoren er variabel. Hvis vektoren, $\bf{v}$, settes inn i et koordinatsystem med utspring i origo og sfærisk koordinat brukes kan situasjonen beskrives som i figur [\ref{fig:spher}]
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.5]{img/RettVek.jpg}
+	\caption{Sfærisk koordinatsystem}
+	\label{fig:spher}
+\end{figure}
+
+hvor $\phi$ er vinkelen mellom x- og y-aksene og $\theta$ er vinkelen mellom z-aksen og xy-planet. Siden riggen skal festes til et fly og kameraet skal se ned på bakken vil det ikke være behov for vinkelretningen å bevege seg inn i den øvre halvdelen av koordinatsystemet. Det betyr at $\phi$ og $\theta$ kun trenger 180 graders utsving for å dekke hele den nedre halvdelen. Dermed kan hele dette omerådet dekkes ved bruk av to servomotorer med 180 graders utslag satt sammen som i figur [\ref{fig:IdeRigg}]. 
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.5]{img/BasicRiggIde.png}
+	\caption{Servostyring av $\theta$ og $\phi$}
+	\label{fig:IdeRigg}
+\end{figure}
+
+Hvor kameraet festes til servomotor 2 som beveger seg i retning $\theta$, mens servomotor 1 beverger servo2 og kamera i retning $\phi$. For å kunne trekke riggen inn i flyet ved landing ble det bestemt å feste riggen på en bom som kunne heves å senkes ved hjelp av en servomotor som vist i figur [\ref{fig:bom}].
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.5]{img/Motor3.png}
+	\caption{Servomotor 3 kan heve riggen inn i flykroppen.}
+	\label{fig:bom}
+\end{figure}
+
+
+\subsubsection{Sammenstilling}
+Riggen ble sammenstilt med målene på prototypeflyet til kongsberg som utgangspunkt [\ref{ref:powerpoint}]. Med disse målene ble det klart at servomotorene måtte være små i størrelse og HD-1600A ble ansett som servomotor som passet dette kravet. HS-50 fra Hitec er også en god kandidat, men med lavere dreimoment og betydelig høyere pris ble HD-1600A regnet som et bedre alternativ. For å bygge delene som binder servoene sammen ble det brukt 4mm MDF plater fordi disse er stive og relativt sterke slik at de ikke bøyes eller gir etter ved raske rotasjoner. Figur [\ref{fig:RiggTegn}] viser hvordan servomotorene er koblet sammen og figur [\ref{fig:RiggBilde}] viser et bilde av den ferdige prototype riggen. 
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.5]{img/RIGG_sattsammen.png}
+	\caption{Tegning av mekaniske rigg}
+	\label{fig:RiggTegn}
+\end{figure}
+
+ 
 
 \subsection{Styring av rigg + bildegjenkjenning}
 
