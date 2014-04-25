@@ -1,6 +1,6 @@
 \subsection{Bildegjenkjenning}
 
-Gjenkjenning av objekter i bilder er en kompleks prosess. Ønsket i starten av dette prosjektet var å klare å gjenkjenne en bil i varierende terreng. Vi ble anbefalt å bruke OpenCV av Kongsberg, et open source softwarebibliotek som brukes til bearbeiding av bilder og video. 
+Gjenkjenning av objekter i bilder er en kompleks prosess. Ønsket i starten av dette prosjektet var å klare å gjenkjenne en bil i varierende terreng. 
 
 For å opparbeide en forståelse for hvordan man gjenkjenning av bilder må man gjøre gjenkjenningsprosessen stegvis. Uten noen tidligere erfaring på området begynte vi med en enkel gemometrisk figur i en klar farge, for eksempel en gul ball, mot en svart bakgrunn med god belysning. En svart bakgrunn mot en klar farge er enkel å skille fra hverandre, og objektet trer lett frem slik at det kan behandles og en posisjon kan fastsettes. 
 
@@ -53,3 +53,50 @@ I dette prosjektet ble det brukt servomotorer av typen HD-1600A fra PowerHD [\re
 Et gyroskop er en innretning for å kunne måle vinkelposisjoner i forhold til en fast retning. Gyroskop brukes i mange sammenhenger og finnes i mange varianter, men i denne rapporten vil kun gyroskop av typen MEMS bli forklart. 
 
 Et MEMS (Micro Electro-Mechanical System) gyroskop er lite og lett og det integreres i pakker som likner pakningene til integrerte kretser. Dette gjør at MEMS gyroskop enkelt kan legges på et kretskort sammen med annen elektronikk. Det består av en stav, laget i mikro mekanikk, som vibrer når en spenning påføres. Når denne staven begynner å vibrere vil den vibrere i samme retning hele tiden, dette blir dermed referanse retningen.  Det er dermed mulig å detektere om pakken som inneholder denne staven orienteres i en annen retning en refranse retningen. 
+
+MPU-6050 fra Invensense, som ble brukt i dette prosjektet, er et 6 akset gyroskop og akselerometer som gir ut data digitalt. Det har en innebydg 10-bit ADC og bruker I2C buss for å kommunisere med andre enheter [\ref{ref:InSens}]. 
+
+
+\subsection{Hardware}
+For å kunne styre riggen er det nødvendig å ha en datamaskin ombord i flyet. Det finnes en rekke alternativer på dette området, men her vil Arduino og Raspberry Pi bli presantert. Hovedoppgaven til datamskinen er å få data fra kameraet, og orientere riggen etter disse. I systemspesifikasjonene til Kongsberg Gruppen blir presisert at det allerede finnes en ekstern GPU på Local Hawk som tar av seg bildebehandling, men man kan også tenke seg en løsning hvor all funksjonalitet er samlet på en chip. Datamaskinen må også kunne håndtere flere prosessorer uten at det blir konflikt mellom dem. 
+
+\subsubsection{Arduino}
+Arduino er en open-source utviklings platform basert på 8bit \textit{ATmega328}. Bruksområdet er hovedsakelig mindre prosjekter. Kortet har 14 digtale porter, samt 6 analoge in-porter. 6 av de digitale portene kan sende PWM-signaler. Servomotorer bruker disse signalene, og det er derfor mulig å koble opp til 6 servoer til Arduino. 
+\begin{figure}[h!]
+\centering
+\includegraphics[scale = 0.25]{img/arduinoBoard.jpg}
+\caption{Arduino Uno R3}
+\end{figure}
+Arduino programmeres i C++, og programmene overføres til kortet via USB. USB-porten på kortet kan også benyttes som COM-port slik at Arduinoen kan ta inn eksterne kommandoer. Disse kommandoen kan for eksempel være vinkler som servomotorer skal innstilles til. På mikrokontrolleren er det også innstallert en bootlader som inneholder en rekke bilbioteker som gjør at abstraksjonsnivået blir høyere enn generell AVR-programmering. Dataregistre trenger ikke å endres når man vil åpne opp for en funksjon fordi bilibioteket vil håndtere dette. 
+
+\subsubsection{Raspberry Pi}
+Raspberry Pi er en datamskin basert på 32-bit ARM-arkitektur. Linux er innstalert på et SD-kort, og all programmering skjer direkte på Raspberry PI. Den kan brukes ved å koble den til en monitor via HDMI, eller man kan koble den til internett via ethetnet-porten og bruke ssh fra en annen datamaskin. Kortet har 8 i/o pins, pinner som kan brukes til seriell kommunikasjon. Den er også utstyrt med 2 usb-porter.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale = 0.25]{img/pi.jpg}
+\caption{Arduino Uno R3}
+\end{figure}  
+
+\subsubsection{Sammenligning mellom Arduino og Raspberry Pi}
+\begin{table}[h!]
+\caption{Sammenligning mellom Arduino og Raspberry Pi}
+\centering
+\begin{tabular}{ |c |c |c| }
+	\hline
+   & Arduino & Raspberry Pi \\
+	\hline
+  CPU & 	ATmega328 & ARM1176JZF-S \\
+  Klokkehastighet & 16 MHz & 700 MHz \\
+	Minne & 32KB & 512MB\\ 
+	CPU-størrelse & 8bit & 32bit\\
+	i/o-porter & 14 & 8 \\
+	PWN-porter & 6 & 1 \\
+	USB-porter & 1 & 2 \\
+	Strømforbruk & 250mW & 3.5W\\
+	Pris & \$26 & \$35 \\
+	\hline  
+\end{tabular}
+\end{table}
+
+
