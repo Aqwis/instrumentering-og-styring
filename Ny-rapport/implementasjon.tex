@@ -97,7 +97,7 @@ Hvor kameraet festes til servomotor 2 som beveger seg i retning $\theta$, mens s
 
 
 \subsubsection{Sammenstilling}
-Riggen ble sammenstilt med målene på prototypeflyet til kongsberg som utgangspunkt [\ref{ref:powerpoint}]. Med disse målene ble det klart at servomotorene måtte være små i størrelse og HD-1600A ble ansett som servomotor som passet dette kravet. HS-50 fra Hitec er også en god kandidat, men med lavere dreimoment og betydelig høyere pris ble HD-1600A regnet som et bedre alternativ. For å bygge delene som binder servoene sammen ble det brukt 4mm MDF plater fordi disse er stive og relativt sterke slik at de ikke bøyes eller gir etter ved raske rotasjoner. Figur [\ref{fig:RiggTegn}] viser hvordan servomotorene er koblet sammen og figur [\ref{fig:RiggBilde}] viser et bilde av den ferdige prototype riggen. 
+Riggen ble sammenstilt med målene på prototypeflyet til kongsberg som utgangspunkt [\ref{ref:powerpoint}]. Med disse målene ble det klart at servomotorene måtte være små i størrelse og HD-1600A ble ansett som servomotor som passet dette formålet. HS-50 fra Hitec ble også vurdert, men med lavere dreimoment og betydelig høyere pris ble HD-1600A regnet som et bedre alternativ. For å bygge delene som binder servoene sammen ble det brukt 4mm MDF plater fordi disse er stive og relativt sterke slik at de ikke bøyes eller gir etter ved raske rotasjoner. Figur [\ref{fig:RiggTegn}] viser hvordan servomotorene er koblet sammen og figur [\ref{fig:RiggBilde}] viser et bilde av den ferdige prototype riggen. 
 
 \begin{figure}[h!]
 	\centering
@@ -106,7 +106,17 @@ Riggen ble sammenstilt med målene på prototypeflyet til kongsberg som utgangsp
 	\label{fig:RiggTegn}
 \end{figure}
 
- 
+Servomotorene styres av et PWM signal som genereres av en Arduino UNO. Biblioteket $Servo.lib$ brukes for å kontrollere servoene gjennom tre I/O porter. Servo 1 er koblet til port 9, servo 2 er koblet til port 6 og servo 3 er koblet til port 3. Siden hver servo, under last, kan trekke opp mot 250mA brukes en ekstern 6V batteripakke, med fire seriekoblede 1.5V AA batterier, koblet inn som vist i figur [\ref{fig:ArduSkjem}].
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.25]{img/KoblingsskjemaArduino.png}
+	\caption{Koblingsskjema for Arduino}
+	\label{fig:ArduSkjem}
+\end{figure}  
+
+Kommandoer sendes til Arduino via USB porten. Kommandoer kan sendes som $Char$ på formen "100a120b40c", hvor tallene foran "a" forteller posisjon til servo 1, tallene for "b" gir posisjon til servo 2 og tallene foran "c" posisjonenen til servo 3. Dermed vil strengen "100a120b40c" flytte servo 1 til 100 grader, servo 2 til 120 grader og servo 3 til 40 grader. De gyldige vinklene er fra 0 til 180 grader. Hvis "200a" sendes vil servo 1 stoppe på 180 grader. 
+
 
 \subsection{Styring av rigg + bildegjenkjenning}
 
