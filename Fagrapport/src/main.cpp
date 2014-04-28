@@ -1,21 +1,22 @@
 #include "main.h"
+#include "util.h"
 #ifdef _WIN32
 #include "com/com.h"
 #endif
 
 using namespace cv;
 
+// Thread handling
+std::atomic<bool> input_thread_done(false);
+
 // Serial I/O
 #ifdef _WIN32
 Serial *SIO;
 #endif
 
-// Thread handling
-std::atomic<bool> input_thread_done(false);
-
-bool use_feature_tracking = false;
 // Feature tracking
 Mat trainingDesc;
+bool use_feature_tracking = false;
 
 // Features on/off
 bool follow_object = false;
@@ -53,25 +54,6 @@ int y_location = 0;
 int angle_a = 90; // plane axis 1 (motor 1)
 int angle_b = 15; // rotation in the plane
 int angle_c = 10; // plane axis 2 (motor 2)
-
-struct ImageStruct {
-    Mat *cameraFeed;
-    Mat *LAB;
-    Mat *threshold;
-};
-
-struct DegreeStruct {
-    int horizontal;
-    int vertical;
-};
-
-double copysign(double x, double y) {
-    if (y >= 0) {
-        return abs(x);
-    } else {
-        return -abs(x);
-    }
-}
 
 void on_trackbar( int, void* ) {
     // This function gets called whenever a
@@ -297,8 +279,6 @@ void trainDetector(int x, int y, Mat &cameraFeed) {
         ROI_HEIGHT = FRAME_HEIGHT+y;
     }
 
-    Rect roi = Rect(x, y, ROI_WIDTH, ROI_HEIGHT);
-    roi_rgb = cameraFeed(roi);
     cvtColor(roi_rgb, roi, CV_BGR2GRAY);
 
     imshow(trainingImage, roi);
@@ -363,50 +343,6 @@ void onClick(int event, int x, int y, int flags, void *LAB_image_v) {
     }
 }
 
-void sendSerialString(std::string message) {
-#ifdef _WIN32
-    bool success = SIO->WriteData((char *) message.c_str(), message.length());
-    std::cout << "Wrote " << message << std::endl;
-#endif
-}
-
-int user_input(ImageStruct *image_struct) {
-	const std::string HELP_TEXT = "Commands:\n* help\n* center\n* exit\n* serial\n* distance\n* follow\n* usefeatures\n* usecolors\n";
-
-    std::string input = "";
-    while (true) {
-        std::cout << ">";
-        std::getline(std::cin, input);
-        int first_space_index = input.find_first_of(" ");
-        std::string command = input.substr(0, first_space_index);
-        std::string argument = input.substr(first_space_index+1);
-        // Interpret input
-        if (command == "exit") {
-            input_thread_done = true;
-            return 0;
-        } else if (command == "help" || command == "?") {
-            std::cout << HELP_TEXT;
-        } else if (command == "center") {
-            use_center_color(*(image_struct->LAB));
-        } else if (command == "serial") {
-            sendSerialString(argument);
-        } else if (command == "distance") {
-            print_object_degrees_from_center();
-        } else if (command == "follow") {
-            follow_object = true;
-        } else if (command == "usefeatures") {
-            use_feature_tracking = true;
-        } else if (command == "usecolors") {
-            use_feature_tracking = false;
-        } else {
-            std::cout << "Unrecognized input!\n";
-        }
-        input = "";
-    }
-    input_thread_done = true;
-    return 1;
-}
-
 void draw_center_crosshair(Mat *image) {
     int screenHeight;
     int screenWidth;
@@ -467,7 +403,7 @@ void center_camera() {
     angle_a = radius_abs;
 
     // Adjust angles a and b
-    sendSerialString(std::to_string(rotation_angle) + "b " + std::to_string(radius) + "a");
+    sendSerialString(SIO, std::to_string(rotation_angle) + "b " + std::to_string(radius) + "a");
 }
 
 void center_camera_simple() {
@@ -497,22 +433,67 @@ void center_camera_simple() {
     angle_a = angle_a + degr->horizontal;
     angle_c = angle_c + degr->vertical;
 
-    sendSerialString(std::to_string(angle_a) + "a " + std::to_string(angle_c) + "c");
+    sendSerialString(SIO, std::to_string(angle_a) + "a " + std::to_string(angle_c) + "c");
+}
+
+int user_input(ImageStruct *image_struct) {
+	const std::string HELP_TEXT = "Commands:\n* help\n* center\n* exit\n* serial\n* distance\n* follow\n* use [features, colors]\n";
+
+    std::string input = "";
+    while (true) {
+        std::cout << ">";
+        std::getline(std::cin, input);
+        int first_space_index = input.find_first_of(" ");
+        std::string command = input.substr(0, first_space_index);
+        std::string argument = input.substr(first_space_index+1);
+        // Interpret input
+        if (command == "exit") {
+            input_thread_done = true;
+            return 0;
+        } else if (command == "help" || command == "?") {
+            std::cout << HELP_TEXT;
+        } else if (command == "center") {
+            use_center_color(*(image_struct->LAB));
+        } else if (command == "serial") {
+			if (argument != "") {
+	            sendSerialString(SIO, argument);
+			} else {
+				std::cout << "No argument provided!\n";
+			}
+        } else if (command == "distance") {
+            print_object_degrees_from_center();
+        } else if (command == "follow") {
+            follow_object = true;
+        } else if (command == "use") {
+			if (argument == "features") {
+	            use_feature_tracking = true;
+			} else if (argument == "colors") {
+				use_feature_tracking = false;
+			} else {
+				std::cout << "No argument provided!\n";
+			}
+        } else {
+            std::cout << "Unrecognized input!\n";
+        }
+        input = "";
+    }
+    input_thread_done = true;
+    return 1;
 }
 
 int main(int argc, char* argv[]) {
 
     // Set up Serial I/O
-#ifdef _WIN32
+    #ifdef _WIN32
     SIO = new Serial("\\\\.\\COM13");
     if (!SIO->IsConnected()) {
         std::cout << "Could not connect to COM device!" << std::endl;
     } else {
-        sendSerialString(std::to_string(angle_a) + "a");
-        sendSerialString(std::to_string(angle_b) + "b");
-        sendSerialString(std::to_string(angle_c) + "c");
+        sendSerialString(SIO, std::to_string(angle_a) + "a");
+        sendSerialString(SIO, std::to_string(angle_b) + "b");
+        sendSerialString(SIO, std::to_string(angle_c) + "c");
     }
-#endif
+    #endif
     
     // Some controls for functions in the program
     bool trackObjects = true;

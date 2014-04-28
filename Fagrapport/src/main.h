@@ -1,9 +1,12 @@
+#ifndef _MAIN_H
+#define _MAIN_H
+
 #include <cstdlib>
+#include <atomic>
 #include <string>
 #include <sstream>
 #include <iostream>
 #include <thread>
-#include <atomic>
 #include <cmath>
 #include <cstdio>
 
@@ -12,12 +15,23 @@
 #include <opencv2/features2d/features2d.hpp>
 #include <opencv2/nonfree/features2d.hpp>
 
-struct ImageStruct;
-struct DegreeStruct;
-
-//// FUNCTION DECLARATIONS ////
+#include "util.h"
 
 const int PI = 3.14159265;
+extern std::atomic<bool> input_thread_done;
+
+struct ImageStruct {
+	cv::Mat *cameraFeed;
+	cv::Mat *LAB;
+	cv::Mat *threshold;
+};
+
+struct DegreeStruct {
+    int horizontal;
+    int vertical;
+};
+
+//// FUNCTION DECLARATIONS ////
 
 void on_trackbar( int, void* );
 void createTrackbars();
@@ -32,9 +46,6 @@ DegreeStruct *degrees_from_center(int x, int y);
 void print_object_degrees_from_center();
 
 //// DEFINED IN main.cpp ////
-
-// Thread handling
-extern std::atomic<bool> input_thread_done;
 
 // Dimensions
 extern const int FRAME_WIDTH;
@@ -57,3 +68,5 @@ extern const std::string windowLAB;
 extern const std::string windowThreshold;
 extern const std::string windowMorph;
 extern const std::string trackbarWindowName;
+
+#endif
