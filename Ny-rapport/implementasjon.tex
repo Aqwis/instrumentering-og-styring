@@ -68,7 +68,7 @@ Etter at vi hadde jobbet en del med systemet fant vi ut at det var tungvindt å 
 \subsection{Konstruksjon av riggen}
 
 \subsubsection{Planlegging}
-Riggens oppgave er å endre synsretningen til kameraet etter kommando fra bildegjennkjenningen. Synsvinkelen kan modeleres som en vektor, hvor retningen til vektoren er variabel. Hvis vektoren, $\bf{v}$, settes inn i et koordinatsystem med utspring i origo og sfærisk koordinat brukes kan situasjonen beskrives som i figur [\ref{fig:spher}]
+Riggens oppgave er å endre synsretningen til kameraet etter kommando fra bildegjennkjenningen. Synsvinkelen kan modeleres som en vektor, hvor retningen til vektoren er variabel. Hvis vektoren, $\bf{v}$, settes inn i et koordinatsystem med utspring i origo og sfæriske koordinater, kan situasjonen beskrives som i figur [\ref{fig:spher}]
 
 \begin{figure}[h!]
 	\centering
@@ -77,7 +77,7 @@ Riggens oppgave er å endre synsretningen til kameraet etter kommando fra bildeg
 	\label{fig:spher}
 \end{figure}
 
-hvor $\phi$ er vinkelen mellom x- og y-aksene og $\theta$ er vinkelen mellom z-aksen og xy-planet. Siden riggen skal festes til et fly og kameraet skal se ned på bakken vil det ikke være behov for vinkelretningen å bevege seg inn i den øvre halvdelen av koordinatsystemet. Det betyr at $\phi$ og $\theta$ kun trenger 180 graders utsving for å dekke hele den nedre halvdelen. Dermed kan hele dette omerådet dekkes ved bruk av to servomotorer med 180 graders utslag satt sammen som i figur [\ref{fig:IdeRigg}]. 
+hvor $\phi$ er vinkelen mellom x- og y-aksene og $\theta$ er vinkelen mellom z-aksen og xy-planet. Siden riggen skal festes til et fly og kameraet skal se ned på bakken vil det ikke være behov for vinkelretningen å bevege seg inn i den øvre halvdelen av koordinatsystemet. Det betyr at $\phi$ og $\theta$ kun trenger 180 graders utsving for å dekke hele den nedre halvdelen. Dermed kan hele dette omerådet dekkes ved hjelp av to servomotorer med 180 graders utslag satt sammen som i figur [\ref{fig:IdeRigg}]. 
 
 \begin{figure}[h!]
 	\centering
@@ -97,7 +97,7 @@ Hvor kameraet festes til servomotor 2 som beveger seg i retning $\theta$, mens s
 
 
 \subsubsection{Sammenstilling}
-Riggen ble sammenstilt med målene på prototypeflyet til kongsberg som utgangspunkt [\ref{ref:powerpoint}]. Med disse målene ble det klart at servomotorene måtte være små i størrelse og HD-1600A ble ansett som servomotor som passet dette formålet. HS-50 fra Hitec ble også vurdert, men med lavere dreimoment og betydelig høyere pris ble HD-1600A regnet som et bedre alternativ. For å bygge delene som binder servoene sammen ble det brukt 4mm MDF plater fordi disse er stive og relativt sterke slik at de ikke bøyes eller gir etter ved raske rotasjoner. Figur [\ref{fig:RiggTegn}] viser hvordan servomotorene er koblet sammen og figur [\ref{fig:RiggBilde}] viser et bilde av den ferdige prototype riggen. 
+Riggen ble sammenstilt med målene på prototypeflyet til kongsberg som utgangspunkt [\ref{ref:PowerPoint}]. Med disse målene ble det klart at servomotorene måtte være små i størrelse og valget falt på servomotoren HD-1600A. Med sine beskjedene fysiske mål på 21.3x11.6x22.8 mm og en vekt på 6g [\ref{ref:PowerHD}], ble HD-1600A ansett som perfekt for dette formålet. HS-50 fra Hitec ble også vurdert, men med lavere dreimoment og betydelig høyere pris ble HD-1600A regnet som et bedre alternativ. For å bygge delene som skulle koble servoene sammen ble det brukt 6mm MDF plater fordi disse er stive og relativt sterke. Dette fører til at de ikke bøyes eller gir etter ved raske rotasjoner. Figur [\ref{fig:RiggTegn}] viser hvordan servomotorene er koblet sammen og figur [\ref{fig:RiggBilde}] viser et bilde av den ferdige prototype riggen. 
 
 \begin{figure}[h!]
 	\centering
@@ -106,7 +106,7 @@ Riggen ble sammenstilt med målene på prototypeflyet til kongsberg som utgangsp
 	\label{fig:RiggTegn}
 \end{figure}
 
-Servomotorene styres av et PWM signal som genereres av en Arduino UNO. Biblioteket $Servo.lib$ brukes for å kontrollere servoene gjennom tre I/O porter. Servo 1 er koblet til port 9, servo 2 er koblet til port 6 og servo 3 er koblet til port 3. Siden hver servo, under last, kan trekke opp mot 250mA brukes en ekstern 6V batteripakke, med fire seriekoblede 1.5V AA batterier, koblet inn som vist i figur [\ref{fig:ArduSkjem}].
+Servomotorene styres av et PWM signal som genereres av en Arduino UNO. Biblioteket $Servo.lib$ brukes for å kontrollere servoene gjennom tre I/O porter. Servo 1 er koblet til port 9, servo 2 er koblet til port 6 og servo 3 er koblet til port 3. Siden det viste seg ved målinger at hver servo, under last, kan trekke opp mot 250mA, ble det valgt å bruke en ekstern 6V batteripakke, med fire seriekoblede 1.5V AA batterier, koblet inn som vist i figur [\ref{fig:ArduSkjem}]. Dette isteden for å la servoene trekke forsyningsstrøm rett fra 5V pinnen til arduinokortet. Arduinokortet bruker strøm fra USB og denne kan ikke levere mer enn 500mA ,på grunn av innebygget sikring i Arduino. Dermed kan ikke Arduinokortet levere de ca. 750mA som trengs dersom alle servoene går med stor last samtidig. 
 
 \begin{figure}[h!]
 	\centering
@@ -115,7 +115,7 @@ Servomotorene styres av et PWM signal som genereres av en Arduino UNO. Bibliotek
 	\label{fig:ArduSkjem}
 \end{figure}  
 
-Kommandoer sendes til Arduino via USB porten. Kommandoer kan sendes som $Char$ på formen "100a120b40c", hvor tallene foran "a" forteller posisjon til servo 1, tallene for "b" gir posisjon til servo 2 og tallene foran "c" posisjonenen til servo 3. Dermed vil strengen "100a120b40c" flytte servo 1 til 100 grader, servo 2 til 120 grader og servo 3 til 40 grader. De gyldige vinklene er fra 0 til 180 grader. Hvis "200a" sendes vil servo 1 stoppe på 180 grader. 
+Kommandoer sendes til Arduino via USB porten. Kommandoer kan sendes som $Char$ på formen ``100a120b40c'', hvor tallene foran``c'' forteller posisjon til servo 1, tallene for ``b'' gir posisjon til servo 2 og tallene foran ``c'' posisjonenen til servo 3. Dermed vil strengen ``100a120b40c'' flytte servo 1 til 100 grader, servo 2 til 120 grader og servo 3 til 40 grader. De gyldige vinklene er fra 0 til 180 grader. Hvis ``200'' sendes vil servo 1 stoppe på 180 grader. 
 
 
 \subsection{Styring av rigg + bildegjenkjenning}
