@@ -9,6 +9,10 @@ Serial *SIO;
 // Thread handling
 std::atomic<bool> input_thread_done(false);
 
+bool use_feature_tracking = false;
+// Feature tracking
+Mat trainingDesc;
+
 // Features on/off
 bool follow_object = false;
 
@@ -33,6 +37,7 @@ const string windowLAB = "LAB Image";
 const string windowThreshold = "Threshold Image";
 const string windowMorph = "After Morphological Operations";
 const string trackbarWindowName = "Trackbars";
+const string trainingImage;
 
 // Video data
 Mat cameraFeed; // Matrix for the camera feed images
@@ -193,6 +198,111 @@ bool trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
     return objectFound;
 }
 
+std::tuple<Mat, std::vector<KeyPoint>> getFeatures(Mat &cameraFeed) {
+    Mat desc;
+    std::vector<KeyPoint> kp;
+
+    SurfDescriptorExtractor extractor;
+    SurfFeatureDetector det(2000);
+
+    det.detect(cameraFeed, kp);
+    extractor.compute(cameraFeed, kp, desc);
+
+    return std::make_tuple(desc, kp);
+}
+
+bool featureMatch(Mat &cameraFeed) {
+    Mat bwCameraFeed;
+    cvtColor(cameraFeed, bwCameraFeed, CV_BGR2GRAY);
+
+    auto featureTuple = getFeatures(bwCameraFeed);
+    Mat desc = std::get<0>(featureTuple);
+    std::vector<KeyPoint> kp = std::get<1>(featureTuple);
+
+    //FlannBasedMatcher matcher;
+    BFMatcher matcher;
+    /*std::vector<DMatch> matches;*/
+    std::vector<std::vector<DMatch>> matches;
+    std::vector<DMatch> good_matches;
+
+    /*double max_dist = 0;
+    double min_dist = 100;*/
+
+    if (!desc.empty() && !trainingDesc.empty()) {
+        //matcher.match(desc, trainingDesc, matches);
+        matcher.knnMatch(desc, trainingDesc, matches, 2);
+    } else {
+        putText(cameraFeed, "COULD NOT FIND FEATURES IN AT LEAST ONE IMAGE", Point(0,50), 1, 2, Scalar(0,0,255), 2);
+        return false;
+    }
+
+    /*for (int i = 0; i < desc.rows; i++) {
+        double dist = matches[i].distance;
+        if (dist < min_dist) {
+            min_dist = dist;
+        }
+        if (dist > max_dist) {
+            max_dist = dist;
+        }
+    }*/
+
+    std::cout << "Matches: " << matches.size() << std::endl;
+
+    for (int i = 0; i < desc.rows; i++) {
+        float ratio = 0.8;
+        /*
+        if (matches[i].distance <= max(2*min_dist, 0.02)) {
+            good_matches.push_back(matches[i]);
+        }
+        */
+        if (matches[i][0].distance < ratio*matches[i][1].distance) {
+            good_matches.push_back(matches[i][0]);
+        }
+    }
+
+    std::cout << "Good matches: " << good_matches.size() << std::endl;
+
+    int x_sum = 0;
+    int y_sum = 0;
+    for (int i = 0; i < good_matches.size(); i++) {
+        Point2f p = kp[good_matches[i].queryIdx].pt;
+        drawObject(p.x, p.y, cameraFeed);
+        x_sum += p.x;
+        y_sum += p.y;
+    }
+    if (good_matches.size() > 0) {
+        x_location = x_sum/good_matches.size();
+        y_location = y_sum/good_matches.size();
+    }
+
+    //drawObject(x_location, y_location, cameraFeed);
+
+    return true;
+}
+
+void trainDetector(int x, int y, Mat &cameraFeed) {
+    Mat roi, roi_rgb, desc;
+
+    int ROI_HEIGHT = 120; // px
+    int ROI_WIDTH = 120; // px
+
+    if (x+ROI_WIDTH > FRAME_WIDTH) {
+        ROI_WIDTH = FRAME_WIDTH-x;
+    }
+    if (y+ROI_HEIGHT > FRAME_HEIGHT) {
+        ROI_HEIGHT = FRAME_HEIGHT+y;
+    }
+
+    Rect roi = Rect(x, y, ROI_WIDTH, ROI_HEIGHT);
+    roi_rgb = cameraFeed(roi);
+    cvtColor(roi_rgb, roi, CV_BGR2GRAY);
+
+    imshow(trainingImage, roi);
+
+    auto featureTuple = getFeatures(roi);
+    trainingDesc = std::get<0>(featureTuple);
+}
+
 double use_center_color(Mat LAB_image) {
     const int l_margin = 50;
     const int a_margin = 10;
@@ -244,6 +354,8 @@ void onClick(int event, int x, int y, int flags, void *LAB_image_v) {
 
         setTrackbarPos( "B_MIN", trackbarWindowName, b - b_margin );
         setTrackbarPos( "B_MAX", trackbarWindowName, b + b_margin );
+
+        trainDetector(x, y, cameraFeed);
     }
 }
 
@@ -253,7 +365,7 @@ void sendSerialString(std::string message) {
 }
 
 int user_input(ImageStruct *image_struct) {
-	const std::string HELP_TEXT = "Commands:\n* help\n* center\n* exit\n* serial\n* distance\n* follow\n";
+	const std::string HELP_TEXT = "Commands:\n* help\n* center\n* exit\n* serial\n* distance\n* follow\n* usefeatures\n* usecolors\n";
 
     std::string input = "";
     while (true) {
@@ -276,6 +388,10 @@ int user_input(ImageStruct *image_struct) {
             print_object_degrees_from_center();
         } else if (command == "follow") {
             follow_object = true;
+        } else if (command == "usefeatures") {
+            use_feature_tracking = true;
+        } else if (command == "usecolors") {
+            use_feature_tracking = false;
         } else {
             std::cout << "Unrecognized input!\n";
         }
@@ -401,7 +517,7 @@ int main(int argc, char* argv[]) {
 
     createTrackbars(); // Create the sliders for LAB filtering
     VideoCapture capture; // Video capture object for camera feed
-    capture.open(1); // Open capture object at location 0 (i.e. the first camera)
+    capture.open(0); // Open capture object at location 0 (i.e. the first camera)
 
     // For some reason, with some cameras, these settings
     // have no effect on the actual image size
@@ -434,7 +550,11 @@ int main(int argc, char* argv[]) {
 
         // Track objects
         if (trackObjects) {
-            objectFound = trackFilteredObject(x_location, y_location, threshold, cameraFeed);
+            if (use_feature_tracking) {
+                objectFound = featureMatch(cameraFeed);
+            } else {
+                objectFound = trackFilteredObject(x_location, y_location, threshold, cameraFeed);
+            }
         }
 
         // Center camera on tracked object

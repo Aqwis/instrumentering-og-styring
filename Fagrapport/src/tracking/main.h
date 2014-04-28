@@ -9,6 +9,8 @@
 
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
+#include <opencv2/features2d/features2d.hpp>
+#include <opencv2/nonfree/features2d.hpp>
 
 struct ImageStruct;
 struct DegreeStruct;
