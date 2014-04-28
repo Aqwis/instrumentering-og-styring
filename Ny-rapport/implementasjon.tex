@@ -8,7 +8,7 @@ Til slutt valgte vi å gå for en løsning hvor vi ikke brukte Matlab. Dette fø
 
 \subsubsection{Første steg}
 
-Den første implementasjonen av gjenkjenningen baserte seg på å konvertere en frame av videoen fra det normale fargespekteret RGB, se figur [\ref{fig:firstiterationrgb}], til et fargespektrum som het HSV\footnote{Hue, Saturation and Value} som vist i figur [\ref{fig:firstiterationhsv}].
+Den første implementasjonen av gjenkjenningen baserte seg på å konvertere en frame av videoen fra det normale fargespekteret RGB\footnote{Red, Green, Blue}, se figur [\ref{fig:firstiterationrgb}], til et fargespektrum som heter HSV\footnote{Hue, Saturation and Value} som vist i figur [\ref{fig:firstiterationhsv}].
 
 \begin{figure}[h!]
 	\centering
@@ -104,6 +104,13 @@ Riggen ble sammenstilt med målene på prototypeflyet til kongsberg som utgangsp
 	\includegraphics[scale=0.5]{img/RIGG_sattsammen.png}
 	\caption{Tegning av mekaniske rigg}
 	\label{fig:RiggTegn}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.25]{img/Rigg_Bilde.jpg}
+	\caption{Prototyperigg}
+	\label{fig:RiggBilde}
 \end{figure}
 
 Servomotorene styres av et PWM signal som genereres av en Arduino UNO. Biblioteket $Servo.lib$ brukes for å kontrollere servoene gjennom tre I/O porter. Servo 1 er koblet til port 9, servo 2 er koblet til port 6 og servo 3 er koblet til port 3. Siden det viste seg ved målinger at hver servo, under last, kan trekke opp mot 250mA, ble det valgt å bruke en ekstern 6V batteripakke, med fire seriekoblede 1.5V AA batterier, koblet inn som vist i figur [\ref{fig:ArduSkjem}]. Dette isteden for å la servoene trekke forsyningsstrøm rett fra 5V pinnen til arduinokortet. Arduinokortet bruker strøm fra USB og denne kan ikke levere mer enn 500mA ,på grunn av innebygget sikring i Arduino. Dermed kan ikke Arduinokortet levere de ca. 750mA som trengs dersom alle servoene går med stor last samtidig. 
