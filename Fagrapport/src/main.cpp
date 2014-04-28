@@ -1,6 +1,6 @@
 #include "main.h"
 #ifdef _WIN32
-#include "com.h"
+#include "com/com.h"
 #endif
 
 using namespace cv;
