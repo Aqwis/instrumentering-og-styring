@@ -1,7 +1,0 @@
-cmake_minimum_required(VERSION 2.8)
-list( APPEND CMAKE_CXX_FLAGS "-std=gnu++11 ${CMAKE_CXX_FLAGS} -g -ftest-coverage -fprofile-arcs")
-project( DisplayImage )
-find_package( OpenCV REQUIRED )
-include_directories( ${OpenCV_INCLUDE_DIRS} )
-add_executable( main main.cpp com.cpp )
-target_link_libraries( main ${OpenCV_LIBS} )
