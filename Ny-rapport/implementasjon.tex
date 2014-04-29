@@ -2,11 +2,11 @@
 
 \subsection{Bildegjenkjenning}
 
-Vi ble anbefalt å bruke OpenCV av Kongsberg, et open source softwarebibliotek som brukes til bearbeiding av bilder og video. I tillegg til bruken av OpenCV ble vi oppfordret til å bruke Matlab for å programmere. Noen på gruppa hadde erfaringer i Matlab fra før, så vi betraktet ikke dette som noe stort problem.
+Kongsberg anbefalte oss å bruke OpenCV, et åpen kildekode programvarebibliotek som brukes til bearbeiding av bilder og video. I tillegg ble vi oppfordret til å implementere programvaren i programmeringsspråket Matlab, siden Kongsberg internt bruker Matlab til prototyping. Flere på gruppa hadde erfaring med Matlab fra før, og vi så på dette som en god avgjørelse.
 
-For å bruke Matlab og OpenCV sammen trengte vi et annet open source prosjekt som het ``mexopencv''. Vi forsøkte en stund å få dette til å fungere, men vi hadde problemer med å sette opp C++, OpenCV og Matlab på en slik måte at mexopencv kunne bruke alle disse ressursene. Noe som førte til ekstra problemer var at de som hadde ansvaret for å begynne med programmeringen satt på to ulike operativsystemer og dermed opplevde forskjellige feilmeldinger underveis. 
+Da vi begynte prosjektet var siste stabile utgivelse av OpenCV versjon 2.4.8, som ikke støttet programmering i Matlab. For å bruke Matlab og OpenCV sammen hadde vi da to alternativer. Versjon 3.0 av OpenCV, som var under utvikling, støtter Matlab. Dessuten fantes det et tredjeparts kompatibilitetslag, \emph{mexopencv}, som gjorde det mulig å programmere med OpenCV i Matlab. Vi forsøkte begge muligheter. \emph{mexopencv} var vanskelig både å kompilere på de ulike kombinasjonene av operativsystem og Matlab-versjon de ulike gruppemedlemmene satt med. Etter å ha kompilert det fikk vi også problemer med at enkelte av grafikkortene vi brukte ikke var støttet av \emph{mexopencv}. Utviklingsversjonen av OpenCV, på sin side, fikk vi overhodet ikke kompilert. Antakelig skyldes dette at kodebasen for denne versjonen var under rask utvikling og dermed ustabil.
 
-Til slutt valgte vi å gå for en løsning hvor vi ikke brukte Matlab. Dette førte til at vi raskt kunne komme igang med utviklingen av bildegjenkjenning og hadde en enkel løsning oppe i løpet av noen dager.
+Etter ikke å ha fått Matlab og OpenCV til å fungere sammen, valgte vi å gå for en løsning der vi i stedet for Matlab implementerte programvaren for bildegjenkjenning i C++. Vi informerte Kongsberg om dette, og de var enige i at det var en god løsning. Etter å ha skiftet språk til C++, kom vi raskt igang med utviklingen og innen få dager hadde vi utviklet en enkel løsning for bildegjenkjenning.
 
 \subsubsection{Første steg}
 
