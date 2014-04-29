@@ -14,14 +14,14 @@ Den første implementasjonen av gjenkjenningen baserte seg på å konvertere en 
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.45]{img/first-rgb.jpg}
+	\includegraphics[scale=0.47]{img/first-rgb.jpg}
 	\caption[Første iterasjon RGB bilde]{Bilde fra video i vanlig RGB}
 	\label{fig:firstiterationrgb}
 \end{figure}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.45]{img/first-hsv.jpg}
+	\includegraphics[scale=0.47]{img/first-hsv.jpg}
 	\caption[Første iterasjon HSV bilde]{Bilde fra video oversatt til HSV}
 	\label{fig:firstiterationhsv}
 \end{figure}
@@ -31,7 +31,6 @@ HSV baserer seg ikke på blandingen av farger, men bruker nyanser, metningsgrad 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.45]{img/sliders.jpg}
-	\caption[First iteration HSV image]{Frame from video cast to HSV}
 	\caption{Slidere for å velge HSV verdier}
 	\label{fig:sliders}
 \end{figure}
@@ -39,7 +38,7 @@ HSV baserer seg ikke på blandingen av farger, men bruker nyanser, metningsgrad 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.45]{img/first-binary.jpg}
-	\caption[Første iterasjon binært bilde]{Resultatet av filtrering av et HSV bilde før smoothing}
+	\caption[Første iterasjon binært bilde]{Resultatet av filtrering av et bilde før smoothing}
 	\label{fig:firstiterationbinary}
 \end{figure}
 
@@ -47,12 +46,12 @@ HSV baserer seg ikke på blandingen av farger, men bruker nyanser, metningsgrad 
 
 I det første steget klarte vi å fange opp et objekt, men som man kan se i figur [\ref{fig:firstiterationbinary}] er det mye støy i bildet. Vi implementerte derfor en smoothingalgoritme som gikk over det binære bildet og fjernet mindre ansamlinger med punkter og fremhevet de som var større. Dette førte til at vi fikk et renere bilde, med færre og tydeligere objekter. Dette gjorde det betydelig lettere å fange opp de enkelte objektene i bildet og finne det største av dem.
 
-Resultatet kan man se i figur [\ref{fig:seconditerationbinary}] 
+Resultatet av smoothing kan man se i figur [\ref{fig:seconditerationbinary}] 
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.45]{img/second-binary.jpg}
-	\caption[Andre iterasjon binært bilde]{Resultatet av filtrering av et HSV bilde etter smoothing}
+	\caption[Andre iterasjon binært bilde]{Resultatet av filtrering av et bilde etter smoothing}
 	\label{fig:seconditerationbinary}
 \end{figure}
 
