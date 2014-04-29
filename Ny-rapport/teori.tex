@@ -18,13 +18,14 @@ Når flyet skal svinge er det avhengig av å gjøre en roll. Dette fører til at
 For å beskytte kameraet ved buklanding ble det bestemt at det skal kunne trekkes inn i flyet. Siden vi ikke fikk informasjon fra Kongsberg om målene på fullskala fly, ble det bestemt å følge målene på modellen i presentasjonen vi fikk tilsendt. I følge presentasjonen er det maksimalt et rom på 10.5 cm i høyden og 7.2 cm i bredden til rådighet inne i flyet. Kravet for riggen ble dermed at den ikke kunne oppta større plass i bredde og høyde enn dette, med kameraet festet på. Det ble antatt at det for modellens skyld kunne brukes et lite kamera, på størrelse med et mobilkamera. Den andre grunnen til å bygge en liten rigg er for å hindre at vekten blir for høy. Kameraet måtte ha mulighet til å bevege synsretningen både horisontalt og vertikalt, noe som krever to servomotorer. I tillegg trengs en ekstra servomotor for å kunne trekke kameraet inn i flyet ved landing.
 
 \subsubsection{Servomotor}
-\textcolor{red}{Skrive en liten sammenlikning mellom digitale og analoge servoer}
 
 En servomotor er en innretning som kan rotere en arm til en bestemt vinkelposisjon og holde posisjonen. Det finnes mange forskjellige servomotorer, med ulik nøyaktighet, kraft, pris, størrelse, vekt, kontrollsignaler, motortyper og kildespenning. Enkle servomotorer kan bestå av enkle DC-motorer med børster og kan bare justere posisjonen sin mellom $-90$ og $+90$ grader fra et senter, mens avanserte servoer kan ha børsteløse motorer og ha mulighet til full rotasjon, med kontrollbar vinkelhastighet og tilbakemelding av posisjon og fart.
 
-Servomotorer er bygget opp av en elektrisk motor, en vinkelsensor og en kontrollenhet. Et kommandosignal, som representerer en vinkelposisjon, påtrykkes inngangen. Dette fører til at motoren roterer i retning av denne posisjonen. Vinkelsensoren registrer hele tiden posisjonen til armen og kontrollenheten sammenlikner denne med den ønskede posisjonen. Motoren stopper når den ønskede vinkelposisjonen er nådd. Hvis armen skyves bort fra denne posisjonen vil kontrollenheten registere at den nåværende vinkelen avviker fra ønsket vinkel og motoren vil flytte armen tilbake i rett posisjon.
+Servomotorer er bygget opp av en elektrisk motor, en vinkelsensor og en kontrollenhet. Et kommandosignal, som representerer en vinkelposisjon, påtrykkes inngangen. Dette fører til at motoren roterer i retning av denne posisjonen. Vinkelsensoren registrer hele tiden posisjonen til armen og kontrollenheten sammenlikner denne med den ønskede posisjonen. Motoren stopper når den ønskede vinkelposisjonen er nådd. Hvis armen skyves bort fra denne posisjonen vil kontrollenheten registere at den nåværende vinkelen avviker fra ønsket vinkel og motoren vil flytte armen tilbake til rett posisjon. 
 
 I dette prosjektet ble det brukt servomotorer av typen HD-1600A fra PowerHD \ref{ref:PowerHD}. Dette er en enkel analog servomotor, beregnet for radiostyrte modellfly, som består av en DC-motor, et potensiometer som vinkelsensor og en kontrollenhet av typen YT2462B. For å kontrollere denne typen servomotor brukes puls-bredde-modulasjon (PWM). I PWM sendes firkantpulser hvor pulslengden varieres, mens grunnfrekvensen holdes konstant. Informasjonen ligger dermed i pulsens lengde. For styring av analoge RC-servomotorer som HD-1600A er det vanlig å bruke en grunnfrekvens på 50Hz og pulsbredde på $1$ ms til $2$ ms \ref{ref:SerCtrl}. Figur \ref{fig:PWM} viser hvordan servovinkelen avhenger av pulsbredden.
+
+Det finnes også digitale servoer ment for radiostyrte fly. Disse inneholder de samme sentrale enhetene som analoge servoer som motor, vinkelsensor og kontrollenhet, men de har også en mikroprosessor som analyserer inngangssignalet. Dette fører til at signalet kan økes fra 50Hz til over 300Hz, noe som igjen fører til at vinkelposisjonen kan oppdateres raskere. Fordelen med å oppdatere posisjonen hyppigere er raskere responstid. I situasjonen hvor en servo skal holde en vinkelposisjon statisk og kraften som påføres armen utenfra er betydelig, vil en analog servo bruke 20ms på å flytte armen tilbake i posisjon når kraften dytter den. Mens en digital servo som har raskere oppdaterings frekvens vil kun bruke ca. 3ms. Dette betyr at den digitale servoens arm får mindre tid til å ``sige'', slik at den ikke vil gå like langt ut av posisjon som den analoge. De negative sidene med digitale servoer er høyre pris og høyere effektforbruk.    
 
 \begin{figure}[H]
 \centering
@@ -65,9 +66,6 @@ Raspberry Pi er en minidatamaskin basert på en 32-bits ARM-arkitektur. Linux er
 \end{figure}  
 
 \subsubsection{Sammenligning mellom Arduino og Raspberry Pi}
-
-\textcolor{red}{Kommentere forskjellene, forklare hvorfor vi brukte Arduino og referere til tabell}
-
 En sammenlikning mellom Arduino Uno og Raspberry Pi model B er gitt i tabell [\ref{tab:ArdRas}]
 
 \begin{table}[h!]
