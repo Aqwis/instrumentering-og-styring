@@ -95,3 +95,11 @@ Med tanke på spesifikasjoner er Raspberry Pi mye kraftigere enn Arduino Uno med
 \colorbox{yellow}{OBS!:} Skal vi si noe om at vi benytter oss av USB? Dette er noe Sven ville vi skulle poengtere. Hva er fordeler og ulemper.
 
 Som nevnt kan det sendes kommandoer til Arduino kortet serielt gjennom en serieport som også kalles en UART. Det finnes to slike serieporter på Arduino-kortet og disse er USB-porten og I/O-port 0 (RX) og port 1 (TX). I dette prosjektet vil USB-porten bli benyttet for å kommunisere mellom en datamaskin og Arduinokortet. Fordelen med å bruke USB porten er at det er enkelt, at alle nye datamaskiner har en USB-port og det er ikke nødvendig å lage en egen protokoll med \emph{header}, \emph{error correction} osv. En ulempe er at denne protokollen er standard slik at den ikke kan endres for å passe kun dette prosjektet og på denne måten minke mengde \emph{overhead}.
+
+\subsection{Software}
+
+\subsubsection{OpenCV}
+OpenCV er et softwarebibliotek med åpen kildekode som brukes for 
+
+
+
