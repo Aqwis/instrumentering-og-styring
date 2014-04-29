@@ -10,7 +10,7 @@ Etter å ikke ha fått Matlab og OpenCV til å fungere sammen, valgte vi å gå 
 
 \subsubsection{Innhenting av bilde og konvertering}
 
-Fra kamera fikk vi et bilde i fargespekteret RGB\footnote{Red, Green, Blue}, som er lite egnet til å separere ulike farger fra hverandre. Vi valgte dermed å heller benytte fargespekteret HSV\footnote{Hue, Saturation, Value}, som er hyppig brukt innen bildeprosessering. Den første implementasjonen av gjenkjenningen baserte seg på å konvertere hvert bilde i videoen fra RGB, se figur [\ref{fig:firstiterationrgb}], til HSV, som vist i figur [\ref{fig:firstiterationhsv}].
+Fra kamera fikk vi et bilde i fargespekteret RGB\footnote{Red, Green, Blue}, som er lite egnet til å separere ulike farger fra hverandre. Vi valgte dermed å heller benytte fargespekteret HSV\footnote{Hue, Saturation, Value}, som er hyppig brukt innen bildeprosessering. Den første implementasjonen av gjenkjenningen baserte seg på å konvertere hvert bilde i videoen fra RGB, som vist i figur [\ref{fig:firstiterationrgb}], til HSV, som vist i figur [\ref{fig:firstiterationhsv}].
 
 \begin{figure}[h!]
 	\centering
@@ -49,7 +49,7 @@ Nå som vi hadde et binært bilde, var det neste steget å velge ut ett objekt f
 
 \subsubsection{Smoothing}
 
-I det første steget klarte vi å fange opp et objekt, men som man kan se i figur [\ref{fig:firstiterationbinary}] er det mye støy i bildet. Vi implementerte derfor en smoothingalgoritme som gikk over det binære bildet og fjernet mindre ansamlinger med punkter og fremhevet de som var større. Dette førte til at vi fikk et renere bilde, med færre og tydeligere objekter. Resultatet av smoothingen kan man se i figur [\ref{fig:seconditerationbinary}].
+I det første steget klarte vi å fange opp et objekt, men som presentert i figur [\ref{fig:firstiterationbinary}] er det mye støy i bildet. Vi implementerte derfor en smoothingalgoritme som gikk over det binære bildet og fjernet mindre ansamlinger med punkter og fremhevet de som var større. Dette førte til at vi fikk et renere bilde, med færre og tydeligere objekter. Resultatet av smoothingen er presentert i figur [\ref{fig:seconditerationbinary}].
 
 \begin{figure}[h!]
 	\centering
