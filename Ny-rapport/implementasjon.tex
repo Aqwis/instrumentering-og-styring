@@ -10,7 +10,7 @@ Etter å ikke ha fått Matlab og OpenCV til å fungere sammen, valgte vi å gå 
 
 \subsubsection{Innhenting av bilde og konvertering}
 
-Fra kamera fikk vi et bilde i fargespekteret RGB\footnote{Red, Green, Blue}, som er lite egnet til å separere ulike farger fra hverandre. Vi valgte dermed å heller benytte fargespekteret HSV\footnote{Hue, Saturation, Value}, som er hyppig brukt innen bildeprosessering. Den første implementasjonen av gjenkjenningen baserte seg på å konvertere hvert bilde i videoen fra RGB, se figur [\ref{fig:firstiterationrgb}], til HSV, som vist i figur [\ref{fig:firstiterationhsv}].
+Fra kamera fikk vi et bilde i fargespekteret RGB\footnote{Red, Green, Blue}, som er lite egnet til å separere ulike farger fra hverandre. Vi valgte dermed å heller benytte fargespekteret HSV\footnote{Hue, Saturation, Value}, som er hyppig brukt innen bildeprosessering. Den første implementasjonen av gjenkjenningen baserte seg på å konvertere hvert bilde i videoen fra RGB, som vist i figur [\ref{fig:firstiterationrgb}], til HSV, som vist i figur [\ref{fig:firstiterationhsv}].
 
 \begin{figure}[h!]
 	\centering
@@ -49,7 +49,7 @@ Nå som vi hadde et binært bilde, var det neste steget å velge ut ett objekt f
 
 \subsubsection{Smoothing}
 
-I det første steget klarte vi å fange opp et objekt, men som man kan se i figur [\ref{fig:firstiterationbinary}] er det mye støy i bildet. Vi implementerte derfor en smoothingalgoritme som gikk over det binære bildet og fjernet mindre ansamlinger med punkter og fremhevet de som var større. Dette førte til at vi fikk et renere bilde, med færre og tydeligere objekter. Resultatet av smoothingen kan man se i figur [\ref{fig:seconditerationbinary}].
+I det første steget klarte vi å fange opp et objekt, men som presentert i figur [\ref{fig:firstiterationbinary}] er det mye støy i bildet. Vi implementerte derfor en smoothingalgoritme som gikk over det binære bildet og fjernet mindre ansamlinger med punkter og fremhevet de som var større. Dette førte til at vi fikk et renere bilde, med færre og tydeligere objekter. Resultatet av smoothingen er presentert i figur [\ref{fig:seconditerationbinary}].
 
 \begin{figure}[h!]
 	\centering
@@ -75,22 +75,22 @@ For å gjøre det enklere å følge spesifikke objekter i kamerabildet, implemen
 
 \subsection{Valg av hardware}
 \subsubsection{Første test med Arduino}
-Det ble først bestemt at Arduino Uno skulle brukes til formålet. Fordelen var at det finnes et standard bibliotek for servoer. I utgangspunktet skulle systemet ha et gyrometer som skulle måle orienteringen av riggen og kompensere for dette. Slik at kameraet vill stå vinkelrett uansett hvordan flyet beveger seg. Det ble valgt å benytte seg av en modifsert utgave av biblioteket [\ref{GyroLib}]. Dette viste seg å bli et problem da Arduino ikke støtter multithreading. Det ble konflikt mellom PWM-delen av servobiblioteket og $U^2C$ som gyrometeret benytter seg av.
+Det ble først bestemt at Arduino Uno skulle brukes til formålet. Fordelen var at det finnes et standard bibliotek for servoer for Arduino. I utgangspunktet skulle systemet ha et gyrometer som skulle måle orienteringen av riggen og kompensere for dette. På denne måten kunne kameraet stå vinkelrett uansett hvordan flyet bevegde seg. Det ble valgt å benytte seg av en modifisert utgave av biblioteket [\ref{GyroLib}]. Dette viste seg å bli et problem da Arduino ikke støtter multithreading. Det ble konflikt mellom PWM-delen av servobiblioteket og $U^2C$ som gyrometeret benytter seg av.
 
-For å løse dette, ble det gjort forsøk på å benytte seg av to arduinoer. Lesingen av gyrometeret og pådrag til servoene skulle bli gjort på hver sin. UART ble benyttet som kommunikasjonsprotokoll mellom dem. Erfaringene viste at arduinoen som skulle motta kommandoer mottok mye støy. Pådraget til servoene ble dermed veldig ustabile. 
+For å løse dette, ble det gjort forsøk på å benytte seg av to arduinoer. Lesingen av gyrometeret og pådrag til servoene skulle bli gjort på ulike arduinoer, med UART som kommunikasjonsprotokoll mellom dem. Erfaringene viste at arduinoen som skulle motta kommandoer mottok mye støy. Pådraget til servoene ble dermed veldig ustabilt.
 
 \subsubsection{Raspberry Pi}
-Et alternativ til Arduino, var å bruke Raspberry Pi. Som presisert i "chapter ett eller annet (ref)", har Raspberry Pi multithreading. En lignende konflikt mellom pwm og I2c vil dermed ikke skje. Men det oppsto utfordringer da Raspberry Pi kun har 1 PWM-port. Det finnes en rekke biblioteker som løser dette ved å genere PWM-signal i software og sende dem gjennom en vanlig digital port. Til dette formålet ble biblioteket WiringPi[\ref{RaspLib}] benyttet. For gyromteret, ble et standard I2C-bibliotek brukt. 
+Et alternativ til Arduino var å bruke Raspberry Pi. Som presisert i "chapter ett eller annet (ref)", har Raspberry Pi mulighet for multithreading. En lignende konflikt mellom PWM og I2C vil dermed ikke skje. Det oppstod imidlertid utfordringer da Raspberry Pi kun har 1 PWM-port. Det finnes en rekke biblioteker som løser dette ved å genere PWM-signal i programvaren og sende dem gjennom en vanlig digital port. Til dette formålet ble biblioteket WiringPi[\ref{RaspLib}] benyttet. For gyrometeret ble et standard I2C-bibliotek brukt. 
 
-Det viste seg at konfigurasjonen av WiringPi-biblioteket var tidkrevende, og det ble bestemt å gå tilbake til Arduino, men uten gyrometer.  
+Det viste seg at konfigurasjonen av WiringPi-biblioteket var tidkrevende, og det ble bestemt å gå tilbake til Arduino, men uten gyrometer.
 
 \subsubsection{Andre test med Ardunino}
-Denne implimentasjonen består av en Arduino som kjører servobilioteket. Arduinoen får innput fra PC via USB, og gir pådrag til servoene basert på disse. Testene viste at servoene hadde en stabil oppførsel, og valget falt da på denne implementasjonen.   
+Denne implimentasjonen består av en Arduino som kjører servobiblioteket. Arduinoen får input fra en PC via USB, og gir pådrag til servoene basert på denne. Testene viste at servoene nå hadde en stabil oppførsel, og valget falt derfor på denne implementasjonen.
 
 \subsection{Konstruksjon av riggen}
 
 \subsubsection{Planlegging}
-Riggens oppgave er å endre synsretningen til kameraet etter kommando fra bildegjennkjenningen. Synsvinkelen kan modeleres som en vektor, hvor retningen til vektoren er variabel. Hvis vektoren, $\bf{v}$, settes inn i et koordinatsystem med utspring i origo og sfæriske koordinater, kan situasjonen beskrives som i figur [\ref{fig:spher}]
+Riggens oppgave er å endre synsretningen til kameraet etter kommando fra bildegjennkjenningsprogramvaren. Synsvinkelen kan modeleres som en vektor, hvor retningen til vektoren er variabel. Hvis vektoren, $\bf{v}$, settes inn i et koordinatsystem med utspring i origo og sfæriske koordinater, kan situasjonen beskrives som i figur [\ref{fig:spher}].
 
 \begin{figure}[h!]
 	\centering
@@ -99,7 +99,7 @@ Riggens oppgave er å endre synsretningen til kameraet etter kommando fra bildeg
 	\label{fig:spher}
 \end{figure}
 
-hvor $\phi$ er vinkelen mellom x- og y-aksene og $\theta$ er vinkelen mellom z-aksen og xy-planet. Siden riggen skal festes til et fly og kameraet skal se ned på bakken vil det ikke være behov for vinkelretningen å bevege seg inn i den øvre halvdelen av koordinatsystemet. Det betyr at $\phi$ og $\theta$ kun trenger 180 graders utsving for å dekke hele den nedre halvdelen. Dermed kan hele dette omerådet dekkes ved hjelp av to servomotorer med 180 graders utslag satt sammen som i figur [\ref{fig:IdeRigg}]. 
+Her er $\phi$ vinkelen mellom x- og y-aksene og $\theta$ er vinkelen mellom z-aksen og xy-planet. Siden riggen skal festes til et fly og kameraet skal se ned på bakken vil det ikke være behov for vinkelretningen å bevege seg inn i den øvre halvdelen av koordinatsystemet. Det betyr at $\phi$ og $\theta$ kun trenger 180 graders utslag for å dekke hele den nedre halvdelen. Dermed kan hele dette omerådet dekkes ved hjelp av to servomotorer med 180 graders utslag, satt sammen som illustrert i figur [\ref{fig:IdeRigg}].
 
 \begin{figure}[h!]
 	\centering
@@ -108,7 +108,7 @@ hvor $\phi$ er vinkelen mellom x- og y-aksene og $\theta$ er vinkelen mellom z-a
 	\label{fig:IdeRigg}
 \end{figure}
 
-Hvor kameraet festes til servomotor 2 som beveger seg i retning $\theta$, mens servomotor 1 beverger servo2 og kamera i retning $\phi$. For å kunne trekke riggen inn i flyet ved landing ble det bestemt å feste riggen på en bom som kunne heves å senkes ved hjelp av en servomotor som vist i figur [\ref{fig:bom}].
+Kameraet festes til servomotor 2, som beveger seg i retning $\theta$. Samtidig beveger servomotor 1 på servo 2 og kamera i retning $\phi$. For å kunne trekke riggen inn i flyet ved landing ble det bestemt å feste riggen på en bom som kunne heves å senkes ved hjelp av ytterligere en servomotor, som vist i figur [\ref{fig:bom}].
 
 \begin{figure}[h!]
 	\centering
@@ -119,7 +119,7 @@ Hvor kameraet festes til servomotor 2 som beveger seg i retning $\theta$, mens s
 
 \subsubsection{Sammenstilling}
 
-Riggen ble sammenstilt med målene på prototypeflyet til kongsberg som utgangspunkt [\textcolor{red}{Referere til PowerPoint}]. Med disse målene ble det klart at servomotorene måtte være små i størrelse og valget falt på servomotoren HD-1600A. Med sine beskjedene fysiske mål på 21.3x11.6x22.8 mm og en vekt på $6$ g \cite{PowerHD}, ble HD-1600A ansett som perfekt for dette formålet. HS-50 fra Hitec ble også vurdert, men med lavere dreiemoment og betydelig høyere pris ble HD-1600A regnet som et bedre alternativ. For å bygge delene som skulle koble servoene sammen ble det brukt $6$ mm MDF-plater fordi disse er stive og relativt sterke. Dette fører til at de ikke bøyes eller gir etter ved raske rotasjoner. Figur [\ref{fig:RiggTegn}] viser hvordan servomotorene er koblet sammen og figur [\ref{fig:RiggBilde}] viser et bilde av den ferdige prototyperiggen. 
+Riggen ble sammenstilt med målene på Kongsbergs prototypefly som utgangspunkt [\textcolor{red}{Referere til PowerPoint}]. Med disse målene ble det klart at servomotorene måtte være små i størrelse og valget falt på servomotoren HD-1600A. Med sine beskjedene fysiske mål på 21.3x11.6x22.8 mm og en vekt på $6$ g \cite{PowerHD}, ble HD-1600A ansett som perfekt for dette formålet. HS-50 fra Hitec ble også vurdert, men med lavere dreiemoment og betydelig høyere pris ble HD-1600A regnet som et bedre alternativ. For å bygge delene som skulle koble servoene sammen ble det brukt $6$ mm MDF-plater fordi disse er stive og relativt sterke. Dette fører til at de ikke bøyes eller gir etter ved raske rotasjoner. Figur [\ref{fig:RiggTegn}] viser hvordan servomotorene er koblet sammen og figur [\ref{fig:RiggBilde}] viser et bilde av den ferdige prototyperiggen. 
 
 \begin{figure}[h!]
 	\centering
