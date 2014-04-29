@@ -46,11 +46,11 @@ Etter å ha konvertert bildet til HSV, behandlet vi bildematrisen med et filter,
 	\label{fig:firstiterationbinary}
 \end{figure}
 
+Nå som vi hadde et binært bilde, var det neste steget å velge ut ett objekt fra bildet slik at det kunne trackes. Med objekt menes her et sammenhengende hvitt område i det binære bildet. Algoritmen vår valgte ut det største objektet, og returnerte objektets midtpunkt. Dersom det var for mye støy i bildet, det vil si for mange ulike objekter, returnerte algoritmen ikke et punkt.
+
 \subsubsection{Smoothing}
 
-I det første steget klarte vi å fange opp et objekt, men som man kan se i figur [\ref{fig:firstiterationbinary}] er det mye støy i bildet. Vi implementerte derfor en smoothingalgoritme som gikk over det binære bildet og fjernet mindre ansamlinger med punkter og fremhevet de som var større. Dette førte til at vi fikk et renere bilde, med færre og tydeligere objekter. Dette gjorde det betydelig lettere å fange opp de enkelte objektene i bildet og finne det største av dem.
-
-Resultatet kan man se i figur [\ref{fig:seconditerationbinary}] 
+I det første steget klarte vi å fange opp et objekt, men som man kan se i figur [\ref{fig:firstiterationbinary}] er det mye støy i bildet. Vi implementerte derfor en smoothingalgoritme som gikk over det binære bildet og fjernet mindre ansamlinger med punkter og fremhevet de som var større. Dette førte til at vi fikk et renere bilde, med færre og tydeligere objekter. Resultatet av smoothingen kan man se i figur [\ref{fig:seconditerationbinary}].
 
 \begin{figure}[h!]
 	\centering
@@ -59,9 +59,11 @@ Resultatet kan man se i figur [\ref{fig:seconditerationbinary}]
 	\label{fig:seconditerationbinary}
 \end{figure}
 
+Smoothingen fremhevet de store objektene i bildet. Dette gjorde det betydelig lettere å fange opp kun det objektet vi var ute etter å følge, gitt riktig innstilling av fargefilterne, fordi små objekter i bildet med samme farge som objektet vi ville følge ble fjernet.
+
 \subsubsection{Brukergrensesnitt}
 
-Etter at vi hadde jobbet en del med systemet fant vi ut at det var tungvindt å hver gang manuelt stille inn hvilke farger som skulle følges ved hjelp av sliderne. Løsningen ble da at vi implementerte et enkelt kommandolinjegrensesnitt, der vi med hjelp av kommandoen \texttt{center} kunne be programmet om å følge etter fargen som befant seg i sentrum av bildet. Grensesnittet er vist i figur [\ref{fig:commandmenu}]. Etter hvert som vi la til flere funksjoner i programmet, utvidet vi kommandolinjegrensesnittet med flere kommandoer.
+Etter at vi hadde jobbet en del med systemet fant vi ut at det var tungvindt å hver gang manuelt stille inn hvilke farger som skulle følges ved hjelp av sliderne. Løsningen ble da at vi implementerte et enkelt kommandolinjegrensesnitt, der vi ved hjelp av kommandoen \texttt{center} kunne be programmet om å følge etter fargen som befant seg i sentrum av bildet. Grensesnittet er vist i figur [\ref{fig:commandmenu}]. Etter hvert som vi la til flere funksjoner i programmet, utvidet vi kommandolinjegrensesnittet med flere kommandoer.
 
 \begin{figure}[h!]
 	\centering
@@ -70,7 +72,7 @@ Etter at vi hadde jobbet en del med systemet fant vi ut at det var tungvindt å 
 	\label{fig:commandmenu}
 \end{figure}
 
-For å gjøre det enklere å følge spesifikke objekter i kamerabildet, implementerte vi senere en funksjon som lot oss klikke på objekter i bildet for å følge dem. Både denne funksjonaliteten og \texttt{center}-kommandoen fungerte slik at fargeverdien til punktet som var i sentrum av bildet eller som ble klikket på ble hentet inn, og at sliderne automatisk ble satt til denne verdien pluss/minus en margverdi. Margverdien ble eksperimentert ved, og vi kom fram til at en marg på $20$ eller $30$ for hver av aksene \emph{hue}, \emph{saturation} og \emph{value} fungerte godt i de fleste situasjoner.
+For å gjøre det enklere å følge spesifikke objekter i kamerabildet, implementerte vi senere en funksjon som lot oss klikke på objekter i bildet for å følge dem. Både denne funksjonaliteten og \texttt{center}-kommandoen fungerte slik at fargeverdien til punktet som var i sentrum av bildet eller som ble klikket på ble hentet inn, og at sliderne automatisk ble satt til denne verdien pluss/minus en margverdi. Gode margverdier ble funnet eksperimentelt, og vi kom fram til at en marg på $20$ eller $30$ for hver av aksene \emph{hue}, \emph{saturation} og \emph{value} fungerte godt i de fleste situasjoner.
 
 \subsection{Valg av hardware}
 \subsubsection{Første test med Arduino}
