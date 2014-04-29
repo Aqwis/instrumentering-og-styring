@@ -45,7 +45,7 @@ Etter å ha konvertert bildet til HSV, behandlet vi bildematrisen med et filter,
 	\label{fig:firstiterationbinary}
 \end{figure}
 
-Nå som vi hadde et binært bilde, var det neste steget å velge ut ett objekt fra bildet slik at det kunne trackes. Med objekt menes her et sammenhengende hvitt område i det binære bildet. Algoritmen vår valgte ut det største objektet, og returnerte objektets midtpunkt. Dersom det var for mye støy i bildet, det vil si for mange ulike objekter, returnerte algoritmen ikke et punkt.
+Nå som vi hadde et binært bilde, var det neste steget å velge ut ett objekt fra bildet slik at det kunne trackes. Med objekt menes her et sammenhengende hvitt område i det binære bildet. Algoritmen vi skrev valgte ut det største objektet, og returnerte objektets midtpunkt. Dersom det var for mye støy i bildet, det vil si for mange ulike objekter, returnerte algoritmen ikke et punkt.
 
 \subsubsection{Smoothing}
 
@@ -71,7 +71,7 @@ Etter at vi hadde jobbet en del med systemet fant vi ut at det var tungvindt å 
 	\label{fig:commandmenu}
 \end{figure}
 
-For å gjøre det enklere å følge spesifikke objekter i kamerabildet, implementerte vi senere en funksjon som lot oss klikke på objekter i bildet for å følge dem. Både denne funksjonaliteten og \texttt{center}-kommandoen fungerte slik at fargeverdien til punktet som var i sentrum av bildet eller som ble klikket på ble hentet inn, og at sliderne automatisk ble satt til denne verdien pluss/minus en margverdi. Gode margverdier ble funnet eksperimentelt, og vi kom fram til at en marg på $20$ eller $30$ for hver av aksene \emph{hue}, \emph{saturation} og \emph{value} fungerte godt i de fleste situasjoner.
+For å gjøre det enklere å følge spesifikke objekter i kamerabildet, implementerte vi senere en funksjon som lot oss klikke på objekter i bildet for å følge dem. Både denne funksjonaliteten og \texttt{center}-kommandoen fungerte slik at fargeverdien til punktet som var i sentrum av bildet eller som ble klikket på ble hentet inn, og at sliderne automatisk ble satt til denne verdien pluss og minus en margverdi. Gode margverdier ble funnet eksperimentelt, og vi kom fram til at en marg på mellom $20$ og $30$ for hver av aksene \emph{hue}, \emph{saturation} og \emph{value} fungerte godt i de fleste situasjoner.
 
 \subsection{Valg av hardware}
 \subsubsection{Første test med Arduino}
@@ -117,9 +117,9 @@ Hvor kameraet festes til servomotor 2 som beveger seg i retning $\theta$, mens s
 	\label{fig:bom}
 \end{figure}
 
-
 \subsubsection{Sammenstilling}
-Riggen ble sammenstilt med målene på prototypeflyet til kongsberg som utgangspunkt [\textcolor{red}{Referere til PowerPoint}]. Med disse målene ble det klart at servomotorene måtte være små i størrelse og valget falt på servomotoren HD-1600A. Med sine beskjedene fysiske mål på 21.3x11.6x22.8 mm og en vekt på 6g \cite{PowerHD}, ble HD-1600A ansett som perfekt for dette formålet. HS-50 fra Hitec ble også vurdert, men med lavere dreimoment og betydelig høyere pris ble HD-1600A regnet som et bedre alternativ. For å bygge delene som skulle koble servoene sammen ble det brukt 6mm MDF plater fordi disse er stive og relativt sterke. Dette fører til at de ikke bøyes eller gir etter ved raske rotasjoner. Figur [\ref{fig:RiggTegn}] viser hvordan servomotorene er koblet sammen og figur [\ref{fig:RiggBilde}] viser et bilde av den ferdige prototype riggen. 
+
+Riggen ble sammenstilt med målene på prototypeflyet til kongsberg som utgangspunkt [\textcolor{red}{Referere til PowerPoint}]. Med disse målene ble det klart at servomotorene måtte være små i størrelse og valget falt på servomotoren HD-1600A. Med sine beskjedene fysiske mål på 21.3x11.6x22.8 mm og en vekt på $6$ g \cite{PowerHD}, ble HD-1600A ansett som perfekt for dette formålet. HS-50 fra Hitec ble også vurdert, men med lavere dreiemoment og betydelig høyere pris ble HD-1600A regnet som et bedre alternativ. For å bygge delene som skulle koble servoene sammen ble det brukt $6$ mm MDF-plater fordi disse er stive og relativt sterke. Dette fører til at de ikke bøyes eller gir etter ved raske rotasjoner. Figur [\ref{fig:RiggTegn}] viser hvordan servomotorene er koblet sammen og figur [\ref{fig:RiggBilde}] viser et bilde av den ferdige prototyperiggen. 
 
 \begin{figure}[h!]
 	\centering
@@ -135,7 +135,7 @@ Riggen ble sammenstilt med målene på prototypeflyet til kongsberg som utgangsp
 	\label{fig:RiggBilde}
 \end{figure}
 
-Servomotorene styres av et PWM signal som genereres av en Arduino UNO. Biblioteket $Servo.lib$ brukes for å kontrollere servoene gjennom tre I/O porter. Servo 1 er koblet til port 9, servo 2 er koblet til port 6 og servo 3 er koblet til port 3. Siden det viste seg ved målinger at hver servo, under last, kan trekke opp mot 250mA, ble det valgt å bruke en ekstern 6V batteripakke, med fire seriekoblede 1.5V AA batterier, koblet inn som vist i figur [\ref{fig:ArduSkjem}]. Dette isteden for å la servoene trekke forsyningsstrøm rett fra 5V pinnen til arduinokortet. Arduinokortet bruker strøm fra USB og denne kan ikke levere mer enn 500mA ,på grunn av innebygget sikring i Arduino. Dermed kan ikke Arduinokortet levere de ca. 750mA som trengs dersom alle servoene går med stor last samtidig. 
+Servomotorene styres av et PWM-signal som genereres av en Arduino UNO. Biblioteket \texttt{Servo.lib} brukes for å kontrollere servoene gjennom tre I/O porter. Servo 1 er koblet til port 9, servo 2 er koblet til port 6 og servo 3 er koblet til port 3. Ved målinger viste det seg at hver servo kan trekke opp mot 250mA under last. Det ble valgt å bruke en ekstern 6V batteripakke med fire seriekoblede 1.5V AA batterier, koblet inn som vist i figur [\ref{fig:ArduSkjem}], i stedet for å la servoene trekke forsyningsstrøm rett fra $5$ V-pinnen til arduinokortet. Arduinokortet bruker strøm fra USB, som ikke kan levere mer enn $500$ mA på grunn av en innebygget sikring i kortet. Dermed kan ikke arduinokortet levere de ca. $750$ mA som trengs når alle servoene går med stor last samtidig.
 
 \begin{figure}[h!]
 	\centering
@@ -144,9 +144,8 @@ Servomotorene styres av et PWM signal som genereres av en Arduino UNO. Bibliotek
 	\label{fig:ArduSkjem}
 \end{figure}  
 
-Kommandoer sendes til Arduino via USB porten. Kommandoer kan sendes som $Char$ på formen ``100a120b40c'', hvor tallene foran``c'' forteller posisjon til servo 1, tallene for ``b'' gir posisjon til servo 2 og tallene foran ``c'' posisjonenen til servo 3. Dermed vil strengen ``100a120b40c'' flytte servo 1 til 100 grader, servo 2 til 120 grader og servo 3 til 40 grader. De gyldige vinklene er fra 0 til 180 grader. Hvis ``200'' sendes vil servo 1 stoppe på 180 grader. 
+Kommandoer sendes til Arduino via USB-porten. Kommandoer kan sendes som \texttt{Char} på formen \texttt{100a120b40c}, hvor tallene foran \texttt{c} forteller posisjon til servo 1, tallene for \texttt{b} gir posisjon til servo 2 og tallene foran \texttt{c} posisjonenen til servo 3. Dermed vil strengen \texttt{100a120b40c} flytte servo 1 til 100 grader, servo 2 til 120 grader og servo 3 til 40 grader. De gyldige vinklene er fra 0 til 180 grader. Hvis \texttt{200} sendes vil servo 1 stoppe på 180 grader. 
 
-
-\subsection{Styring av rigg + bildegjenkjenning}
+\subsection{Styring av rigg}
 
 Tekst her
