@@ -34,13 +34,13 @@ Det finnes også digitale servoer ment for radiostyrte fly. Disse inneholder de 
 \label{fig:PWM}
 \end{figure}   
 
-\subsubsection{Gyroskop}
+\subsubsection{Gyrometer}
 
-Et gyroskop er en innretning for å kunne måle vinkelposisjoner i forhold til en fast retning. Gyroskop brukes i mange sammenhenger og finnes i mange varianter, men i denne rapporten vil kun gyroskop av typen MEMS bli beskrevet. 
+Et gyrometer er en innretning for å kunne måle vinkelposisjoner i forhold til en fast retning. Gyrometer brukes i mange sammenhenger og finnes i mange varianter, men i denne rapporten vil kun gyrometer av typen MEMS bli beskrevet. 
 
-Et MEMS-gyroskop (Micro Electro-Mechanical System) er lite og lett, og integreres i pakker som likner pakningene til integrerte kretser. Dette gjør at MEMS-gyroskoper enkelt kan legges på kretskort sammen med annen elektronikk. Et MEMS-gyroskop består av en stav, laget i mikromekanikk, som vibrer når en spenning påføres. Når denne staven begynner å vibrere vil den vibrere i samme retning hele tiden. Dette blir referanseretningen. Det er dermed mulig å detektere om pakken som inneholder denne staven orienteres i en annen retning enn referanseretningen.
+Et MEMS-gyrometer (Micro Electro-Mechanical System) er lite og lett, og integreres i pakker som likner pakningene til integrerte kretser. Dette gjør at MEMS-gyrometerer enkelt kan legges på kretskort sammen med annen elektronikk. Et MEMS-gyrometer består av en stav, laget i mikromekanikk, som vibrer når en spenning påføres. Når denne staven begynner å vibrere vil den vibrere i samme retning hele tiden. Dette blir referanseretningen. Det er dermed mulig å detektere om pakken som inneholder denne staven orienteres i en annen retning enn referanseretningen.
 
-MPU-6050 fra Invensense, som ble brukt i dette prosjektet, er et 6-akset gyroskop og akselerometer som gir ut data digitalt. Det har en innebygd 10-bit ADC og bruker en I2C-buss for å kommunisere med andre enheter.\cite{InSens}
+MPU-6050 fra Invensense, som ble brukt i dette prosjektet, er et 6-akset gyrometer og akselerometer som gir ut data digitalt. Det har en innebygd 10-bit ADC og bruker en I2C-buss for å kommunisere med andre enheter.\cite{InSens}
 
 \subsection{Hardware}
 For å kunne styre riggen er det nødvendig å ha en datamaskin ombord i flyet. Det finnes en rekke alternativer på dette området, men her vil Arduino og Raspberry Pi bli presentert. Hovedoppgaven til datamaskinen er å få data fra kameraet, og orientere riggen etter disse. I systemspesifikasjonene til Kongsberg Gruppen blir det presisert at det allerede finnes en ekstern GPU på LocalHawk som tar av seg bildebehandling, men at man også kan tenke seg en løsning hvor all funksjonalitet er samlet på én chip. Datamaskinen må også kunne håndtere flere prosessorer uten at det blir konflikt mellom dem.
