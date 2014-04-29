@@ -75,12 +75,13 @@ For å gjøre det enklere å følge spesifikke objekter i kamerabildet, implemen
 
 \subsection{Valg av hardware}
 \subsubsection{Første test med Arduino}
-Det ble først bestemt at Arduino Uno skulle brukes til formålet. Fordelen var at det finnes et standard bibliotek for servoer for Arduino. I utgangspunktet skulle systemet ha et gyrometer som skulle måle orienteringen av riggen og kompensere for dette. På denne måten kunne kameraet stå vinkelrett uansett hvordan flyet bevegde seg. Det ble valgt å benytte seg av en modifisert utgave av biblioteket [\ref{GyroLib}]. Dette viste seg å bli et problem da Arduino ikke støtter multithreading. Det ble konflikt mellom PWM-delen av servobiblioteket og $U^2C$ som gyrometeret benytter seg av.
+Det ble først bestemt at Arduino Uno skulle brukes til formålet. Fordelen var at det finnes et standard bibliotek for servoer for Arduino. I utgangspunktet skulle systemet ha et gyrometer som skulle måle orienteringen av riggen og kompensere for dette. På denne måten kunne kameraet stå vinkelrett uansett hvordan flyet bevegde seg. Det ble valgt å benytte seg av en modifisert utgave av biblioteket MPU-6050 \cite{GyroLib}. Dette viste seg å bli et problem da Arduino ikke støtter multithreading. Det ble konflikt mellom PWM-delen av servobiblioteket og $U^2C$ som gyrometeret benytter seg av.
 
 For å løse dette, ble det gjort forsøk på å benytte seg av to arduinoer. Lesingen av gyrometeret og pådrag til servoene skulle bli gjort på ulike arduinoer, med UART som kommunikasjonsprotokoll mellom dem. Erfaringene viste at arduinoen som skulle motta kommandoer mottok mye støy. Pådraget til servoene ble dermed veldig ustabilt.
 
 \subsubsection{Raspberry Pi}
-Et alternativ til Arduino var å bruke Raspberry Pi. Som presisert i "\textcolor{red}{chapter ett eller annet (ref)}", har Raspberry Pi mulighet for multithreading. En lignende konflikt mellom PWM og I2C vil dermed ikke skje. Det oppstod imidlertid utfordringer da Raspberry Pi kun har 1 PWM-port. Det finnes en rekke biblioteker som løser dette ved å genere PWM-signal i programvaren og sende dem gjennom en vanlig digital port. Til dette formålet ble biblioteket WiringPi[\ref{RaspLib}] benyttet. For gyrometeret ble et standard I2C-bibliotek brukt. 
+
+Et alternativ til Arduino var å bruke Raspberry Pi. Som presisert i seksjon [\ref{sec:Pi}], har Raspberry Pi mulighet for multithreading. En lignende konflikt mellom PWM og I2C vil dermed ikke skje. Det oppstod imidlertid utfordringer da Raspberry Pi kun har 1 PWM-port. Det finnes en rekke biblioteker som løser dette ved å genere PWM-signal i programvaren og sende dem gjennom en vanlig digital port. Til dette formålet ble biblioteket WiringPi \cite{WirPi} benyttet. For gyrometeret ble et standard I2C-bibliotek brukt. 
 
 Det viste seg at konfigurasjonen av WiringPi-biblioteket var tidkrevende, og det ble bestemt å gå tilbake til Arduino, men uten gyrometer.
 
@@ -144,7 +145,7 @@ Servomotorene styres av et PWM-signal som genereres av en Arduino UNO. Bibliotek
 	\label{fig:ArduSkjem}
 \end{figure}  
 
-Kommandoer sendes til Arduino via USB-porten. Kommandoer kan sendes som \texttt{Char} på formen \texttt{100a120b40c}, hvor tallene foran \texttt{c} forteller posisjon til servo 1, tallene for \texttt{b} gir posisjon til servo 2 og tallene foran \texttt{c} posisjonenen til servo 3. Dermed vil strengen \texttt{100a120b40c} flytte servo 1 til 100 grader, servo 2 til 120 grader og servo 3 til 40 grader. De gyldige vinklene er fra 0 til 180 grader. Hvis \texttt{200} sendes vil servo 1 stoppe på 180 grader. 
+Kommandoer sendes til Arduino via USB-porten. Kommandoer kan sendes som \texttt{Char} på formen \texttt{100a120b40c}, hvor tallene foran \texttt{c} forteller posisjon til servo 1, tallene for \texttt{b} gir posisjon til servo 2 og tallene foran \texttt{c} posisjonenen til servo 3. Dermed vil strengen \texttt{100a120b40c} flytte servo 1 til 100 grader, servo 2 til 120 grader og servo 3 til 40 grader. De gyldige vinklene er fra 0 til 180 grader. Hvis \texttt{200a} sendes vil servo 1 stoppe på 180 grader. 
 
 \subsection{Styring av rigg}
 
