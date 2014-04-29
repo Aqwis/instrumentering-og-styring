@@ -99,11 +99,16 @@ Som nevnt kan det sendes kommandoer til Arduino kortet serielt gjennom en seriep
 \subsection{Software}
 
 \subsubsection{Matlab}
-Matlab brukes til å utforme matematiske modeller, utføre komplekse beregninger og visualisere data. Programmet er mye brukt i vitenskapelige miljøer og er meget anerkjent. NTNU tilbyr gratis tilgang til Matlab til alle studenter og det ble besluttet at dette var verktøyet som skulle brukes til programmering. \cite{matlab}
+Matlab brukes til å utforme matematiske modeller, utføre komplekse beregninger og visualisere data. \cite{matlab} Programmet er mye brukt i vitenskapelige miljøer og er meget anerkjent. NTNU tilbyr gratis tilgang til Matlab til alle studenter og det ble besluttet at dette var verktøyet som skulle brukes til programmering. 
+
+\subsubsection{C++}
+C++ er et mellomnivå programmeringsspråk som brukes i mange aspekter av softwareutvikling. Språket er objektorientert og krever kompilering.
 
 \subsubsection{OpenCV}
-OpenCV er et softwarebibliotek med åpen kildekode som brukes til digital bildebehandling. Biblioteket i versjon 2.x er programmert i C++ og støtter mange plattformer. \cite{docs:opencv}
+OpenCV er et softwarebibliotek med åpen kildekode som brukes til digital bildebehandling. Biblioteket i versjon 2.x, som er versjonen vi har benyttet oss av, er programmert i C++ og støtter mange plattformer. \cite{docs:opencv}
 
 \subsubsection{mexopencv}
-For å kunne bruke funksjoner fra OpenCV i Matlab kreves det at \cite{mexopencv}
+For å kunne bruke funksjoner fra OpenCV i Matlab måtte vi ta i bruk et verktøy som heter mexopencv. Matlab er ikke uten videre kompatibelt med OpenCV, da dette er programmert i C++. Mexopencv tilbyr Matlabfunksjoner som bygger på flere hundre APIer fra OpenCV. \cite{mexopencv} Kort sagt gjør dette at vi kan lage hele programmet i Matlab uten å måtte tenke på hvordan OpenCV er bygget opp.
+
+
   
