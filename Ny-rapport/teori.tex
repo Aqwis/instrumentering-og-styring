@@ -46,7 +46,7 @@ MPU-6050 fra Invensense, som ble brukt i dette prosjektet, er et 6-akset gyrosko
 For å kunne styre riggen er det nødvendig å ha en datamaskin ombord i flyet. Det finnes en rekke alternativer på dette området, men her vil Arduino og Raspberry Pi bli presentert. Hovedoppgaven til datamaskinen er å få data fra kameraet, og orientere riggen etter disse. I systemspesifikasjonene til Kongsberg Gruppen blir det presisert at det allerede finnes en ekstern GPU på LocalHawk som tar av seg bildebehandling, men at man også kan tenke seg en løsning hvor all funksjonalitet er samlet på én chip. Datamaskinen må også kunne håndtere flere prosessorer uten at det blir konflikt mellom dem.
 
 \subsubsection{Arduino}
-Arduino er en open source utviklingsplatform basert på \textit{ATmega328}, en 8-bits mikrokontroller. Bruksområdet er hovedsakelig hobbyprosjekter og prototyping. Kortet har 14 digtale porter og 6 analoge inn-porter, som vist i figur \ref{fig:Arduino}. 6 av de digitale portene kan sende PWM-signaler. Siden servomotorer bruker disse signalene er det mulig å koble opp til 6 servomotorer til en Arduino. 
+Arduino er en open source utviklingsplatform basert på \textit{ATmega328}, en 8-bits mikrokontroller. Bruksområdet er hovedsakelig hobbyprosjekter og prototyping. Kortet har 14 digtale porter og 6 analoge inn-porter, som vist i figur \ref{fig:Arduino}. Seks av de digitale portene kan sende PWM-signaler. Siden servomotorer bruker disse signalene er det mulig å koble opp til 6 servomotorer til en Arduino. 
 
 \begin{figure}[h!]
 \centering
@@ -58,19 +58,20 @@ Arduino er en open source utviklingsplatform basert på \textit{ATmega328}, en 8
 Arduino programmeres i C++, og programmene overføres til kortet via USB. USB-porten på kortet kan også benyttes som COM-port, slik at Arduinoen kan ta inn eksterne kommandoer. Disse kommandoene kan for eksempel være vinkler som en servomotor skal innstilles til. På mikrokontrolleren er det også installert en bootloader som inneholder en rekke biblioteker som gjør at abstraksjonsnivået blir høyere enn ordinær AVR-programmering. Dataregistre trenger ikke å endres når man vil åpne opp for en funksjon fordi biblioteket håndterer dette.
 
 \subsubsection{Raspberry Pi}
-Raspberry Pi er en minidatamaskin basert på en 32-bits ARM-arkitektur. Linux er installert på et SD-kort, og all programmering skjer direkte på Raspberry Pi. Maskinen kan brukes ved å koble den til en monitor via HDMI, eller ved å koble den til Internett via nettverksporten og koble seg til via SSH fra en annen datamaskin. Kortet har 8 I/O-pinner, som kan brukes til seriell kommunikasjon. Den er også utstyrt med 2 USB-porter, slik at man for eksempel kan koble til et kamera. 
+Raspberry Pi er en minidatamaskin basert på en 32-bits ARM-arkitektur. Linux er installert på et SD-kort, og all programmering skjer direkte på Raspberry Pi. Maskinen kan brukes ved å koble den til en monitor via HDMI, eller ved å koble den til Internett via nettverksporten og koble seg til via SSH fra en annen datamaskin. Kortet har 8 I/O-pinner, som kan brukes til seriell kommunikasjon. Den er også utstyrt med 2 USB-porter, slik at man for eksempel kan koble til et kamera. En presentasjon av Raspberry PI er gitt i figur \ref{fig:Raspberryfigur}.
 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale = 0.25]{img/pi.jpg}
 \caption{Raspberry Pi Model B \cite{Raspberry}}
+\label{fig:Raspberryfigur}
 \end{figure}  
 
 \subsubsection{Sammenligning mellom Arduino og Raspberry Pi}
 En sammenlikning mellom Arduino Uno og Raspberry Pi model B er gitt i tabell [\ref{tab:ArdRas}]
 
 \begin{table}[h!]
-\caption{Sammenligning mellom Arduino og Raspberry Pi}
+\caption{Sammenligning mellom Arduino og Raspberry Pi\colorbox{yellow}{Kilde!}}
 \centering
 \begin{tabular}{ |c |c |c| }
 	\hline
@@ -102,11 +103,7 @@ Som nevnt kan det sendes kommandoer til Arduino kortet serielt gjennom en seriep
 \subsubsection{Matlab}
 Matlab brukes til å utforme matematiske modeller, utføre komplekse beregninger og visualisere data. \cite{matlab} Programmet er mye brukt i vitenskapelige miljøer og er meget anerkjent. NTNU tilbyr gratis tilgang til Matlab til alle studenter og det ble besluttet at dette var verktøyet som skulle brukes til programmering. 
 
-\subsubsection{C++}
-C++ er et mellomnivå programmeringsspråk som brukes i mange aspekter av softwareutvikling. Språket er objektorientert og krever kompilering.
-
-\subsubsection{OpenCV}
+\subsubsection{OpenCV og mexopencv}
 OpenCV er et softwarebibliotek med åpen kildekode som brukes til digital bildebehandling. Biblioteket i versjon 2.x, som er versjonen vi har benyttet oss av, er programmert i C++ og støtter mange plattformer. \cite{docs:opencv}
 
-\subsubsection{mexopencv}
 For å kunne bruke funksjoner fra OpenCV i Matlab måtte vi ta i bruk et verktøy som heter mexopencv. Matlab er ikke uten videre kompatibelt med OpenCV, da dette er programmert i C++. Mexopencv tilbyr Matlabfunksjoner som bygger på flere hundre APIer fra OpenCV. \cite{mexopencv} Kort sagt gjør dette at vi kan lage hele programmet i Matlab uten å måtte tenke på hvordan OpenCV er bygget opp.
