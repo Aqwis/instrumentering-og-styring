@@ -2,15 +2,15 @@
 
 Gjenkjenning av objekter i bilder er en kompleks prosess. Ønsket i starten av dette prosjektet var å klare å gjenkjenne en bil i skiftende omgivelser. 
 
-For å opparbeide en forståelse for hvordan man gjenkjenner bilder må man gjøre gjenkjenningsprosessen stegvis. Uten noen tidligere erfaring på området begynte vi med en enkel gemometrisk figur i en klar farge, for eksempel en gul ball, mot en mørk bakgrunn med god belysning. En mørk bakgrunn og en klar farge er enkle å skille fra hverandre, og objektet trer godt frem slik at det kan behandles og en posisjon kan fastsettes.\\\colorbox{yellow}{Dette er fremgangsmåte, ikke teori..}
+For å opparbeide en forståelse for hvordan man gjenkjenner bilder må man gjøre gjenkjenningsprosessen stegvis. Uten noen tidligere erfaring på området begynte man med en enkel gemometrisk figur i en klar farge, for eksempel en gul ball, mot en mørk bakgrunn med god belysning. En mørk bakgrunn og en klar farge er enkle å skille fra hverandre, og objektet trer godt frem slik at det kan behandles og en posisjon kan fastsettes.
 
-Dersom dette forsøket gjennomføres uten problemer kan man øke vanskelighetsgraden ved å utvide forsøket med en annen geometrisk figur, for eksempel en boks. En ny geometrisk figur medfører noen ekstra problemer. Forskjellen på en kule og en ball er at en kule er identisk uansett hvilken vinkel den betraktes fra, mens en boks vil variere ikke bare i fasong, men også kaste skygger, noe som fører til at fargen ikke er uniform over helt objektet. Utslaget fra dette er at gjenkjenningsalgoritmen må ta høyde for to nye faktorer; fargeulikhet og form. \\\colorbox{yellow}{Stikkord som må benyttes: Platoniske objekter}
+Dersom dette forsøket gjennomføres uten problemer kan man øke vanskelighetsgraden ved å utvide forsøket til andre geometriske figurer, slik som platoniske objekter. Det neste naturlige steget er å gå over til en heksaede, eller kube. En ny geometrisk figur medfører noen ekstra problemer. Forskjellen på en kule og en boks er at en kule er identisk uansett hvilken vinkel den betraktes fra, mens en boks vil variere ikke bare i fasong, men også kaste skygger, noe som fører til at fargen ikke er uniform over helt objektet. Utslaget fra dette er at gjenkjenningsalgoritmen må ta høyde for to nye faktorer; fargeulikhet og form. 
 
 Utforskningen kan deretter forrsette ved å bevege objektet rundt i bildet, noe som fremhever fargeulikheten og gjør at objektet kan ha en ny fasong hele tiden. På dette stadiet kan man sammenligne bildegjenkjenningen med prosessering av video, der man må gjøre slik gjenkjenning for hver gang man får et bidle fra videokameraet. Her kreves det også at gjenkjenningen foregår relativt hurtig. 
 
 Etter å ha testet kanskje andre genmetriske figurer på samme måte som med en boks, hvor hver nye flate eller ulikhet kan medføre nye problemer, kan man begynne å teste med noen reelle objekter. Vi forsøkte nå med en modell av en rød bil. Etter å ha finpusset gjenkjenningen med de andre geometriske modellene var ikke bilen noen stor utfordring. Vi prøvde dermed å fjerne det svarte bakteppet og teste mot diverse bakgrunner som vi kunne finne innendørs. Dette gjorde gjenkjenningen mye vanskeligere, da selv en klar rødfarge kan dukke opp delvis i objekter rundt i rommet. Når dette skjedde fikk vi mye støy inn i det behandlede bildet.
 
-Bildebehandling er et komplisert fagfelt, og gjenkjenning av kompliserte objekter, som realistiske biler, krever lang erfaring og en svært stor mengde arbeid. Dette gjør det opprinnelige ønsket om å kunne gjenkjenne en bil i ulike omgivelser urealistisk å kunne gjennomføre i den tiden vi har til rådighet.
+Bildebehandling er et komplisert fagfelt, og gjenkjenning av kompliserte objekter, som realistiske biler, krever lang erfaring og en svært stor mengde arbeid. Dermed virker det lite realistisk å kunen gjennomføre det opprinnelige ønsket om å kunne gjenkjenne en bil i ulike omgivelser. Særlig om man tar tiden vi har tilgjengelig i betraktning.
 
 \subsection{Mekanisk installasjon}
 Når flyet skal svinge er det avhengig av å gjøre en roll. Dette fører til at buken til flyet ikke lengre peker rett ned mot bakken. Et kamera i en låst posisjon i buken vil i denne situasjonen kunne oppleve at objektet det skulle følge forsvinner ut forbi bildekanten. Dette problemet kan løses ved å feste kameraet til en mekanisk rigg som kan kompensere for at flyet beveger seg.
@@ -18,13 +18,14 @@ Når flyet skal svinge er det avhengig av å gjøre en roll. Dette fører til at
 For å beskytte kameraet ved buklanding ble det bestemt at det skal kunne trekkes inn i flyet. Siden vi ikke fikk informasjon fra Kongsberg om målene på fullskala fly, ble det bestemt å følge målene på modellen i presentasjonen vi fikk tilsendt. I følge presentasjonen er det maksimalt et rom på 10.5 cm i høyden og 7.2 cm i bredden til rådighet inne i flyet. Kravet for riggen ble dermed at den ikke kunne oppta større plass i bredde og høyde enn dette, med kameraet festet på. Det ble antatt at det for modellens skyld kunne brukes et lite kamera, på størrelse med et mobilkamera. Den andre grunnen til å bygge en liten rigg er for å hindre at vekten blir for høy. Kameraet måtte ha mulighet til å bevege synsretningen både horisontalt og vertikalt, noe som krever to servomotorer. I tillegg trengs en ekstra servomotor for å kunne trekke kameraet inn i flyet ved landing.
 
 \subsubsection{Servomotor}
-\textcolor{red}{Skrive en liten sammenlikning mellom digitale og analoge servoer}
 
 En servomotor er en innretning som kan rotere en arm til en bestemt vinkelposisjon og holde posisjonen. Det finnes mange forskjellige servomotorer, med ulik nøyaktighet, kraft, pris, størrelse, vekt, kontrollsignaler, motortyper og kildespenning. Enkle servomotorer kan bestå av enkle DC-motorer med børster og kan bare justere posisjonen sin mellom $-90$ og $+90$ grader fra et senter, mens avanserte servoer kan ha børsteløse motorer og ha mulighet til full rotasjon, med kontrollbar vinkelhastighet og tilbakemelding av posisjon og fart.
 
-Servomotorer er bygget opp av en elektrisk motor, en vinkelsensor og en kontrollenhet. Et kommandosignal, som representerer en vinkelposisjon, påtrykkes inngangen. Dette fører til at motoren roterer i retning av denne posisjonen. Vinkelsensoren registrer hele tiden posisjonen til armen og kontrollenheten sammenlikner denne med den ønskede posisjonen. Motoren stopper når den ønskede vinkelposisjonen er nådd. Hvis armen skyves bort fra denne posisjonen vil kontrollenheten registere at den nåværende vinkelen avviker fra ønsket vinkel og motoren vil flytte armen tilbake i rett posisjon.
+Servomotorer er bygget opp av en elektrisk motor, en vinkelsensor og en kontrollenhet. Et kommandosignal, som representerer en vinkelposisjon, påtrykkes inngangen. Dette fører til at motoren roterer i retning av denne posisjonen. Vinkelsensoren registrer hele tiden posisjonen til armen og kontrollenheten sammenlikner denne med den ønskede posisjonen. Motoren stopper når den ønskede vinkelposisjonen er nådd. Hvis armen skyves bort fra denne posisjonen vil kontrollenheten registere at den nåværende vinkelen avviker fra ønsket vinkel og motoren vil flytte armen tilbake til rett posisjon. 
 
 I dette prosjektet ble det brukt servomotorer av typen HD-1600A fra PowerHD \ref{ref:PowerHD}. Dette er en enkel analog servomotor, beregnet for radiostyrte modellfly, som består av en DC-motor, et potensiometer som vinkelsensor og en kontrollenhet av typen YT2462B. For å kontrollere denne typen servomotor brukes puls-bredde-modulasjon (PWM). I PWM sendes firkantpulser hvor pulslengden varieres, mens grunnfrekvensen holdes konstant. Informasjonen ligger dermed i pulsens lengde. For styring av analoge RC-servomotorer som HD-1600A er det vanlig å bruke en grunnfrekvens på 50Hz og pulsbredde på $1$ ms til $2$ ms \ref{ref:SerCtrl}. Figur \ref{fig:PWM} viser hvordan servovinkelen avhenger av pulsbredden.
+
+Det finnes også digitale servoer ment for radiostyrte fly. Disse inneholder de samme sentrale enhetene som analoge servoer som motor, vinkelsensor og kontrollenhet, men de har også en mikroprosessor som analyserer inngangssignalet. Dette fører til at signalet kan økes fra 50Hz til over 300Hz, noe som igjen fører til at vinkelposisjonen kan oppdateres raskere. Fordelen med å oppdatere posisjonen hyppigere er raskere responstid. I situasjonen hvor en servo skal holde en vinkelposisjon statisk og kraften som påføres armen utenfra er betydelig, vil en analog servo bruke 20ms på å flytte armen tilbake i posisjon når kraften dytter den. Mens en digital servo som har raskere oppdaterings frekvens vil kun bruke ca. 3ms. Dette betyr at den digitale servoens arm får mindre tid til å ``sige'', slik at den ikke vil gå like langt ut av posisjon som den analoge. De negative sidene med digitale servoer er høyre pris og høyere effektforbruk.    
 
 \begin{figure}[H]
 \centering
@@ -61,13 +62,10 @@ Raspberry Pi er en minidatamaskin basert på en 32-bits ARM-arkitektur. Linux er
 \begin{figure}[h!]
 \centering
 \includegraphics[scale = 0.25]{img/pi.jpg}
-\caption{Rasberry Pi Model B}
+\caption{Raspberry Pi Model B}
 \end{figure}  
 
 \subsubsection{Sammenligning mellom Arduino og Raspberry Pi}
-
-\textcolor{red}{Kommentere forskjellene, forklare hvorfor vi brukte Arduino og referere til tabell}
-
 En sammenlikning mellom Arduino Uno og Raspberry Pi model B er gitt i tabell [\ref{tab:ArdRas}]
 
 \begin{table}[h!]
@@ -91,12 +89,17 @@ En sammenlikning mellom Arduino Uno og Raspberry Pi model B er gitt i tabell [\r
 	\label{tab:ArdRas}
 \end{table}
 
-Med tanke på spesifikasjoner er Rasberry Pi mye kraftigere enn Arduino Uno med klart raskere prossesor og mye mer minne. En annen fordel er at Rasberry Pi inneholder en GPU noe Arduino Uno ikke gjør, det betyr at den kan utføre bildegjenkjenning og styre servoene samtidig. På den andre siden har Rasberry Pi kun en PWM port, noe som betyr at hvis denne skal styretre servoer må to I/O porter implementeres som PWM porter i software noe som vil resultere i mer programmeringsarbeid. En annen ulempe med Rassberry Pi i forhold til Arduino er strømforbruket som er 140\% høyere ved standby. Kongsberg gruppen har også sagt at de vil sende opp en egen GPU i flyet og bildegjennkjennigen kan gjøres på denne. Med dette tankene falt valget på Arduino Uno for å kontrollere servoene.
+Med tanke på spesifikasjoner er Raspberry Pi mye kraftigere enn Arduino Uno med klart raskere prossesor og mye mer minne. En annen fordel er at Raspberry Pi inneholder en GPU, noe Arduino Uno ikke gjør. Dette betyr at Raspberry Pi potensielt kan utføre bildegjenkjenning og styre servoene samtidig. På den andre siden har Raspberry Pi kun én PWM-port, noe som betyr at hvis denne skal styre servoer må to I/O-porter implementeres som PWM-porter i software. Dette vil resultere i mer programmeringsarbeid. En annen ulempe med Raspberry Pi i forhold til Arduino er strømforbruket som er 140\% høyere ved stand-by. Kongsberg Gruppen har også sagt at de vil sende opp en egen GPU i flyet, og bildegjennkjenningen kan gjøres på denne. Med dette i tankene falt valget på Arduino Uno for å kontrollere servoene.
 
 \subsubsection{Kommunikasjonsprotokoll}
 \colorbox{yellow}{OBS!:} Skal vi si noe om at vi benytter oss av USB? Dette er noe Sven ville vi skulle poengtere. Hva er fordeler og ulemper.
 
-Som nevnt kan det sendes kommandoer til Arduino kortet serielt gjennom en serielport som også kalles en UART. Det finnes to slike serielporter på Arduinokortet og disse er USB porten og I/O port 0(RX) og port 1(TX). I dette prosjektet vil USB porten bli benyttet for å kommunisere mellom en datamaskin og Arduinokortet. Fordelen med å bruke USB porten er at det er enkelt, at alle nye datamaskiner har en USB port og det er ikke nødvendig å lage en egen protokoll med $haeder$, $error correction$ osv. En ulempe er at denne protokollen er standard slik at den ikke kan endres for å passe kun dette prosjektet og på denne måten minke mengde $overhead$.  
+Som nevnt kan det sendes kommandoer til Arduino kortet serielt gjennom en serieport som også kalles en UART. Det finnes to slike serieporter på Arduino-kortet og disse er USB-porten og I/O-port 0 (RX) og port 1 (TX). I dette prosjektet vil USB-porten bli benyttet for å kommunisere mellom en datamaskin og Arduinokortet. Fordelen med å bruke USB porten er at det er enkelt, at alle nye datamaskiner har en USB-port og det er ikke nødvendig å lage en egen protokoll med \emph{header}, \emph{error correction} osv. En ulempe er at denne protokollen er standard slik at den ikke kan endres for å passe kun dette prosjektet og på denne måten minke mengde \emph{overhead}.
+
+\subsection{Software}
+
+\subsubsection{OpenCV}
+OpenCV er et softwarebibliotek med åpen kildekode som brukes for 
 
 
 
