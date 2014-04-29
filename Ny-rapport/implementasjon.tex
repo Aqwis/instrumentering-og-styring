@@ -4,13 +4,13 @@
 
 Kongsberg anbefalte oss å bruke OpenCV, et åpen kildekode programvarebibliotek som brukes til bearbeiding av bilder og video. I tillegg ble vi oppfordret til å implementere programvaren i programmeringsspråket Matlab, siden Kongsberg internt bruker Matlab til prototyping. Flere på gruppa hadde erfaring med Matlab fra før, og vi så på dette som en god avgjørelse.
 
-Da vi begynte prosjektet var siste stabile utgivelse av OpenCV versjon 2.4.8, som ikke støttet programmering i Matlab. For å bruke Matlab og OpenCV sammen hadde vi da to alternativer. Versjon 3.0 av OpenCV, som var under utvikling, støtter Matlab. Dessuten fantes det et tredjeparts kompatibilitetslag, \emph{mexopencv}, som gjorde det mulig å programmere med OpenCV i Matlab. Vi forsøkte begge muligheter. \emph{mexopencv} var vanskelig både å kompilere på de ulike kombinasjonene av operativsystem og Matlab-versjon de ulike gruppemedlemmene satt med. Etter å ha kompilert det fikk vi også problemer med at enkelte av grafikkortene vi brukte ikke var støttet av \emph{mexopencv}. Utviklingsversjonen av OpenCV, på sin side, fikk vi overhodet ikke kompilert. Antakelig skyldes dette at kodebasen for denne versjonen var under rask utvikling og dermed ustabil.
+Da vi begynte prosjektet var siste stabile utgivelse av OpenCV versjon 2.4.8, som ikke støttet programmering i Matlab. For å bruke Matlab og OpenCV sammen hadde vi da to alternativer. Versjon 3.0 av OpenCV, som var under utvikling, støtter Matlab. Dessuten fantes det et tredjeparts kompatibilitetslag, \emph{mexopencv}, som gjorde det mulig å programmere med OpenCV i Matlab. Vi forsøkte begge muligheter. \emph{mexopencv} var vanskelig å kompilere på de ulike kombinasjonene av operativsystem og Matlab-versjon de ulike gruppemedlemmene satt med. Etter å ha kompilert det fikk vi dessuten problemer med at enkelte av grafikkortene vi brukte ikke var støttet av \emph{mexopencv}. Utviklingsversjonen av OpenCV, på sin side, fikk vi overhodet ikke kompilert. Antakelig skyldes dette at kodebasen for denne versjonen var under rask utvikling og dermed ustabil.
 
-Etter ikke å ha fått Matlab og OpenCV til å fungere sammen, valgte vi å gå for en løsning der vi i stedet for Matlab implementerte programvaren for bildegjenkjenning i C++. Vi informerte Kongsberg om dette, og de var enige i at det var en god løsning. Etter å ha skiftet språk til C++, kom vi raskt igang med utviklingen og innen få dager hadde vi utviklet en enkel løsning for bildegjenkjenning.
+Etter å ikke ha fått Matlab og OpenCV til å fungere sammen, valgte vi å gå for en løsning der vi i stedet for Matlab implementerte programvaren for bildegjenkjenning i C++. Vi informerte Kongsberg om dette, og de var enige i at det var en god løsning. Etter å ha skiftet språk til C++, kom vi raskt igang med utviklingen og innen få dager hadde vi utviklet en enkel løsning for bildegjenkjenning.
 
-\subsubsection{Første steg}
+\subsubsection{Innhenting av bilde og konvertering}
 
-Den første implementasjonen av gjenkjenningen baserte seg på å konvertere en frame av videoen fra det normale fargespekteret RGB\footnote{Red, Green, Blue}, se figur [\ref{fig:firstiterationrgb}], til et fargespektrum som heter HSV\footnote{Hue, Saturation and Value} som vist i figur [\ref{fig:firstiterationhsv}].
+Fra kamera fikk vi et bilde i fargespekteret RGB\footnote{Red, Green, Blue}, som er lite egnet til å separere ulike farger fra hverandre. Vi valgte dermed å heller benytte fargespekteret HSV\footnote{Hue, Saturation, Value}, som er hyppig brukt innen bildeprosessering. Den første implementasjonen av gjenkjenningen baserte seg på å konvertere hvert bilde i videoen fra RGB, se figur [\ref{fig:firstiterationrgb}], til HSV, som vist i figur [\ref{fig:firstiterationhsv}].
 
 \begin{figure}[h!]
 	\centering
@@ -26,7 +26,11 @@ Den første implementasjonen av gjenkjenningen baserte seg på å konvertere en 
 	\label{fig:firstiterationhsv}
 \end{figure}
 
-HSV baserer seg ikke på blandingen av farger, men bruker nyanser, metningsgrad og lysverdier for å vise en farge . Matrisen med fargekoder som skapes av konverteringen til HSV fører til en skarpere kontrast mellom farger, og gjør jobben med å filtrere vekk uønskede elementer lettere. Vi behandlet deretter matrisen med et filter, som vi manuelt stilte inn med maksimum- og minimumverdier for henholdsvis Hue, Saturation og Value, vist i figur [\ref{fig:sliders}]. Etter at matrisen hadde passert gjennom filteret satt vi igjen med et binært bilde, der fargene som passerte gjennom filteret er gjengitt som hvitt, mens alle andre farger er svarte slik det er vist i figur [\ref{fig:firstiterationbinary}].
+HSV baserer seg ikke på blanding av ulike farger, som RGB, men bruker nyanse, metningsgrad og lysverdi til å definere hver farge. Å konvertere bildet fra RGB til HSV gjør jobben med å peke ut en spesifikk farge lettere, og gjør det lettere å skille objekter fra andre. Et eksempel på et problem ved å bruke RGB er at dersom et objekt blir flyttet fra lys til skygge, endrer ikke RGB-verdiene seg langs én akse, men derimot på både R-, G- og B-aksene på en måte som er vanskelig å forutse. HSV oppfører seg mer forutsigbart -- i dette eksempelet endrer fargeverdien seg hovedsakelig i V-aksen.
+
+\subsubsection{Deteksjon}
+
+Etter å ha konvertert bildet til HSV, behandlet vi bildematrisen med et filter, som vi manuelt stilte inn med maksimum- og minimumverdier for \emph{hue}, \emph{saturation} og \emph{value}, vist i figur [\ref{fig:sliders}]. Vi satt da igjen med et binært bilde, der fargene som passerte gjennom filteret er gjengitt som hvitt, mens alle andre farger er svarte, slik det er vist i figur [\ref{fig:firstiterationbinary}].
 
 \begin{figure}[h!]
 	\centering
@@ -43,7 +47,7 @@ HSV baserer seg ikke på blandingen av farger, men bruker nyanser, metningsgrad 
 	\label{fig:firstiterationbinary}
 \end{figure}
 
-\subsubsection{Andre steg}
+\subsubsection{Smoothing}
 
 I det første steget klarte vi å fange opp et objekt, men som man kan se i figur [\ref{fig:firstiterationbinary}] er det mye støy i bildet. Vi implementerte derfor en smoothingalgoritme som gikk over det binære bildet og fjernet mindre ansamlinger med punkter og fremhevet de som var større. Dette førte til at vi fikk et renere bilde, med færre og tydeligere objekter. Dette gjorde det betydelig lettere å fange opp de enkelte objektene i bildet og finne det største av dem.
 
@@ -56,7 +60,7 @@ Resultatet kan man se i figur [\ref{fig:seconditerationbinary}]
 	\label{fig:seconditerationbinary}
 \end{figure}
 
-\subsubsection{Tredje steg}
+\subsubsection{Brukergrensesnitt}
 
 Etter at vi hadde jobbet en del med systemet fant vi ut at det var tungvindt å stille inn verdiene som skulle følges hver gang. Løsningen ble da at vi implementerte et enkelt kommandogrensesnitt som kunne be programmet om å følge etter fargen som befant seg i sentrum av bildet, som vist i figur [\ref{fig:commandmenu}]
 
