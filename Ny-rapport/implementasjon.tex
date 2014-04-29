@@ -14,16 +14,15 @@ Fra kamera fikk vi et bilde i fargespekteret RGB\footnote{Red, Green, Blue}, som
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.45]{img/first-rgb.jpg}
+	\includegraphics[scale=0.47]{img/first-rgb.jpg}
 	\caption[Første iterasjon RGB bilde]{Bilde fra video i vanlig RGB}
 	\label{fig:firstiterationrgb}
 \end{figure}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.45]{img/first-hsv.jpg}
-	\caption[Første iterasjon HSV bilde]{Bilde fra video konvertert til HSV}
-	\label{fig:firstiterationhsv}
+	\includegraphics[scale=0.47]{img/first-hsv.jpg}
+	\caption[Første iterasjon HSV bilde]{Bilde fra video konvertert til HSV}	\label{fig:firstiterationhsv}
 \end{figure}
 
 HSV baserer seg ikke på blanding av ulike farger, som RGB, men bruker nyanse, metningsgrad og lysverdi til å definere hver farge. Å konvertere bildet fra RGB til HSV gjør jobben med å peke ut en spesifikk farge lettere, og gjør det lettere å skille objekter fra andre. Et eksempel på et problem ved å bruke RGB er at dersom et objekt blir flyttet fra lys til skygge, endrer ikke RGB-verdiene seg langs én akse, men derimot på både R-, G- og B-aksene på en måte som er vanskelig å forutse. HSV oppfører seg mer forutsigbart -- i dette eksempelet endrer fargeverdien seg hovedsakelig i V-aksen.
@@ -42,7 +41,7 @@ Etter å ha konvertert bildet til HSV, behandlet vi bildematrisen med et filter,
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.45]{img/first-binary.jpg}
-	\caption{Resultatet av filtrering av et HSV-bilde før smoothing}
+	\caption[Første iterasjon binært bilde]{Resultatet av filtrering av et bilde før smoothing}
 	\label{fig:firstiterationbinary}
 \end{figure}
 
@@ -55,7 +54,7 @@ I det første steget klarte vi å fange opp et objekt, men som man kan se i figu
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.45]{img/second-binary.jpg}
-	\caption[Andre iterasjon binært bilde]{Resultatet av filtrering av et HSV-bilde etter smoothing}
+	\caption[Andre iterasjon binært bilde]{Resultatet av filtrering av et bilde etter smoothing}
 	\label{fig:seconditerationbinary}
 \end{figure}
 
