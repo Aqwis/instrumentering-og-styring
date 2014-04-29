@@ -18,6 +18,7 @@ Digitale servoer ville holdt kameraet roligere.
 \item hva de neste steg i prosessen blir, for å komme frem til et brukbart produkt. 
 \end{itemize}
 
+
  
 \subsection{Mekanisk instalasjon}
 
@@ -34,3 +35,11 @@ På grunn av liten tid til testing mot slutten av prosjektet ble også servomoto
 
 \item Mer nøyaktige digitale servoer for å minimere vibrasjoner og for raskere responstid
 \end{itemize} 
+=======
+På grunn av liten tid til testing mot slutten av prosjektet ble også servomotor 3 benyttet til å følge objekter selvom denne egentlig bare skulle brukes til å heve å senke riggen. Dette fordi det var enklere å implemnetere en algoritme for å følge objekt med alle servoene på den lille tiden dom var igjen. Det viste seg at servo 3 kunne vibrere så lenge bommen ``hvilte'' på armen til denne. Det var bare en liten vibrasjon, men den kan ha innvirkning hvis objektet er langt fra kameraet og bildet er zoomet inn. Denne vibrasjonen er nok mest sannsynlig på grunn av oppdateringshastigheten til servoen. Som bevnt tidligere er denne på 50Hz og vibrasjonen kunne vært enda mindre ved bruk av digitale servoer som har høyere oppdateringshastighet.   
+
+\subsubsection{Gyrometer}
+Gyrometeret i systemet skulle bli benyttet til å simulere flyets krengninger. Det kunne da bli demostrert hvordan riggen ville oppføre seg mens den var i bevegelse. Drivere til gyrometeret fantes ferdig til Arduino, og det var få problemer å få det til å virke. Det oppsto derimot problemer da servoene skulle implimenteres i samme program. Det ble konflikt mellom de to bibliotekene fordi begge benytter seg av samme timer på Arduinoen. Siden det ikke er multithreading på Arduino, er det ikke mulig å få et ?kongruent? program. Gyro-biblioteket fungerte også bra til Raspberry Pi. Men gyrometeret ble valgt bort da det var problematisk å få servoene til å virke på Raspbery Pi. 
+
+For systemets helhet, er ikke gyrometeret vital. I spesifikasjonene til Kongsberg blir det presisert at systemet allerede inneholder et gyrometer. Ved en fullstending implementasjon vil denne bli brukt. Fordelen ved å ikke bruke gyrometeret, er at implimentasjonen blir lettere. Ved bruk av gyrometer, må pådraget til servoene ta hensyn til hviklen vinkel riggen står i. 
+
