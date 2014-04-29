@@ -74,21 +74,12 @@ Etter at vi hadde jobbet en del med systemet fant vi ut at det var tungvindt å 
 For å gjøre det enklere å følge spesifikke objekter i kamerabildet, implementerte vi senere en funksjon som lot oss klikke på objekter i bildet for å følge dem. Både denne funksjonaliteten og \texttt{center}-kommandoen fungerte slik at fargeverdien til punktet som var i sentrum av bildet eller som ble klikket på ble hentet inn, og at sliderne automatisk ble satt til denne verdien pluss og minus en margverdi. Gode margverdier ble funnet eksperimentelt, og vi kom fram til at en marg på mellom $20$ og $30$ for hver av aksene \emph{hue}, \emph{saturation} og \emph{value} fungerte godt i de fleste situasjoner.
 
 \subsection{Valg av hardware}
-\subsubsection{Første test med Arduino}
 Det ble først bestemt at Arduino Uno skulle brukes til formålet. Fordelen var at det finnes et standard bibliotek for servoer for Arduino. I utgangspunktet skulle systemet ha et gyrometer som skulle måle orienteringen av riggen og kompensere for dette. På denne måten kunne kameraet stå vinkelrett uansett hvordan flyet bevegde seg. Det ble valgt å benytte seg av en modifisert utgave av biblioteket for MPU-6050 \cite{GyroLib}. Dette viste seg å bli et problem da Arduino ikke støtter multithreading. Det ble konflikt mellom PWM-delen av servobiblioteket og $I^2C$ som gyrometeret benytter seg av.
 
 For å løse dette, ble det gjort forsøk på å benytte seg av to arduinoer. Lesingen av gyrometeret og pådrag til servoene skulle bli gjort på ulike arduinoer, med UART som kommunikasjonsprotokoll mellom dem. Erfaringene viste at arduinoen som skulle motta kommandoer mottok mye støy. Pådraget til servoene ble dermed veldig ustabilt.
 
-\subsubsection{Raspberry Pi}
-<<<<<<< HEAD
-Et alternativ til Arduino var å bruke Raspberry Pi. Som presisert i seksjon [\ref{sec:Pi}], har Raspberry Pi mulighet for multithreading. En lignende konflikt mellom PWM og I2C vil dermed ikke skje. Det oppstod imidlertid utfordringer da Raspberry Pi kun har 1 PWM-port. Det finnes en rekke biblioteker som løser dette ved å genere PWM-signal i programvaren og sende dem gjennom en vanlig digital port. Til dette formålet ble biblioteket WiringPi \cite{WirPi} benyttet. For gyrometeret ble et standard I2C-bibliotek brukt. 
-=======
-Et alternativ til Arduino var å bruke Raspberry Pi. Som presisert i "\textcolor{red}{chapter ett eller annet (ref)}", har Raspberry Pi mulighet for multithreading. En lignende konflikt mellom PWM og I2C vil dermed ikke skje. Det oppstod imidlertid utfordringer da Raspberry Pi kun har 1 PWM-port. Det finnes en rekke biblioteker som løser dette ved å genere PWM-signal i programvaren og sende dem gjennom en vanlig digital port. Til dette formålet ble biblioteket WiringPi[\ref{RaspLib}] benyttet. For gyrometeret ble et standard I2C-bibliotek brukt. 
->>>>>>> 3d565ef3b64ae205d4ad85309e7a8458162354b6
+Det ble da besluttet å gå over til Raspberry Pi. Som presisert i seksjon [\ref{sec:Pi}], har Raspberry Pi mulighet for multithreading. En lignende konflikt mellom PWM og I2C vil dermed ikke skje. Det oppstod imidlertid utfordringer da Raspberry Pi kun har 1 PWM-port. Det finnes en rekke biblioteker som løser dette ved å genere PWM-signal i programvaren og sende dem gjennom en vanlig digital port. Til dette formålet ble biblioteket WiringPi \cite{WirPi} benyttet. For gyrometeret ble et standard I2C-bibliotek brukt. Det viste seg at konfigurasjonen av WiringPi-biblioteket var tidkrevende, og det ble bestemt å gå tilbake til Arduino, men uten gyrometer.
 
-Det viste seg at konfigurasjonen av WiringPi-biblioteket var tidkrevende, og det ble bestemt å gå tilbake til Arduino, men uten gyrometer.
-
-\subsubsection{Andre test med Ardunino}
 Denne implimentasjonen består av en Arduino som kjører servobiblioteket. Arduinoen får input fra en PC via USB, og gir pådrag til servoene basert på denne. Testene viste at servoene nå hadde en stabil oppførsel, og valget falt derfor på denne implementasjonen.
 
 \subsection{Konstruksjon av riggen}
