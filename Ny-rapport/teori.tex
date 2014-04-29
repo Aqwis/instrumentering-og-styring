@@ -23,14 +23,14 @@ En servomotor er en innretning som kan rotere en arm til en bestemt vinkelposisj
 
 Servomotorer er bygget opp av en elektrisk motor, en vinkelsensor og en kontrollenhet. Et kommandosignal, som representerer en vinkelposisjon, påtrykkes inngangen. Dette fører til at motoren roterer i retning av denne posisjonen. Vinkelsensoren registrer hele tiden posisjonen til armen og kontrollenheten sammenlikner denne med den ønskede posisjonen. Motoren stopper når den ønskede vinkelposisjonen er nådd. Hvis armen skyves bort fra denne posisjonen vil kontrollenheten registere at den nåværende vinkelen avviker fra ønsket vinkel og motoren vil flytte armen tilbake til rett posisjon. 
 
-I dette prosjektet ble det brukt servomotorer av typen HD-1600A fra PowerHD \cite{PowerHD}. Dette er en enkel analog servomotor, beregnet for radiostyrte modellfly, som består av en DC-motor, et potensiometer som vinkelsensor og en kontrollenhet av typen YT2462B. For å kontrollere denne typen servomotor brukes puls-bredde-modulasjon (PWM). I PWM sendes firkantpulser hvor pulslengden varieres, mens grunnfrekvensen holdes konstant. Informasjonen ligger dermed i pulsens lengde. For styring av analoge RC-servomotorer som HD-1600A er det vanlig å bruke en grunnfrekvens på 50Hz og pulsbredde på $1$ ms til $2$ ms \ref{ref:SerCtrl}. Figur \ref{fig:PWM} viser hvordan servovinkelen avhenger av pulsbredden.
+I dette prosjektet ble det brukt servomotorer av typen HD-1600A fra PowerHD \cite{PowerHD}. Dette er en enkel analog servomotor, beregnet for radiostyrte modellfly, som består av en DC-motor, et potensiometer som vinkelsensor og en kontrollenhet av typen YT2462B. For å kontrollere denne typen servomotor brukes puls-bredde-modulasjon (PWM). I PWM sendes firkantpulser hvor pulslengden varieres, mens grunnfrekvensen holdes konstant. Informasjonen ligger dermed i pulsens lengde. For styring av analoge RC-servomotorer som HD-1600A er det vanlig å bruke en grunnfrekvens på 50Hz og pulsbredde på $1$ ms til $2$ ms \cite{PCBheaven}. Figur \ref{fig:PWM} viser hvordan servovinkelen avhenger av pulsbredden.
 
 Det finnes også digitale servoer ment for radiostyrte fly. Disse inneholder de samme sentrale enhetene som analoge servoer som motor, vinkelsensor og kontrollenhet, men de har også en mikroprosessor som analyserer inngangssignalet. Dette fører til at signalet kan økes fra 50Hz til over 300Hz, noe som igjen fører til at vinkelposisjonen kan oppdateres raskere. Fordelen med å oppdatere posisjonen hyppigere er raskere responstid. I situasjonen hvor en servo skal holde en vinkelposisjon statisk og kraften som påføres armen utenfra er betydelig, vil en analog servo bruke 20ms på å flytte armen tilbake i posisjon når kraften dytter den. Mens en digital servo som har raskere oppdaterings frekvens vil kun bruke ca. 3ms. Dette betyr at den digitale servoens arm får mindre tid til å ``sige'', slik at den ikke vil gå like langt ut av posisjon som den analoge. De negative sidene med digitale servoer er høyre pris og høyere effektforbruk.    
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{img/pwm_servo.jpg}
-\caption{PWM-servo kontrollsignal [\cite{PWM}]}
+\caption{PWM-servo kontrollsignal \cite{PWM}}
 \label{fig:PWM}
 \end{figure}   
 
