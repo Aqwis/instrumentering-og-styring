@@ -46,14 +46,15 @@ MPU-6050 fra Invensense, som ble brukt i dette prosjektet, er et 6-akset gyrosko
 For å kunne styre riggen er det nødvendig å ha en datamaskin ombord i flyet. Det finnes en rekke alternativer på dette området, men her vil Arduino og Raspberry Pi bli presentert. Hovedoppgaven til datamaskinen er å få data fra kameraet, og orientere riggen etter disse. I systemspesifikasjonene til Kongsberg Gruppen blir det presisert at det allerede finnes en ekstern GPU på LocalHawk som tar av seg bildebehandling, men at man også kan tenke seg en løsning hvor all funksjonalitet er samlet på én chip. Datamaskinen må også kunne håndtere flere prosessorer uten at det blir konflikt mellom dem.
 
 \subsubsection{Arduino}
-Arduino er en open source utviklingsplatform basert på \textit{ATmega328}, en 8-bits mikrokontroller. Bruksområdet er hovedsakelig hobbyprosjekter og prototyping. Kortet har 14 digtale porter og 6 analoge inn-porter. 6 av de digitale portene kan sende PWM-signaler. Siden servomotorer bruker disse signalene er det mulig å koble opp til 6 servomotorer til en Arduino.
-%
+Arduino er en open source utviklingsplatform basert på \textit{ATmega328}, en 8-bits mikrokontroller. Bruksområdet er hovedsakelig hobbyprosjekter og prototyping. Kortet har 14 digtale porter og 6 analoge inn-porter, som vist i figur \ref{fig:Arduino}. 6 av de digitale portene kan sende PWM-signaler. Siden servomotorer bruker disse signalene er det mulig å koble opp til 6 servomotorer til en Arduino. 
+
 \begin{figure}[h!]
 \centering
 \includegraphics[scale = 0.25]{img/arduinoBoard.jpg}
-\caption{Arduino Uno R3}
+\caption{Arduino Uno R3 \cite{Arduino}}
+\label{fig:Arduino}
 \end{figure}
-%
+
 Arduino programmeres i C++, og programmene overføres til kortet via USB. USB-porten på kortet kan også benyttes som COM-port, slik at Arduinoen kan ta inn eksterne kommandoer. Disse kommandoene kan for eksempel være vinkler som en servomotor skal innstilles til. På mikrokontrolleren er det også installert en bootloader som inneholder en rekke biblioteker som gjør at abstraksjonsnivået blir høyere enn ordinær AVR-programmering. Dataregistre trenger ikke å endres når man vil åpne opp for en funksjon fordi biblioteket håndterer dette.
 
 \subsubsection{Raspberry Pi}
@@ -62,7 +63,7 @@ Raspberry Pi er en minidatamaskin basert på en 32-bits ARM-arkitektur. Linux er
 \begin{figure}[h!]
 \centering
 \includegraphics[scale = 0.25]{img/pi.jpg}
-\caption{Raspberry Pi Model B}
+\caption{Raspberry Pi Model B \cite{Raspberry}}
 \end{figure}  
 
 \subsubsection{Sammenligning mellom Arduino og Raspberry Pi}
