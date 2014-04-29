@@ -79,12 +79,12 @@ Det ble først bestemt at Arduino Uno skulle brukes til formålet. Fordelen var 
 For å løse dette, ble det gjort forsøk på å benytte seg av to arduinoer. Lesingen av gyrometeret og pådrag til servoene skulle bli gjort på hver sin. UART ble benyttet som kommunikasjonsprotokoll mellom dem. Erfaringene viste at arduinoen som skulle motta kommandoer mottok mye støy. Pådraget til servoene ble dermed veldig ustabile. 
 
 \subsubsection{Raspberry Pi}
-Et alternativ til Arduino, var å bruke Raspberry Pi. Som presisert i "chapter ett eller annet (ref)", har Raspberry Pi multithreading. En lignende konflikt mellom pwm og u2c vil dermed ikke skje. Men det oppsto utfordringer da Raspberry Pi kun har 1 PWM-port. Det finnes en rekke biblioteker som løser dette ved å genere PWM-signal i software og sende dem gjennom en vanlig digital port. Til dette formålet ble biblioteket WiringPi[\ref{RaspLib}] benyttet. For gyromteret, ble et standard U2C-bibliotek brukt. 
+Et alternativ til Arduino, var å bruke Raspberry Pi. Som presisert i "chapter ett eller annet (ref)", har Raspberry Pi multithreading. En lignende konflikt mellom pwm og I2c vil dermed ikke skje. Men det oppsto utfordringer da Raspberry Pi kun har 1 PWM-port. Det finnes en rekke biblioteker som løser dette ved å genere PWM-signal i software og sende dem gjennom en vanlig digital port. Til dette formålet ble biblioteket WiringPi[\ref{RaspLib}] benyttet. For gyromteret, ble et standard I2C-bibliotek brukt. 
 
-Det viste seg at konfigurasjonen av WiringPi-biblioteket var tidkrevende, ble det valgt å gå tilbake til Arduino, men uten gyrometer. 
+Det viste seg at konfigurasjonen av WiringPi-biblioteket var tidkrevende, og det ble bestemt å gå tilbake til Arduino, men uten gyrometer.  
 
 \subsubsection{Andre test med Ardunino}
-Denne implimentasjonen består av en Arduino som kjører servobilioteket. Arduinoen får innput fra PC via USB.  
+Denne implimentasjonen består av en Arduino som kjører servobilioteket. Arduinoen får innput fra PC via USB, og gir pådrag til servoene basert på disse. Testene viste at servoene hadde en stabil oppførsel, og valget falt da på denne implementasjonen.   
 
 \subsection{Konstruksjon av riggen}
 
