@@ -23,22 +23,13 @@ På grunn av liten tid til testing mot slutten av prosjektet ble også servomoto
 \subsubsection{Gyrometer}
 Gyrometeret i systemet skulle bli benyttet til å simulere flyets krengninger. Det kunne da bli demostrert hvordan riggen ville oppføre seg mens den var i bevegelse. Drivere til gyrometeret fantes ferdig til Arduino, og det var få problemer å få det til å virke. Det oppsto derimot problemer da servoene skulle implimenteres i samme program. Det ble konflikt mellom de to bibliotekene fordi begge benytter seg av samme timer på Arduinoen. Siden det ikke er multithreading på Arduino, er det ikke mulig å få et \textcolor{red}{?kongruent?} program. Gyro-biblioteket fungerte også bra til Raspberry Pi. Men gyrometeret ble valgt bort da det var problematisk å få servoene til å virke på Raspbery Pi. Derfor benyttet vi oss av en løsning med en enkelt Arduino og servoer. 
 
-For systemets helhet, er ikke gyrometeret vital. I spesifikasjonene til Kongsberg blir det presisert at systemet allerede inneholder et gyrometer. Ved en fullstending implementasjon vil denne bli brukt. Fordelen ved å ikke bruke gyrometeret, er at implementasjonen blir lettere. Ved bruk av gyrometer, må pådraget til servoene ta hensyn til hvilken vinkel riggen står i. 
-
-
-Fordelen med å ha et eget gyrometer, er at man får et system som er uavhengig av den eksisterende hardwaren på Local Hawk. Dette medfører at systemet blir lettere overførbart til andre plattformer.
-
-
+For systemets helhet, er ikke gyrometeret vital. I spesifikasjonene til Kongsberg blir det presisert at systemet allerede inneholder et gyrometer. Ved en fullstending implementasjon vil denne bli brukt. Fordelen ved å ikke bruke gyrometeret, er at implementasjonen blir lettere. Ved bruk av gyrometer, må pådraget til servoene ta hensyn til hvilken vinkel riggen står i. Fordelen med å ha et eget gyrometer, er at man får et system som er uavhengig av den eksisterende hardwaren på Local Hawk. Dette medfører at systemet blir lettere overførbart til andre plattformer.
 
 \subsubsection{Bildegjenkjenning}
 
 Det tok ikke veldig lang tid før det måtte erkjennes at bildegjenkjenningen var mye mer utfordrende enn først antatt. Selv en oppgave som å følge et ensfarget objekt medfører ganske komplekse algoritmer, og små endringer i lysforhold kan være nok til å endre kvaliteten på et bilde nok til at objektet plutselig faller gjennom filteret i programmet.
 
-
-
 Målet for bildegjenkjenningen var å klare å følge meget komplekse objekter i varierende terreng. En bil brukt i bilsport vil ofte ha en eller flere farger som grunnfarge, i tillegg har man et udefinert antall klistremerker og påmalte kjennemerker som annonser, navn og annet. I utviklingen av algoritmene ble det aldri tid til å komme forbi steget der vi skal begynne med ensfargede objekter i varierte bakgrunner. Dette fungerte nesten utelukkende dersom kontrasten på fargen til objektet var stor nok i forhold til bakgrunnen til at de enkelt kunne skilles fra hverandre.
-
-
 
 Arbeid med bildegjenkjenning på det nivået som kreves for å skille ut objekter i graden som ønskes av Kongsberg var ikke mulig å oppnå i den relativt korte tiden som var tilgjengelig for dette prosjektet.
 
@@ -47,17 +38,12 @@ Arbeid med bildegjenkjenning på det nivået som kreves for å skille ut objekte
 
 Bildegjenkjenning er en tung prosess som krever noe hardware for å utføre operasjonen fortløpende. Når man skal gjøre denne prosessen med en videostrøm trengs en relativt kraftig cpu. I spesifikasjonene fra Kongsberg \cite{LocalHawkPDF} var det ikke spesifisert noen form for hardware som støtter den mengden prosessering som er nødvendig for gjenkjenningen. I samtaler med Kongsberg kom det frem at de vurderte å utstyre flyet med en egen GPU for å utføre bildegjenkjenning. 
 
-
-
 GPU har i nyere tid kommet til en formfaktor og energibruk som egner seg godt til bruk for et prosjekt som dette. OpenCV har egne pakker som inkluderer støtte for bruk av GPU for behandling av bilder, og kodebasen som er utviklet i dette prosjektet kan derfor i stor grad benyttes selv om denne løsningen blir brukt.
-
 
 \subsubsection{Nedskalering av oppgaven}
 Arbeidet med prosjektet kom fort igang, oppgaven var tidlig valgt ut og teknologiene som skulle benyttes bestemt. Bildegjenkjenningen hadde vanskeligheter i begynnelsen, særlig med biblioteket \emph{mexopencv}. Problemer med installasjon førte resulterte i at programmeringen aldri var på et stadie der vi kunne begynne å bruke Matlab. Det tok noen uker med forsøk før vi bestemte oss for å bytte til C++ som programmeringsspråk etter en samtale med Kongsberg.
 
 Rundt tiden da samarbeidsavtalen ble revidert ble det klart at gruppa ikke kunne komme i mål med hele oppgaven slik den var fremstilt av Kongsberg. Prosjektets tilstand ble diskutert innad i gruppen, og i samråd med faglærer ble vi enige om at en prototype av bildestabiliseringsriggen ville være en bedre proporsjonert oppgave for tidsrammen.
-
-
 
 \subsection{Videre arbeid}
 
