@@ -1,53 +1,92 @@
 \begin{itemize}
 \item 
-Droppet gyro.
-\item 
-Tungt kamera.
-\item 
-Digitale servoer ville holdt kameraet roligere.
-\item I demostrasjone  ble alle også servo 3 brukt for å følge objekt.
+Hva kunne vært fordelen med å gå over til Raspberry PI med sine servoer
 
-\item Hva kunne vært fordelen med å gå over til Raspberry PI med sine servoer
+\item diskutere kompleksiteten ved bildegjenkjenning. 
+
+\item diskutere behandling av bilder i flyet med egen gpu
 
 \item diskutere utfordringene med å følge bilen med flyet, med tanke på svingene på banen og flyets krenging.
 
 \item hva de neste steg i prosessen blir, for å komme frem til et brukbart produkt. 
 \end{itemize}
 
-
+\subsection{Implementasjonen}
  
-\subsection{Mekanisk installasjon}
+\subsubsection{Mekanisk installasjon}
 
 Kameraet som ble brukt var et billig 300K piksels webkamera. Dette til tross for at Kongsberg sende et kamera som var tiltenkt brukt i LokalHawk flyet. Grunnen er at konstruksjonen av riggen ble gjort før Kongsberg sendte sitt kamera og ble laget med tanke på et mindre kamera og da kameraet skulle monteres på riggen viste det seg at det var for stort og tungt. Hadde kameraet fra Kongsberg vært skaffet tidligere kunne riggen blitt bygget større med større og sterkere servoer. Dermed ble et nytt kamera kjøpt, dette kameraet er betydelig mindre og lettere. Selvom det har dårligere spesifikasjoner er det godt nok til å vise at bildegjenkjenningen virker som den skal.
 
-På grunn av liten tid til testing mot slutten av prosjektet ble også servomotor 3 benyttet til å følge objekter selvom denne egentlig bare skulle brukes til å heve å senke riggen. Dette fordi det var enklere å implemnetere en algoritme for å følge objekt med alle servoene på den lille tiden dom var igjen. Det viste seg at servo 3 kunne vibrere så lenge bommen ``hvilte'' på armen til denne. Det var bare en liten vibrasjon, men den kan ha innvirkning hvis objektet er langt fra kameraet og bildet er zoomet inn. Denne vibrasjonen er nok mest sannsynlig på grunn av oppdateringshastigheten til servoen. Som bevnt tidligere er denne på 50Hz og vibrasjonen kunne vært enda mindre ved bruk av digitale servoer som har høyere oppdateringshastighet.   
-
+På grunn av liten tid til testing mot slutten av prosjektet ble også servomotor 3 benyttet til å følge objekter selvom denne egentlig bare skulle brukes til å heve å senke riggen. Dette fordi det var enklere å implemnetere en algoritme for å følge objekt med alle servoene på den lille tiden dom var igjen. Det viste seg at servo 3 kunne vibrere så lenge bommen ``hvilte'' på armen til denne. Det var bare en liten vibrasjon, men den kan ha innvirkning hvis objektet er langt fra kameraet og bildet er zoomet inn. Denne vibrasjonen er nok mest sannsynlig på grunn av oppdateringshastigheten til servoen. Som bevnt tidligere er denne på 50Hz og vibrasjonen kunne vært enda mindre ved bruk av digitale servoer som har høyere oppdateringshastighet.  
+   
 
 \subsubsection{Gyrometer}
-Gyrometeret i systemet skulle bli benyttet til å simulere flyets krengninger. Det kunne da bli demostrert hvordan riggen ville oppføre seg mens den var i bevegelse. Drivere til gyrometeret fantes ferdig til Arduino, og det var få problemer å få det til å virke. Det oppsto derimot problemer da servoene skulle implimenteres i samme program. Det ble konflikt mellom de to bibliotekene fordi begge benytter seg av samme timer på Arduinoen. Siden det ikke er multithreading på Arduino, er det ikke mulig å få et ?kongruent? program. Gyro-biblioteket fungerte også bra til Raspberry Pi. Men gyrometeret ble valgt bort da det var problematisk å få servoene til å virke på Raspbery Pi. 
+Gyrometeret i systemet skulle bli benyttet til å simulere flyets krengninger. Det kunne da bli demostrert hvordan riggen ville oppføre seg mens den var i bevegelse. Drivere til gyrometeret fantes ferdig til Arduino, og det var få problemer å få det til å virke. Det oppsto derimot problemer da servoene skulle implimenteres i samme program. Det ble konflikt mellom de to bibliotekene fordi begge benytter seg av samme timer på Arduinoen. Siden det ikke er multithreading på Arduino, er det ikke mulig å få et ?kongruent? program. Gyro-biblioteket fungerte også bra til Raspberry Pi. Men gyrometeret ble valgt bort da det var problematisk å få servoene til å virke på Raspbery Pi. Derfor benyttet vi oss av en løsning med en enkelt Arduino og servoer. 
 
-For systemets helhet, er ikke gyrometeret vital. I spesifikasjonene til Kongsberg blir det presisert at systemet allerede inneholder et gyrometer. Ved en fullstending implementasjon vil denne bli brukt. Fordelen ved å ikke bruke gyrometeret, er at implimentasjonen blir lettere. Ved bruk av gyrometer, må pådraget til servoene ta hensyn til hviklen vinkel riggen står i. 
+For systemets helhet, er ikke gyrometeret vital. I spesifikasjonene til Kongsberg blir det presisert at systemet allerede inneholder et gyrometer. Ved en fullstending implementasjon vil denne bli brukt. Fordelen ved å ikke bruke gyrometeret, er at implementasjonen blir lettere. Ved bruk av gyrometer, må pådraget til servoene ta hensyn til hvilken vinkel riggen står i. 
 
 
-\subsection{Bildegjenkjenning}
+Fordelen med å ha et eget gyrometer, er at man får et system som er uavhengig av den eksisterende hardwaren på Local Hawk. Dette medfører at systemet blir lettere overførbart til andre plattformer.
+
+
+
+\subsubsection{Bildegjenkjenning}
+
 Det tok ikke veldig lang tid før det måtte erkjennes at bildegjenkjenningen var mye mer utfordrende enn først antatt. Selv en oppgave som å følge et ensfarget objekt medfører ganske komplekse algoritmer, og små endringer i lysforhold kan være nok til å endre kvaliteten på et bilde nok til at objektet plutselig faller gjennom filteret i programmet.
+
+
 
 Målet for bildegjenkjenningen var å klare å følge meget komplekse objekter i varierende terreng. En bil brukt i bilsport vil ofte ha en eller flere farger som grunnfarge, i tillegg har man et udefinert antall klistremerker og påmalte kjennemerker som annonser, navn og annet. I utviklingen av algoritmene ble det aldri tid til å komme forbi steget der vi skal begynne med ensfargede objekter i varierte bakgrunner. Dette fungerte nesten utelukkende dersom kontrasten på fargen til objektet var stor nok i forhold til bakgrunnen til at de enkelt kunne skilles fra hverandre.
 
+
+
 Arbeid med bildegjenkjenning på det nivået som kreves for å skille ut objekter i graden som ønskes av Kongsberg var ikke mulig å oppnå i den relativt korte tiden som var tilgjengelig for dette prosjektet.
 
-\subsection{Ressursbruk i bildegjenkjenning og bruk i flyet}
+
+\subsubsection{Ressursbruk i bildegjenkjenning og bruk i flyet}
+
 Bildegjenkjenning er en tung prosess som krever noe hardware for å utføre operasjonen fortløpende. Når man skal gjøre denne prosessen med en videostrøm trengs en relativt kraftig cpu. I spesifikasjonene fra Kongsberg \cite{LocalHawkPDF} var det ikke spesifisert noen form for hardware som støtter den mengden prosessering som er nødvendig for gjenkjenningen. I samtaler med Kongsberg kom det frem at de vurderte å utstyre flyet med en egen GPU for å utføre bildegjenkjenning. 
+
+
 
 GPU har i nyere tid kommet til en formfaktor og energibruk som egner seg godt til bruk for et prosjekt som dette. OpenCV har egne pakker som inkluderer støtte for bruk av GPU for behandling av bilder, og kodebasen som er utviklet i dette prosjektet kan derfor i stor grad benyttes selv om denne løsningen blir brukt.
 
+
+\subsubsection{Nedskalering av oppgaven}
+Arbeidet med prosjektet kom fort igang, oppgaven var tidlig valgt ut og teknologiene som skulle benyttes bestemt. Bildegjenkjenningen hadde vanskeligheter i begynnelsen, særlig med biblioteket \emph{mexopencv}. Problemer med installasjon førte resulterte i at programmeringen aldri var på et stadie der vi kunne begynne å bruke Matlab. Det tok noen uker med forsøk før vi bestemte oss for å bytte til C++ som programmeringsspråk etter en samtale med Kongsberg.
+
+Rundt tiden da samarbeidsavtalen ble revidert ble det klart at gruppa ikke kunne komme i mål med hele oppgaven slik den var fremstilt av Kongsberg. Prosjektets tilstand ble diskutert innad i gruppen, og i samråd med faglærer ble vi enige om at en prototype av bildestabiliseringsriggen ville være en bedre proporsjonert oppgave for tidsrammen.
+
+
+
 \subsection{Videre arbeid}
 
+\subsubsection{Hardware}
+Kongsberg så for seg en løsning der man hadde et ferdig hyllevareprodukt man kunne plassere under flyet. En videreføring av implementasjonen vil være å lage et eget kretskort med gyro, CPU og GPU. Til dette formålet kan man bruke en ARM-prosessor som har innebygget GPU med god ytelse.  
+
 \begin{itemize}
+
 \item Implementere Gyroskop
+
+
 
 \item Kraftigere servoer for å kunne bære kameraet
 
+
+
 \item Mer nøyaktige digitale servoer for å minimere vibrasjoner og for raskere responstid
+
 \end{itemize} 
+
+\subsubsection{Mekanisk installasjon}
+
+Siden prototyperiggen presentert i denne oppgaven er for liten til å bære kameraet Konsberg ønsker å bruke i sitt LocalHawk, er en naturlig videre føring av dette prosjektet å bygge en ny rigg og forbedret rigg med større servoer og materialer mer egent vær og vind. Detneste steget vil kunne være å bruke et gyrometer, som det ble forsøkt i dette prosjektet, til å stabilisere denne riggen slik at den blir mest mulig uavhengig av flyets bevegelser. 
+
+\subsubsection{Bildegjenkjenning}
+Bildegjenkjenningen trenger fremdeles en god del arbeid før den kan brukes i faktiske forhold. Som tidligere nevnt innebærer dette nesten et selvstendig prosjekt hvor fokuset er på bearbeidingen av bilder og integrasjon av denne teknologien mot en innebygget GPU i flyet. Prototypen som er utviklet i dette prosjektet gjør tydelig hvordan vi vil løse oppgaven med bildestabilisering som en isolert oppgave, men tar ikke med noen faktorer knyttet til flygningen.
+
+\subsubsection{Mekanisk bilestabilisering}
+Beslutningen om nedskalering av prosjektet medførte at vi forkuserte på å vise at riggen i prinsippet klarer å følge etter objekter. I dag er stabiliseringen litt hakkete, noe som bare betyr at det kan gjøres med for å forsøke å enten forutsi hvilken vei objektet sannsynligvis beveger seg eller å la kameraet følge litt etter slik at banen kameraet skal følge kan finstilles mer.
+
+
 
