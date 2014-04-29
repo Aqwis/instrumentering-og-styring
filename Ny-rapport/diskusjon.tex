@@ -14,9 +14,9 @@ Digitale servoer ville holdt kameraet roligere.
 \item hva de neste steg i prosessen blir, for å komme frem til et brukbart produkt. 
 \end{itemize}
 
-
+\subsection{Implementasjonen}
  
-\subsection{Mekanisk installasjon}
+\subsubsection{Mekanisk installasjon}
 
 Kameraet som ble brukt var et billig 300K piksels webkamera. Dette til tross for at Kongsberg sende et kamera som var tiltenkt brukt i LokalHawk flyet. Grunnen er at konstruksjonen av riggen ble gjort før Kongsberg sendte sitt kamera og ble laget med tanke på et mindre kamera og da kameraet skulle monteres på riggen viste det seg at det var for stort og tungt. Hadde kameraet fra Kongsberg vært skaffet tidligere kunne riggen blitt bygget større med større og sterkere servoer. Dermed ble et nytt kamera kjøpt, dette kameraet er betydelig mindre og lettere. Selvom det har dårligere spesifikasjoner er det godt nok til å vise at bildegjenkjenningen virker som den skal.
 
@@ -28,18 +28,28 @@ Gyrometeret i systemet skulle bli benyttet til å simulere flyets krengninger. D
 
 For systemets helhet, er ikke gyrometeret vital. I spesifikasjonene til Kongsberg blir det presisert at systemet allerede inneholder et gyrometer. Ved en fullstending implementasjon vil denne bli brukt. Fordelen ved å ikke bruke gyrometeret, er at implimentasjonen blir lettere. Ved bruk av gyrometer, må pådraget til servoene ta hensyn til hvilken vinkel riggen står i. 
 
+
 Fordelen ved å ha et eget gyrometer, er at man får et system som er uavhengig av den eksisterende hardwaren på Local Hawk. Dette medfører at systemet blir lettere overførbart til andre plattformer.
+
 \subsection{Bildegjenkjenning}
+
+\subsubsection{Bildegjenkjenning}
 Det tok ikke veldig lang tid før det måtte erkjennes at bildegjenkjenningen var mye mer utfordrende enn først antatt. Selv en oppgave som å følge et ensfarget objekt medfører ganske komplekse algoritmer, og små endringer i lysforhold kan være nok til å endre kvaliteten på et bilde nok til at objektet plutselig faller gjennom filteret i programmet.
 
 Målet for bildegjenkjenningen var å klare å følge meget komplekse objekter i varierende terreng. En bil brukt i bilsport vil ofte ha en eller flere farger som grunnfarge, i tillegg har man et udefinert antall klistremerker og påmalte kjennemerker som annonser, navn og annet. I utviklingen av algoritmene ble det aldri tid til å komme forbi steget der vi skal begynne med ensfargede objekter i varierte bakgrunner. Dette fungerte nesten utelukkende dersom kontrasten på fargen til objektet var stor nok i forhold til bakgrunnen til at de enkelt kunne skilles fra hverandre.
 
 Arbeid med bildegjenkjenning på det nivået som kreves for å skille ut objekter i graden som ønskes av Kongsberg var ikke mulig å oppnå i den relativt korte tiden som var tilgjengelig for dette prosjektet.
 
-\subsection{Ressursbruk i bildegjenkjenning og bruk i flyet}
+\subsubsection{Ressursbruk i bildegjenkjenning og bruk i flyet}
 Bildegjenkjenning er en tung prosess som krever noe hardware for å utføre operasjonen fortløpende. Når man skal gjøre denne prosessen med en videostrøm trengs en relativt kraftig cpu. I spesifikasjonene fra Kongsberg \cite{LocalHawkPDF} var det ikke spesifisert noen form for hardware som støtter den mengden prosessering som er nødvendig for gjenkjenningen. I samtaler med Kongsberg kom det frem at de vurderte å utstyre flyet med en egen GPU for å utføre bildegjenkjenning. 
 
 GPU har i nyere tid kommet til en formfaktor og energibruk som egner seg godt til bruk for et prosjekt som dette. OpenCV har egne pakker som inkluderer støtte for bruk av GPU for behandling av bilder, og kodebasen som er utviklet i dette prosjektet kan derfor i stor grad benyttes selv om denne løsningen blir brukt.
+
+\subsubsection{Nedskalering av oppgaven}
+Arbeidet med prosjektet kom fort igang, oppgaven var tidlig valgt ut og teknologiene som skulle benyttes bestemt. Bildegjenkjenningen hadde vanskeligheter i begynnelsen, særlig med biblioteket \emph{mexopencv}. Problemer med installasjon førte resulterte i at programmeringen aldri var på et stadie der vi kunne begynne å bruke Matlab. Det tok noen uker med forsøk før vi bestemte oss for å bytte til C++ som programmeringsspråk etter en samtale med Kongsberg.
+
+Rundt tiden da samarbeidsavtalen ble revidert ble det klart at gruppa ikke kunne komme i mål med hele oppgaven slik den var fremstilt av Kongsberg. Prosjektets tilstand ble diskutert innad i gruppen, og i samråd med faglærer ble vi enige om at en prototype av bildestabiliseringsriggen ville være en bedre proporsjonert oppgave for tidsrammen.
+
 
 \subsection{Videre arbeid}
 
@@ -51,3 +61,5 @@ GPU har i nyere tid kommet til en formfaktor og energibruk som egner seg godt ti
 \item Mer nøyaktige digitale servoer for å minimere vibrasjoner og for raskere responstid
 \end{itemize} 
 
+\subsubsection{Bildegjenkjenning}
+gfogdjopå
