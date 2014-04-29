@@ -22,7 +22,7 @@ Fra kamera fikk vi et bilde i fargespekteret RGB\footnote{Red, Green, Blue}, som
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.45]{img/first-hsv.jpg}
-	\caption[Første iterasjon HSV bilde]{Bilde fra video oversatt til HSV}
+	\caption[Første iterasjon HSV bilde]{Bilde fra video konvertert til HSV}
 	\label{fig:firstiterationhsv}
 \end{figure}
 
@@ -30,12 +30,11 @@ HSV baserer seg ikke på blanding av ulike farger, som RGB, men bruker nyanse, m
 
 \subsubsection{Deteksjon}
 
-Etter å ha konvertert bildet til HSV, behandlet vi bildematrisen med et filter, som vi manuelt stilte inn med maksimum- og minimumverdier for \emph{hue}, \emph{saturation} og \emph{value}, vist i figur [\ref{fig:sliders}]. Vi satt da igjen med et binært bilde, der fargene som passerte gjennom filteret er gjengitt som hvitt, mens alle andre farger er svarte, slik det er vist i figur [\ref{fig:firstiterationbinary}].
+Etter å ha konvertert bildet til HSV, behandlet vi bildematrisen med et filter, som vi manuelt stilte inn med maksimum- og minimumverdier for \emph{hue}, \emph{saturation} og \emph{value}, vist i figur [\ref{fig:sliders}]. Vi satt da igjen med et binært bilde, der fargene som lå mellom disse maksimums- og minimumsverdiene er gjengitt i hvitt, mens alle andre farger er gjengitt i svart, som vist i figur [\ref{fig:firstiterationbinary}].
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.45]{img/sliders.jpg}
-	\caption[First iteration HSV image]{Frame from video cast to HSV}
 	\caption{Slidere for å velge HSV verdier}
 	\label{fig:sliders}
 \end{figure}
@@ -43,7 +42,7 @@ Etter å ha konvertert bildet til HSV, behandlet vi bildematrisen med et filter,
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.45]{img/first-binary.jpg}
-	\caption[Første iterasjon binært bilde]{Resultatet av filtrering av et HSV bilde før smoothing}
+	\caption{Resultatet av filtrering av et HSV-bilde før smoothing}
 	\label{fig:firstiterationbinary}
 \end{figure}
 
@@ -56,21 +55,22 @@ Resultatet kan man se i figur [\ref{fig:seconditerationbinary}]
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.45]{img/second-binary.jpg}
-	\caption[Andre iterasjon binært bilde]{Resultatet av filtrering av et HSV bilde etter smoothing}
+	\caption[Andre iterasjon binært bilde]{Resultatet av filtrering av et HSV-bilde etter smoothing}
 	\label{fig:seconditerationbinary}
 \end{figure}
 
 \subsubsection{Brukergrensesnitt}
 
-Etter at vi hadde jobbet en del med systemet fant vi ut at det var tungvindt å stille inn verdiene som skulle følges hver gang. Løsningen ble da at vi implementerte et enkelt kommandogrensesnitt som kunne be programmet om å følge etter fargen som befant seg i sentrum av bildet, som vist i figur [\ref{fig:commandmenu}]
+Etter at vi hadde jobbet en del med systemet fant vi ut at det var tungvindt å hver gang manuelt stille inn hvilke farger som skulle følges ved hjelp av sliderne. Løsningen ble da at vi implementerte et enkelt kommandolinjegrensesnitt, der vi med hjelp av kommandoen \texttt{center} kunne be programmet om å følge etter fargen som befant seg i sentrum av bildet. Grensesnittet er vist i figur [\ref{fig:commandmenu}]. Etter hvert som vi la til flere funksjoner i programmet, utvidet vi kommandolinjegrensesnittet med flere kommandoer.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.8]{img/command-menu.png}
-	\caption{Kommandomenyen}
+	\caption{En oversikt over de tilgjengelige kommandoene i kommandolinjegrensesnittet}
 	\label{fig:commandmenu}
 \end{figure}
 
+For å gjøre det enklere å følge spesifikke objekter i kamerabildet, implementerte vi senere en funksjon som lot oss klikke på objekter i bildet for å følge dem. Både denne funksjonaliteten og \texttt{center}-kommandoen fungerte slik at fargeverdien til punktet som var i sentrum av bildet eller som ble klikket på ble hentet inn, og at sliderne automatisk ble satt til denne verdien pluss/minus en margverdi. Margverdien ble eksperimentert ved, og vi kom fram til at en marg på $20$ eller $30$ for hver av aksene \emph{hue}, \emph{saturation} og \emph{value} fungerte godt i de fleste situasjoner.
 
 \subsection{Valg av hardware}
 \subsubsection{Første test med Arduino}
