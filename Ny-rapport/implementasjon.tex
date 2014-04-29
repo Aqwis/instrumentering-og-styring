@@ -1,5 +1,3 @@
-\colorbox{yellow}{Denne delen er mye preget av ``vi``. Setningene bør bygges opp som ``Det ble ..``}
-
 \subsection{Bildegjenkjenning}
 
 Kongsberg anbefalte oss å bruke OpenCV, et åpen kildekode programvarebibliotek som brukes til bearbeiding av bilder og video. I tillegg ble vi oppfordret til å implementere programvaren i programmeringsspråket Matlab, siden Kongsberg internt bruker Matlab til prototyping. Flere på gruppa hadde erfaring med Matlab fra før, og vi så på dette som en god avgjørelse.
@@ -75,12 +73,16 @@ For å gjøre det enklere å følge spesifikke objekter i kamerabildet, implemen
 
 \subsection{Valg av hardware}
 \subsubsection{Første test med Arduino}
-Det ble først bestemt at Arduino Uno skulle brukes til formålet. Fordelen var at det finnes et standard bibliotek for servoer for Arduino. I utgangspunktet skulle systemet ha et gyrometer som skulle måle orienteringen av riggen og kompensere for dette. På denne måten kunne kameraet stå vinkelrett uansett hvordan flyet bevegde seg. Det ble valgt å benytte seg av en modifisert utgave av biblioteket [\ref{GyroLib}]. Dette viste seg å bli et problem da Arduino ikke støtter multithreading. Det ble konflikt mellom PWM-delen av servobiblioteket og $U^2C$ som gyrometeret benytter seg av.
+Det ble først bestemt at Arduino Uno skulle brukes til formålet. Fordelen var at det finnes et standard bibliotek for servoer for Arduino. I utgangspunktet skulle systemet ha et gyrometer som skulle måle orienteringen av riggen og kompensere for dette. På denne måten kunne kameraet stå vinkelrett uansett hvordan flyet bevegde seg. Det ble valgt å benytte seg av en modifisert utgave av biblioteket for MPU-6050 \cite{GyroLib}. Dette viste seg å bli et problem da Arduino ikke støtter multithreading. Det ble konflikt mellom PWM-delen av servobiblioteket og $I^2C$ som gyrometeret benytter seg av.
 
 For å løse dette, ble det gjort forsøk på å benytte seg av to arduinoer. Lesingen av gyrometeret og pådrag til servoene skulle bli gjort på ulike arduinoer, med UART som kommunikasjonsprotokoll mellom dem. Erfaringene viste at arduinoen som skulle motta kommandoer mottok mye støy. Pådraget til servoene ble dermed veldig ustabilt.
 
 \subsubsection{Raspberry Pi}
-Et alternativ til Arduino var å bruke Raspberry Pi. Som presisert i "chapter ett eller annet (ref)", har Raspberry Pi mulighet for multithreading. En lignende konflikt mellom PWM og I2C vil dermed ikke skje. Det oppstod imidlertid utfordringer da Raspberry Pi kun har 1 PWM-port. Det finnes en rekke biblioteker som løser dette ved å genere PWM-signal i programvaren og sende dem gjennom en vanlig digital port. Til dette formålet ble biblioteket WiringPi[\ref{RaspLib}] benyttet. For gyrometeret ble et standard I2C-bibliotek brukt. 
+<<<<<<< HEAD
+Et alternativ til Arduino var å bruke Raspberry Pi. Som presisert i seksjon [\ref{sec:Pi}], har Raspberry Pi mulighet for multithreading. En lignende konflikt mellom PWM og I2C vil dermed ikke skje. Det oppstod imidlertid utfordringer da Raspberry Pi kun har 1 PWM-port. Det finnes en rekke biblioteker som løser dette ved å genere PWM-signal i programvaren og sende dem gjennom en vanlig digital port. Til dette formålet ble biblioteket WiringPi \cite{WirPi} benyttet. For gyrometeret ble et standard I2C-bibliotek brukt. 
+=======
+Et alternativ til Arduino var å bruke Raspberry Pi. Som presisert i "\textcolor{red}{chapter ett eller annet (ref)}", har Raspberry Pi mulighet for multithreading. En lignende konflikt mellom PWM og I2C vil dermed ikke skje. Det oppstod imidlertid utfordringer da Raspberry Pi kun har 1 PWM-port. Det finnes en rekke biblioteker som løser dette ved å genere PWM-signal i programvaren og sende dem gjennom en vanlig digital port. Til dette formålet ble biblioteket WiringPi[\ref{RaspLib}] benyttet. For gyrometeret ble et standard I2C-bibliotek brukt. 
+>>>>>>> 3d565ef3b64ae205d4ad85309e7a8458162354b6
 
 Det viste seg at konfigurasjonen av WiringPi-biblioteket var tidkrevende, og det ble bestemt å gå tilbake til Arduino, men uten gyrometer.
 
@@ -148,4 +150,12 @@ Kommandoer sendes til Arduino via USB-porten. Kommandoer kan sendes som \texttt{
 
 \subsection{Styring av rigg}
 
-Tekst her
+På dette punktet hadde vi en rigg med et kamera som kunne styres med signaler fra en PC, og programvare som kunne detektere et objekt i bildet fra kameraet basert på fargen. For å koble disse to delene sammen, trengte vi en metode for å oversette objektets posisjon i bildet til vinkelkommandoer som kunne sendes til riggen, med mål om å få kameraet til å peke direkte på det detekterte objektet.
+
+Som tidligere beskrevet var den opprinnelige planen å kun bruke to av servomotorene til å styre kameraet, og bruke den tredje kun til å trekke kameraet inn i flyet. Vi oppdaget imidlertid at det var svært utfordrende å regne ut relasjonen mellom objektets posisjon i bildet og riggens bevegelse dersom vi brukte disse to servomotorene. Som en enklere løsning valgte vi å bruke servomotor 1 og 3 til å følge objektet. Med riktig forhåndsinnstilling av servomotor 2 står bevegelsesaksene til servomotor 1 og 3 omtrent normalt på hverandre, slik at de henholdsvis beveger seg langs tenkte x- og y-akser.
+
+Fra kameraleverandøren hentet vi informasjon om størrelsen på kameraets synsfelt. Kombinert med det detekterte objektets avstand fra bildesenteret i piksler, kunne vi regne ut antall grader riggen måtte bevege seg for å plassere objektet i sentrum av bildet. Ved å til dette tallet legge til riggens nåværende posisjon, som ble lagret hver gang riggen ble bedt om å flytte på seg, kunne man regne ut en absolutt posisjon som riggen skulle flytte seg til.
+
+Det siste steget var å sende bevegelseskommandoene til Arduino-kortet, som kontrollerte servoene. Opprinnelig ba vi riggen om å i hvert steg bevege seg hele avstanden i grader mellom sentrum av bildet og objektet. Dette førte til svært stor ustabilitet og oscillasjoner rundt de detekterte objektene. Vi løste dette ved å sette en begrensning på bevegelsen, der vi aldri lot riggen bevege seg mer enn 2 eller 1 grad om gangen, avhengig av hvor nært objektet var sentrum av bildet.
+
+Vi oppdaget videre at det punktet OpenCV beregnet som midten av det detekterte objektet gjerne varierte tilfeldig selv om objektet sto i ro, noe som førte til unødvendige bevegelser av riggen. Det ble dermed spesifisert i koden at dersom objektet var under 3 grader under sentrum, skulle riggen ikke bevege seg. En annen ting vi merket var at motorene ikke opererte perfekt innenfor hele området $0$ til $180$ grader. Servomotor 1 hadde et ideelt bevegelsesområde på omtrent $15$ til $175$ grader, mens servomotor 3 kunne bevege seg mellom rundt $10$ og $140$ grader uten problemer. Vi implenterte en sperre som gjorde at dersom det var nødvendig for motorene å bevege seg utenfor disse intervallene for å følge et objekt, ble bevegelsene ikke gjennomført. Med disse begrensningene på riggens bevegelse på plass, fungerte objektfølgingen tilfredsstillende, uten for mye ustabilitet og med grei fart.

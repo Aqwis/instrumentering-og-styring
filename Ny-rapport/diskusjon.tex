@@ -21,12 +21,12 @@ På grunn av liten tid til testing mot slutten av prosjektet ble også servomoto
    
 
 \subsubsection{Gyrometer}
-Gyrometeret i systemet skulle bli benyttet til å simulere flyets krengninger. Det kunne da bli demostrert hvordan riggen ville oppføre seg mens den var i bevegelse. Drivere til gyrometeret fantes ferdig til Arduino, og det var få problemer å få det til å virke. Det oppsto derimot problemer da servoene skulle implimenteres i samme program. Det ble konflikt mellom de to bibliotekene fordi begge benytter seg av samme timer på Arduinoen. Siden det ikke er multithreading på Arduino, er det ikke mulig å få et ?kongruent? program. Gyro-biblioteket fungerte også bra til Raspberry Pi. Men gyrometeret ble valgt bort da det var problematisk å få servoene til å virke på Raspbery Pi. 
+Gyrometeret i systemet skulle bli benyttet til å simulere flyets krengninger. Det kunne da bli demostrert hvordan riggen ville oppføre seg mens den var i bevegelse. Drivere til gyrometeret fantes ferdig til Arduino, og det var få problemer å få det til å virke. Det oppsto derimot problemer da servoene skulle implimenteres i samme program. Det ble konflikt mellom de to bibliotekene fordi begge benytter seg av samme timer på Arduinoen. Siden det ikke er multithreading på Arduino, er det ikke mulig å få et ?kongruent? program. Gyro-biblioteket fungerte også bra til Raspberry Pi. Men gyrometeret ble valgt bort da det var problematisk å få servoene til å virke på Raspbery Pi. Derfor benyttet vi oss av en løsning med en enkelt Arduino og servoer. 
 
-For systemets helhet, er ikke gyrometeret vital. I spesifikasjonene til Kongsberg blir det presisert at systemet allerede inneholder et gyrometer. Ved en fullstending implementasjon vil denne bli brukt. Fordelen ved å ikke bruke gyrometeret, er at implimentasjonen blir lettere. Ved bruk av gyrometer, må pådraget til servoene ta hensyn til hvilken vinkel riggen står i. 
+For systemets helhet, er ikke gyrometeret vital. I spesifikasjonene til Kongsberg blir det presisert at systemet allerede inneholder et gyrometer. Ved en fullstending implementasjon vil denne bli brukt. Fordelen ved å ikke bruke gyrometeret, er at implementasjonen blir lettere. Ved bruk av gyrometer, må pådraget til servoene ta hensyn til hvilken vinkel riggen står i. 
 
 
-Fordelen ved å ha et eget gyrometer, er at man får et system som er uavhengig av den eksisterende hardwaren på Local Hawk. Dette medfører at systemet blir lettere overførbart til andre plattformer.
+Fordelen med å ha et eget gyrometer, er at man får et system som er uavhengig av den eksisterende hardwaren på Local Hawk. Dette medfører at systemet blir lettere overførbart til andre plattformer.
 
 
 
@@ -61,7 +61,8 @@ Rundt tiden da samarbeidsavtalen ble revidert ble det klart at gruppa ikke kunne
 
 \subsection{Videre arbeid}
 
-
+\subsubsection{Hardware}
+Kongsberg så for seg en løsning der man hadde et ferdig hyllevareprodukt man kunne plassere under flyet. En videreføring av implementasjonen vil være å lage et eget kretskort med gyro, CPU og GPU. Til dette formålet kan man bruke en ARM-prosessor som har innebygget GPU med god ytelse.  
 
 \begin{itemize}
 
@@ -82,5 +83,10 @@ Rundt tiden da samarbeidsavtalen ble revidert ble det klart at gruppa ikke kunne
 Siden prototyperiggen presentert i denne oppgaven er for liten til å bære kameraet Konsberg ønsker å bruke i sitt LocalHawk, er en naturlig videre føring av dette prosjektet å bygge en ny rigg og forbedret rigg med større servoer og materialer mer egent vær og vind. Detneste steget vil kunne være å bruke et gyrometer, som det ble forsøkt i dette prosjektet, til å stabilisere denne riggen slik at den blir mest mulig uavhengig av flyets bevegelser. 
 
 \subsubsection{Bildegjenkjenning}
-gfogdjopå
+Bildegjenkjenningen trenger fremdeles en god del arbeid før den kan brukes i faktiske forhold. Som tidligere nevnt innebærer dette nesten et selvstendig prosjekt hvor fokuset er på bearbeidingen av bilder og integrasjon av denne teknologien mot en innebygget GPU i flyet. Prototypen som er utviklet i dette prosjektet gjør tydelig hvordan vi vil løse oppgaven med bildestabilisering som en isolert oppgave, men tar ikke med noen faktorer knyttet til flygningen.
+
+\subsubsection{Mekanisk bilestabilisering}
+Beslutningen om nedskalering av prosjektet medførte at vi forkuserte på å vise at riggen i prinsippet klarer å følge etter objekter. I dag er stabiliseringen litt hakkete, noe som bare betyr at det kan gjøres med for å forsøke å enten forutsi hvilken vei objektet sannsynligvis beveger seg eller å la kameraet følge litt etter slik at banen kameraet skal følge kan finstilles mer.
+
+
 
