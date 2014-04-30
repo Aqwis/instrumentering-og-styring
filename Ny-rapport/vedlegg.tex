@@ -1,2 +1,47 @@
-\subsection{Vedlegg A: C++ kode}
-bla bla
+\subsection{Vedlegg A: Arduino C++ kode}
+
+//På servo er brun ledning jord, rød ledning kobles til 5V og orange er signal og kobles til pwm port
+
+#include <Servo.h>
+
+//Definerer servoobjekter
+Servo servo_1; 
+Servo servo_2;
+Servo servo_3;
+
+void setup(){
+  servo_1.attach(9);  //Servo 1 er koblet til port 9
+  servo_2.attach(6);  //Servo 1 er koblet til port 6
+  servo_3.attach(3);  //Servo 1 er koblet til port 3
+  Serial.begin(9600);
+}
+
+void loop(){
+  
+  static int ut = 0;
+  
+  if (Serial.available()){
+    char abc=Serial.read(); //abc skal se ut som dette 111a222b333c hvor tallene før a er vinkelen til servo_1 tallene mellom a og b er vinkelen til servo_2 osv.
+                            //Det er også mulig å sende komando til en eller to av servoene av gangen også, ved f.eks "100a" eller "50a120c"
+    
+    //Setter verdiene til servoene og sender de til servoene.
+    switch(abc) {
+      case '0'...'9':
+        ut = ut*10 + abc -'0';
+        break;
+      case 'a':
+        servo_1.write(ut);
+        ut = 0;
+        break;
+      case 'b':
+        servo_2.write(ut);
+        ut = 0;
+        break;
+      case 'c':
+        servo_3.write(ut);
+        ut = 0;
+        break;
+    }
+  }
+  
+}  
