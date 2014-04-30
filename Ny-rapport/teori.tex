@@ -38,7 +38,7 @@ Det finnes også digitale servoer ment for radiostyrte fly. Disse inneholder de 
 
 Et gyrometer er en innretning for å kunne måle vinkelposisjoner i forhold til en fast retning. Gyrometer brukes i mange sammenhenger og finnes i mange varianter, men i denne rapporten vil kun gyrometer av typen MEMS bli beskrevet. 
 
-Et MEMS-gyrometer (Micro Electro-Mechanical System) er lite og lett, og integreres i pakker som likner pakningene til integrerte kretser. Dette gjør at MEMS-gyrometerer enkelt kan legges på kretskort sammen med annen elektronikk. Et MEMS-gyrometer består av en stav, laget i mikromekanikk, som vibrer når en spenning påføres. Når denne staven begynner å vibrere vil den vibrere i samme retning hele tiden. Dette blir referanseretningen. Det er dermed mulig å detektere om pakken som inneholder denne staven orienteres i en annen retning enn referanseretningen.\colorbox{yellow}{Trengs kilde på dette, eller er det trivielt?}
+Et MEMS-gyrometer (Micro Electro-Mechanical System) er lite og lett, og integreres i pakker som likner pakningene til integrerte kretser. Dette gjør at MEMS-gyrometerer enkelt kan legges på kretskort sammen med annen elektronikk. Et MEMS-gyrometer består av en stav, laget i mikromekanikk, som vibrer når en spenning påføres. Når denne staven begynner å vibrere vil den vibrere i samme retning hele tiden.\colorbox{yellow}{Trengs kilde på dette, eller er det trivielt?} Dette blir referanseretningen. Det er dermed mulig å detektere om pakken som inneholder denne staven orienteres i en annen retning enn referanseretningen.
 
 MPU-6050 fra Invensense, som ble brukt i dette prosjektet, er et 6-akset gyrometer og akselerometer som gir ut data digitalt. Det har en innebygd 10-bit ADC og bruker en I2C-buss for å kommunisere med andre enheter.\cite{InSens}
 
@@ -100,10 +100,8 @@ Som nevnt kan det sendes kommandoer til Arduino kortet serielt gjennom en seriep
 
 \subsection{Software}
 
-\subsubsection{Matlab}
-Matlab brukes til å utforme matematiske modeller, utføre komplekse beregninger og visualisere data. \cite{matlab} Programmet er mye brukt i vitenskapelige miljøer og er meget anerkjent. NTNU tilbyr gratis tilgang til Matlab til alle studenter og det ble besluttet at dette var verktøyet som skulle brukes til programmering. 
-
-\subsubsection{OpenCV og mexopencv}
+\subsubsection{Matlab, OpenCV og mexopencv}
+Matlab brukes til å utforme matematiske modeller, utføre komplekse beregninger og visualisere data. \cite{matlab} Programmet er mye brukt i vitenskapelige miljøer og er meget anerkjent. 
 OpenCV er et softwarebibliotek med åpen kildekode som brukes til digital bildebehandling. Biblioteket i versjon 2.x, som er versjonen benyttet i dette prosjektet, og er programmert i C++. \cite{docs:opencv}
 
 For å kunne bruke funksjoner fra OpenCV i Matlab måtte mexopencv tas i bruk. Matlab er ikke uten videre kompatibelt med OpenCV, da dette er programmert i C++. Mexopencv tilbyr Matlabfunksjoner som bygger på flere hundre APIer fra OpenCV. \cite{mexopencv} Dette tillater å programmere alt i Matlab, uten å måtte fokusere på hvordan OpenCV er bygget opp. 
