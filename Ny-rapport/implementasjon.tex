@@ -137,7 +137,7 @@ Servomotorene styres av et PWM-signal som genereres av en Arduino UNO. Bibliotek
 	\label{fig:ArduSkjem}
 \end{figure}  
 
-Kommandoer sendes til Arduino via USB-porten. Kommandoer kan sendes som \texttt{Char} på formen \texttt{100a120b40c}, hvor tallene foran \texttt{c} forteller posisjon til servo 1, tallene for \texttt{b} gir posisjon til servo 2 og tallene foran \texttt{c} posisjonenen til servo 3. Dermed vil strengen \texttt{100a120b40c} flytte servo 1 til 100 grader, servo 2 til 120 grader og servo 3 til 40 grader. De gyldige vinklene er fra 0 til 180 grader. Dersom \texttt{200a} sendes vil servo 1 stoppe på 180 grader. Den fullstendige koden brukt i Arduino ligger i vedlegg A.
+Kommandoer sendes til Arduino via USB-porten på PC-en. USB-porten fungerer som en emulert COM-port. I implementasjonen brukes et bibliotek for Windows for kommunikasjon hentet fra nettsidene til Arduino-prosjektet[\ref{ArduinoCOM}]. Kommandoer kan sendes som \texttt{Char} på formen \texttt{100a120b40c}, hvor tallene foran \texttt{c} forteller posisjon til servo 1, tallene for \texttt{b} gir posisjon til servo 2 og tallene foran \texttt{c} posisjonenen til servo 3. Dermed vil strengen \texttt{100a120b40c} flytte servo 1 til 100 grader, servo 2 til 120 grader og servo 3 til 40 grader. De gyldige vinklene er fra 0 til 180 grader. Dersom \texttt{200a} sendes vil servo 1 stoppe på 180 grader. Den fullstendige koden brukt i Arduino ligger i vedlegg A.
 
 \subsection{Styring av rigg}
 
