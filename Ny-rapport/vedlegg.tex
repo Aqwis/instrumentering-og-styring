@@ -1,6 +1,18 @@
 \subsection{Vedlegg A: Arduino C++ kode}
 
-//På servo er brun ledning jord, rød ledning kobles til 5V og orange er signal og kobles til pwm port
+\begin{frame}
+\frametitle{Styring av servorigg - Arduino}
+\lstset{language=C++,
+                keywordstyle=\color{blue},
+                stringstyle=\color{red},
+                commentstyle=\color{green},
+                morecomment=[l][\color{magenta}]{\#}
+}
+\begin{lstlisting}
+
+//På servo er brun ledning jord, 
+// rød ledning kobles til 5V 
+// orange er signal og kobles til pwm port
 
 #include <Servo.h>
 
@@ -21,8 +33,9 @@ void loop(){
   static int ut = 0;
   
   if (Serial.available()){
-    char abc=Serial.read(); //abc skal se ut som dette 111a222b333c hvor tallene før a er vinkelen til servo_1 tallene mellom a og b er vinkelen til servo_2 osv.
-                            //Det er også mulig å sende komando til en eller to av servoene av gangen også, ved f.eks "100a" eller "50a120c"
+    char abc=Serial.read(); 
+//abc skal se ut som dette 111a222b333c hvor tallene før a er vinkelen til servo_1 tallene mellom a og b er vinkelen til servo_2 osv.
+ //Det er også mulig å sende komando til en eller to av servoene av gangen også, ved f.eks "100a" eller "50a120c"
     
     //Setter verdiene til servoene og sender de til servoene.
     switch(abc) {
@@ -45,3 +58,6 @@ void loop(){
   }
   
 }  
+
+\end{lstlisting}
+\end{frame}
