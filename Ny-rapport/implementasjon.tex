@@ -1,6 +1,6 @@
 \subsection{Bildegjenkjenning}
 
-Kongsberg la klare retningslinjer om at OpenCV skulle benyttes. I tillegg oppfordret Kongsberg til å implementere programvaren i programmeringsspråket Matlab, ettersom de internt bruker Matlab til prototyping.
+Kongsberg anbefalte at OpenCV skulle benyttes som datasynbibliotek i prosjektet. I tillegg oppfordret Kongsberg til å implementere programvaren i programmeringsspråket Matlab, ettersom de internt bruker Matlab til prototyping.
 
 I prosjektets begynnende fase var siste stabile utgivelse av OpenCV versjon 2.4.8, som ikke støttet programmering i Matlab. For å bruke Matlab og OpenCV sammen gjensto det da to alternativer. Versjon 3.0 av OpenCV, som var under utvikling, støttet Matlab. I tillegg fantes det et tredjeparts kompatibilitetslag, \emph{mexopencv}, som gjorde det mulig å programmere med OpenCV i Matlab.
 
@@ -8,7 +8,7 @@ Begge muligheter ble undersøkt. mexopencv viste seg å være problematisk å ko
 
 \subsubsection{Innhenting av bilde og konvertering}
 
-Kameraet ga ut bilder i fargespekteret RGB, som fungerer godt for bilderedigering i forbrukerprogrmavare som Photoshop, men som er lite egnet til bildeprosesseringsformål. Valget falt dermed først på å heller benytte fargespekteret HSV, som er hyppig brukt innen bildeprosessering og datasyn. Hvert bilde i videoen ble konvertert fra RGB til HSV før det ble prosessert videre. I figur [\ref{fig:firstiterationrgb}] og figur [\ref{fig:firstiterationhsv}] er det samme bildet vist henholdsvis før og etter konvertering fra RGB til HSV.
+Standard kameraer gir ut bilder i fargespekteret RGB, som fungerer godt for bilderedigering i forbrukerprogrmavare som Photoshop, men som er lite egnet til bildeprosesseringsformål. Valget falt dermed først på å heller benytte fargespekteret HSV, som er hyppig brukt innen bildeprosessering og datasyn. Hvert bilde i videoen ble konvertert fra RGB til HSV før det ble prosessert videre. I figur [\ref{fig:firstiterationrgb}] og figur [\ref{fig:firstiterationhsv}] er det samme bildet vist henholdsvis før og etter konvertering fra RGB til HSV.
 
 \begin{figure}[!ht]
 	\centering
@@ -147,7 +147,7 @@ På dette steget av arbeidet var det blitt ferdigstilt en rigg med et kamera som
 
 Som tidligere beskrevet var den opprinnelige planen å kun bruke to av servomotorene til å styre kameraet, og bruke den tredje kun til å trekke kameraet inn i flyet. Det ble imidlertid klart at det var svært utfordrende å regne ut relasjonen mellom objektets posisjon i bildet og riggens bevegelse dersom disse to servomotorene ble benyttet. Som en enklere løsning ble det valgt å bruke servomotor 1 og 3 til å følge objektet. Med riktig forhåndsinnstilling av servomotor 2 står bevegelsesaksene til servomotor 1 og 3 omtrent normalt på hverandre, slik at de henholdsvis beveger seg langs tenkte x- og y-akser.
 
-Fra kameraleverandøren ble det innhentet informasjon om størrelsen på kameraets synsfelt. Kombinert med det detekterte objektets avstand fra bildesenteret i piksler, ble det mulig å regne ut antall grader riggen måtte bevege seg for å plassere objektet i sentrum av bildet. Ved å legge til riggen nåverende posisjon til dette tallet som lagres hver gang riggen flytter på seg, ble en absolutt posisjon som riggen skulle flytte seg til regnet ut.
+Fra leverandøren av kameraet som brukes kan det innhentes informasjon om størrelsen på kameraets synsfelt. Dette varierer fra kamera til kamera. Kombinert med det detekterte objektets avstand fra bildesenteret i piksler, kan det da regnes ut antall grader riggen må bevege seg for å plassere objektet i sentrum av bildet. Ved å legge til riggens nåverende posisjon til dette tallet som lagres hver gang riggen flytter på seg, ble en absolutt posisjon som riggen skulle flytte seg til regnet ut.
 
 Det siste steget var å sende bevegelseskommandoene til Arduino-kortet, som kontrollerte servoene. Opprinnelig ble riggen bedt om å bevege seg hele avstanden i grader mellom sentrum av bildet og objekt for hvert nye bilde fra kameraet.Dette førte til svært stor ustabilitet og oscillasjoner rundt de detekterte objektene. Dette ble løst ved å sette en begrensning på bevegelsen, der riggen aldri ble tillatt å bevege seg mer enn 2 eller 1 grad om gangen, avhengig av hvor nært objektet var sentrum av bildet.
 
