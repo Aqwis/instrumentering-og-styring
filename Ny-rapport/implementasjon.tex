@@ -58,7 +58,7 @@ Det var nå mulig å detektere et valgt objekt og returnere koordinatene til det
 
 Smoothingen fremhevet de store objektene i bildet. Dette gjorde det betydelig lettere å fange opp kun det objektet, gitt riktig innstilling av fargefiltrene, da små objekter i bildet med samme farge som objektet ble eliminert.
 
-\newpage
+
 \subsubsection{Brukergrensesnitt}
 
 \begin{wrapfigure}[12]{r}{0.3\textwidth}
@@ -151,4 +151,4 @@ Fra leverandøren av kameraet som brukes kan det innhentes informasjon om størr
 
 Det siste steget var å sende bevegelseskommandoene til Arduino-kortet, som kontrollerte servoene. Opprinnelig ble riggen bedt om å bevege seg hele avstanden i grader mellom sentrum av bildet og objekt for hvert nye bilde fra kameraet.Dette førte til svært stor ustabilitet og oscillasjoner rundt de detekterte objektene. Dette ble løst ved å sette en begrensning på bevegelsen, der riggen aldri ble tillatt å bevege seg mer enn 2 eller 1 grad om gangen, avhengig av hvor nært objektet var sentrum av bildet.
 
-Det ble senere oppdaget at punktet OpenCV beregnet som midten av det detekterte objektet gjerne varierte tilfeldig selv om objektet sto i ro, noe som førte til unødvendige bevegelser av riggen. Det ble dermed spesifisert i koden at dersom objektet var under 3 grader under sentrum, skulle riggen ikke bevege seg. En annen ting som ble bemerket var at motorene ikke opererte perfekt innenfor hele området $0$ til $180$ grader. Servomotor 1 hadde et ideelt bevegelsesområde på omtrent $15$ til $175$ grader, mens servomotor 3 kunne bevege seg mellom rundt $10$ og $140$ grader uten problemer. En sperre ble implementert som gjorde at dersom det var nødvendig for motorene å bevege seg utenfor disse intervallene, ble bevegelsene ikke gjennomført. Med disse begrensningene på riggens bevegelse på plass, fungerte objektfølgingen tilfredsstillende, uten for mye ustabilitet og med grei fart.
+Det ble senere oppdaget at punktet OpenCV beregnet som midten av det detekterte objektet gjerne varierte tilfeldig selv om objektet sto i ro, noe som førte til unødvendige bevegelser av riggen. Det ble dermed spesifisert i koden at dersom objektet var under 3 grader under sentrum, skulle riggen ikke bevege seg. En annen ting som ble bemerket var at motorene ikke opererte perfekt innenfor hele området $0$ til $180$ grader. Servomotor 1 hadde et ideelt bevegelsesområde på omtrent $15$ til $175$ grader, mens servomotor 3 kunne bevege seg mellom rundt $10$ og $140$ grader uten problemer. En sperre ble implementert som gjorde at dersom det var nødvendig for motorene å bevege seg utenfor disse intervallene, ble bevegelsene ikke gjennomført. Med disse begrensningene på riggens bevegelse på plass, fungerte objektfølgingen tilfredsstillende, uten for mye ustabilitet og med grei fart. Koden for styring av servoer med Arduinoen er gitt i vedlegg A.
