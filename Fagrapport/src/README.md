@@ -16,3 +16,6 @@ make
 make install```
 
 OpenCV 2.4.8 or newer is required to compile.
+
+The code used for communication on the Arduino is given in the
+file ArduinoKode.cpp.
