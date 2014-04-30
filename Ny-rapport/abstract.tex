@@ -1,1 +1,12 @@
-Her skal det være abstract
+I denne rapporten ble det designet en mekanisk rigg med et kamera, knyttet opp mot bildegjenkjenning. Oppgaven er basert på et prosjekt Kongsberg benytter en større andel resurser på i dag. Kongsbergs primære mål er å benytte et autonomt fly, som skal følge en bil på racerbane. Ved bruk av kameraet og et system for objektgjenkjenning, benyttes den mekaniske riggen til å holde objektet i sentrum av bildet. Prototypen i denne rapporten benytter seg av en Arduino og tre analoge servoer av typen PowerHD. Styringsmekanismen mellom Arduinoen og servoene er programmert i språket C++.  
+
+Systemet har vist seg å fungere i praksis, men krever dog en del videre arbeid for at systemet skal brukes i praksis. Dette baseres på at systemet vil detektere og fange opp et ensfarget, enkelt objekt. Det vil være mer komplekst å følge en bevegelig bil sett fra et fugleperspektiv. Videre anbefalles det å benytte eksempelsvis Raspberry PI, som vil ha en større evne til å prosessere et gyrometer og kameraet simultant under flyturen. 
+
+%Konklusjon nedenfor 
+\iffalse
+Planleggingsfasen av prosjektet var preget av at det ble gjort en litt for optimistisk ved vurdering av hvor mye som var tilgjengelig innenfor rammene av faget. Oppgaven som ble presentert av Kongsberg gruppen hadde mye relevant for faget, samt at det hørtes meget spennende ut. Arbeidet med prosjektet har ført til alle på gruppa har lært mye nytt, både om arbeidet ved ukjente teknologier og kompleksiteten ved disse.
+
+Prototypen som ble laget selekterer ut et objekt fra en videostrøm og deretter dirigerer en mekanisk rigg med et kamera, slik at objektet hele tiden holder seg i sentrum. Prototypen ble bygget opp av tre analoge servoer av typen PowerHD, som benytter seg av PDM-signal for justering av retning. For modellering av bildene ble C++ brukt i kombinasjon med OpenCV, noe som viste seg å fungere utmerket til dette formålet. 
+
+Det gjenstår en del arbeid før det som er påbegynt, kan brukes i sammenheng med flyet som Kongsberg gruppen har sett for seg. Bildegjenkjenning er et komplekst område i seg selv, og egner seg nok som et eget prosjekt uavhengig av om LocalHawk skal inkluderes. I tillegg vil det være fornuftig å benytte seg av for eksempel en Raspberry PI, med servoer \textcolor{red}{designet} for denne. Dette vil bidra til støtte for multi-threading, noe som igjen gjør det mulig å benytte seg av et for eksempel et gyrometer i tillegg til kamerafeeden.  
+\fi
