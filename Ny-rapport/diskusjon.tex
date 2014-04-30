@@ -2,7 +2,7 @@
 \begin{itemize}
 \item Kongsberg gruppen ble informert om dette, og de var enige i at det var en god løsning. -> Opencv <-
 \item igang med utviklingen og innen få dager hadde vi utviklet en enkel løsning for bildegjenkjenning.
-\tem Som konsekvens av å ha skiftet språk til C++, hadde utviklingen raskt fremtog. 
+\item Som konsekvens av å ha skiftet språk til C++, hadde utviklingen raskt fremtog. 
 
 \end {itemize}
 --- Setninger hentet ut fra implementasjon som egentlig er diskusjon ---
@@ -34,12 +34,11 @@ For systemets helhet, er ikke gyrometeret vital. I spesifikasjonene til Kongsber
 
 \subsubsection{Bildegjenkjenning}
 
-Det tok ikke veldig lang tid før det måtte erkjennes at bildegjenkjenningen var mye mer utfordrende enn først antatt. Selv en oppgave som å følge et ensfarget objekt medfører ganske komplekse algoritmer, og små endringer i lysforhold kan være nok til å endre kvaliteten på et bilde nok til at objektet plutselig faller gjennom filteret i programmet.
+Det tok ikke veldig lang tid før det måtte erkjennes at bildegjenkjenningen var mye mer utfordrende enn først antatt. Selv en oppgave som å følge et ensfarget objekt medfører ganske komplekse algoritmer. Små endringer i lysforhold kan være nok til å endre kvaliteten på et bilde nok til at objektet plutselig faller gjennom filteret i programmet eller at forstyrrende elementer fra bakgrunnen kommer gjennom filteret og fører til en mengde støy som gjør at programmet ikke finner noe klart objekt å forfølge.
 
 Målet for bildegjenkjenningen var å klare å følge meget komplekse objekter i varierende terreng. En bil brukt i bilsport vil ofte ha en eller flere farger som grunnfarge, i tillegg har vil det være et udefinert antall klistremerker og påmalte kjennemerker som annonser, navn og annet. I utviklingen av algoritmene ble det aldri tid til å komme forbi steget der ensfargede objekter i varierte bakgrunner skal benyttes. Dette fungerte nesten utelukkende dersom kontrasten på fargen til objektet var stor nok i forhold til bakgrunnen til at de enkelt kunne skilles fra hverandre.
 
-Arbeid med bildegjenkjenning på det nivået som kreves for å skille ut objekter i graden som ønskes av Kongsberg var ikke mulig å oppnå i den relativt korte tiden som var tilgjengelig for dette prosjektet.
-
+Bildebehandling er et komplisert fagfelt, og gjenkjenning av kompliserte objekter, som realistiske biler, er en kompleks prosess som krever lang erfaring og en svært stor mengde arbeid. Arbeid med bildegjenkjenning på det nivået som kreves for å skille ut objekter i graden som ønskes av Kongsberg var ikke mulig å oppnå i den relativt korte tiden som var tilgjengelig for dette prosjektet.
 
 \subsubsection{Ressursbruk i bildegjenkjenning og bruk i flyet}
 
