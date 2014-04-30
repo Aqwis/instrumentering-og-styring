@@ -8,7 +8,7 @@ Begge muligheter ble undersøkt. mexopencv viste seg å være problematisk å ko
 
 \subsubsection{Innhenting av bilde og konvertering}
 
-Kameraet ga ut bilder i fargespekteret RGB, som fungerer godt for bilderedigering i forbrukerprogrmavare som Photoshop, men som er lite egnet til bildeprosesseringsformål. Valget falt dermed på å heller benytte fargespekteret HSV, som er hyppig brukt innen bildeprosessering. Hvert bilde i videoen ble konvertert fra RGB til HSV før det ble prosessert videre. I figur [\ref{fig:firstiterationrgb}] og figur [\ref{fig:firstiterationhsv}] er det samme bildet vist henholdsvis før og etter konvertering fra RGB til HSV.
+Kameraet ga ut bilder i fargespekteret RGB, som fungerer godt for bilderedigering i forbrukerprogrmavare som Photoshop, men som er lite egnet til bildeprosesseringsformål. Valget falt dermed først på å heller benytte fargespekteret HSV, som er hyppig brukt innen bildeprosessering og datasyn. Hvert bilde i videoen ble konvertert fra RGB til HSV før det ble prosessert videre. I figur [\ref{fig:firstiterationrgb}] og figur [\ref{fig:firstiterationhsv}] er det samme bildet vist henholdsvis før og etter konvertering fra RGB til HSV.
 
 \begin{figure}[!ht]
 	\centering
@@ -18,7 +18,20 @@ Kameraet ga ut bilder i fargespekteret RGB, som fungerer godt for bilderedigerin
 	{\includegraphics[width=0.45\textwidth]{img/first-hsv.jpg}}
 	\caption{Bilde fra kamera i RGB og HSV}
 \end{figure}
-\newpage 
+
+Å konvertere bildet til HSV før prosessering fungerte tilfredsstillende for tilfeller med stor fargekontrast mellom objekt og bakgrunn. I mer kaotiske scener oppstod det derimot problemer. For å kunne tracke objekter selv om de for eksempel ble beveget fra områder med sterkt lys til områder med skygge, var løsingen å øke avstanden mellom maksimums- og minimumsverdiene for value-aksen. Dette førte imidlertid til at objekter av andre farger også ble plukket opp. Årsaken til dette er at HSV ikke samsvarer helt med måten mennesker oppfatter farger på, så endringer på value-aksen korresponderer ikke helt med det som skjer med fargen til et objekt når den blir truffet av skygge eller lys. Et annet problem med HSV var at objekter med svakere farger ble plukket opp dårligere.
+
+\begin{figure}[!ht]
+	\centering
+	\subcaptionbox{RGB\label{fig:rgblab1}}
+	{\includegraphics[width=0.45\textwidth]{img/rgblab1.jpg}}
+	\subcaptionbox{HSV\label{fig:rgblab2}}
+	{\includegraphics[width=0.45\textwidth]{img/rgblab2.jpg}}
+	\caption{Bilde fra kamera i RGB og LAB}
+\end{figure}
+
+Det ble eksperimentert med flere ulike alternativer til HSV. Av alle alternativene fungerte LAB best, mer spesifikt CIE L*a*b*-standarden. En LAB-farge består av tre akser -- \emph{Lightness} og to fargespesiserende akser, \emph{a} og \emph{b}. LAB-fargerommet er laget for å korrespondere bedre med måten mennesker oppfatter farger på. Å beskrive nøyaktig hvorfor LAB fungerte bedre enn HSV for det aktuelle formålet er utenfor målet med denne oppgaven, men erfaringen tilsier at LAB tillot bedre deteksjon og følging av objekter av mange ulike farger inn og ut av skyggeområder. Valget falt dermed på LAB som erstatning for HSV. Et bilde fra kameraet i RGB og det samme bildet konvertert til LAB er vist i henholdsvis figur [\ref{fig:rgblab1}] og figur [\ref{fig:rgblab2}].
+
 \subsubsection{Deteksjon}
 
 \begin{wrapfigure}[12]{r}{0.25\textwidth}
@@ -27,9 +40,7 @@ Kameraet ga ut bilder i fargespekteret RGB, som fungerer godt for bilderedigerin
 	\label{fig:sliders}
 \end{wrapfigure}
 
-Etter å ha konvertert bildet til HSV, ble bildematrisen behandlet med et filter som manuelt ble stilt inn med maksimum- og minimumsverdier for \emph{hue}, \emph{saturation} og \emph{value}, som vist i figur [\ref{fig:sliders}]. Resultatet av dette var et binært bilde, der fargene med H-, S-, og V-verdier mellom disse maksimums- og minimumsverdiene er gjengitt i hvitt, mens alle andre farger er gjengitt i svart, som vist i figur [\ref{fig:firstiterationbinary}].
-
-Å konvertere bildet til HSV før prosessering (...)
+Etter å ha konvertert bildet til HSV, ble bildematrisen behandlet med et filter som manuelt ble stilt inn med maksimums- og minimumsverdier for \emph{hue}, \emph{saturation} og \emph{value}, som vist i figur [\ref{fig:sliders}]. Resultatet av dette var et binært bilde, der fargene med H-, S-, og V-verdier mellom disse maksimums- og minimumsverdiene er gjengitt i hvitt, mens alle andre farger er gjengitt i svart, som vist i figur [\ref{fig:firstiterationbinary}].
 
 Neste steg var nå å velge ut ett objekt fra bildet slik at det kunne spores. Definisjonen av et \emph{objekt} er her et sammenhengende hvitt område i det binære bildet. Metoden som ble valgt var å velge ut det største objektet, og returnere dets midtpunkt. Dersom det er for mye støy i bildet, det vil si for mange ulike objekter, returnerer algoritmen at objektet ikke ble funnet.
 
