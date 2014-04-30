@@ -2,13 +2,11 @@
 
 Kongsberg anbefalte at OpenCV skulle benyttes som datasynbibliotek i prosjektet. I tillegg oppfordret Kongsberg til å implementere programvaren i programmeringsspråket Matlab, ettersom de internt bruker Matlab til prototyping.
 
-I prosjektets begynnende fase var siste stabile utgivelse av OpenCV versjon 2.4.8, som ikke støttet programmering i Matlab. For å bruke Matlab og OpenCV sammen gjensto det da to alternativer. Versjon 3.0 av OpenCV, som var under utvikling, støttet Matlab. I tillegg fantes det et tredjeparts kompatibilitetslag, \emph{mexopencv}, som gjorde det mulig å programmere med OpenCV i Matlab.
-
-Begge muligheter ble undersøkt. mexopencv viste seg å være problematisk å kompilere på de ulike kombinasjonene av operativsystemer og Matlab-versjoner gruppedmedlemmene satt med. Videre hadde mexopencv problemer med grafikkortene som ble benyttet på gruppens datamaskiner. Utviklingsversjonen av OpenCV, på sin side, ville overhodet ikke kompilere. Antakelig skyldes dette at kodebasen for denne versjonen var under rask utvikling og dermed ustabil. Etter å ikke ha fått Matlab og OpenCV til å fungere sammen, ble det valgt å heller implementere bildeprosesseringsalgoritmene i C++. Kongsberg ble informert om dette, og var fornøyd med løsningen.
+I starten forsøkte vi begge mulighetene for å få brukt Matlab i samkjøring med OpenCV. Mexopencv viste seg å være problematisk å kompilere på de ulike kombinasjonene av operativsystemer og Matlab-versjoner gruppedmedlemmene satt med. Videre hadde mexopencv problemer med grafikkortene som ble benyttet på gruppens datamaskiner. Utviklingsversjonen av OpenCV, på sin side, ville overhodet ikke kompilere. Antakelig skyldes dette at kodebasen for denne versjonen var under rask utvikling og dermed ustabil. Etter å ikke ha fått Matlab og OpenCV til å fungere sammen, ble det valgt å heller implementere bildeprosesseringsalgoritmene i C++. Kongsberg ble informert om dette, og var fornøyd med løsningen.
 
 \subsubsection{Innhenting av bilde og konvertering}
 
-Standard kameraer gir ut bilder i fargespekteret RGB, som fungerer godt for bilderedigering i forbrukerprogrmavare som Photoshop, men som er lite egnet til bildeprosesseringsformål. Valget falt dermed først på å heller benytte fargespekteret HSV, som er hyppig brukt innen bildeprosessering og datasyn. Hvert bilde i videoen ble konvertert fra RGB til HSV før det ble prosessert videre. I figur [\ref{fig:firstiterationrgb}] og figur [\ref{fig:firstiterationhsv}] er det samme bildet vist henholdsvis før og etter konvertering fra RGB til HSV.
+Standard kameraer gir ut bilder i fargespekteret RGB, som fungerer godt for bilderedigering i forbrukerprogramvare som Photoshop, men som er lite egnet til bildeprosesseringsformål. Valget falt dermed først på å heller benytte fargespekteret HSV, som er hyppig brukt innen bildeprosessering og datasyn. Hvert bilde i videoen ble konvertert fra RGB til HSV før det ble prosessert videre. I figur [\ref{fig:firstiterationrgb}] og figur [\ref{fig:firstiterationhsv}] er det samme bildet vist henholdsvis før og etter konvertering fra RGB til HSV.
 
 \begin{figure}[!ht]
 	\centering
@@ -61,7 +59,7 @@ Smoothingen fremhevet de store objektene i bildet. Dette gjorde det betydelig le
 
 \subsubsection{Brukergrensesnitt}
 
-\begin{wrapfigure}[12]{r}{0.3\textwidth}
+\begin{wrapfigure}[13]{r}{0.3\textwidth}
 	\centering
 	\includegraphics[width=\linewidth]{img/command-menu.png}
 	\caption{En oversikt over de tilgjengelige kommandoene i kommandolinjegrensesnittet}
@@ -70,7 +68,7 @@ Smoothingen fremhevet de store objektene i bildet. Dette gjorde det betydelig le
 
 Bestemmelsen av fargene i objektet ble automatisert ved at det ble implementert et enkelt kommandolinjegrensesnitt. Her kunne en med kommandoen \texttt{center} be programmet om å følge etter fargen som befant seg i sentrum av bildet. Grensesnittet er vist i figur [\ref{fig:commandmenu}]. Kommandolinjegrensesnittet ble utvidet etter hvert som flere funksjoner ble implementert i programmet.
 
-For å gjøre det enklere å følge spesifikke objekter i kamerabildet, ble det implementert en funksjon som lot oss klikke på objekter i bildet for å følge dem. Både denne funksjonaliteten og \texttt{center}-kommandoen fungerte slik at fargeverdien til punktet som var i sentrum av bildet eller som ble klikket på ble hentet inn, og at sliderne automatisk ble satt til denne verdien pluss og minus en margverdi. Gode margverdier ble funnet eksperimentelt, og det ble bestemt at en marg på mellom $20$ og $30$ for hver av aksene \emph{hue}, \emph{saturation} og \emph{value} fungerte godt.
+For å gjøre det enklere å følge spesifikke objekter i kamerabildet, ble det implementert en funksjon som lot oss klikke på objekter i bildet for å følge dem. Både denne funksjonaliteten og \texttt{center}-kommandoen fungerte slik at fargeverdien til punktet som var i sentrum av bildet eller som ble klikket på ble hentet inn, og at sliderne automatisk ble satt til denne verdien pluss og minus en marginalverdi. Gode marginalverdier ble funnet eksperimentelt, og det ble bestemt at en verdi på mellom $20$ og $30$ for hver av aksene \emph{hue}, \emph{saturation} og \emph{value} fungerte godt.
 
 \subsection{Valg av hardware}
 
