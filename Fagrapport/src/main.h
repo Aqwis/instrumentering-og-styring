@@ -40,7 +40,12 @@ void morphOps(cv::Mat &thresh);
 void drawObject(int x, int y, cv::Mat &frame);
 bool trackFilteredObject(int &x, int &y, cv::Mat threshold, cv::Mat &cameraFeed);
 
+double use_center_color(cv::Mat LAB_image);
+void onClick(int event, int x, int y, int flags, void *LAB_image_v);
+void draw_center_crosshair(cv::Mat *image);
+
 int user_input(ImageStruct *image_struct);
+void center_camera_simple();
 
 DegreeStruct *degrees_from_center(int x, int y);
 void print_object_degrees_from_center();

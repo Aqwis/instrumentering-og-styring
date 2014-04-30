@@ -10,13 +10,13 @@ using namespace cv;
 std::atomic<bool> input_thread_done(false);
 
 // Serial I/O
+/* Unfortunately, the current implementation of
+   the serial communications only work in Windows,
+   but it should be trivial to make it work
+   under other operating systems as well.*/
 #ifdef _WIN32
 Serial *SIO;
 #endif
-
-// Feature tracking
-Mat trainingDesc;
-bool use_feature_tracking = false;
 
 // Features on/off
 bool follow_object = false;
@@ -61,6 +61,8 @@ void on_trackbar( int, void* ) {
 }
 
 void createTrackbars() {
+    /* Creates the trackbar window and the trackbars
+       for each component of the LAB color space. */
     
     namedWindow(trackbarWindowName, 0);
         
@@ -97,8 +99,8 @@ void morphOps(Mat &thresh) {
 
 void drawObject(int x, int y, Mat &frame) {
 
-    //use some of the openCV drawing functions to draw crosshairs
-    //on your tracked image!
+    /* Use some of the openCV drawing functions to draw large crosshairs
+       on the tracked image! */
 
     //UPDATE:JUNE 18TH, 2013
     //added 'if' and 'else' statements to prevent
@@ -135,6 +137,8 @@ void drawObject(int x, int y, Mat &frame) {
 }
 
 bool trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
+    /* This function implements the algorithm that finds an object to track
+       in an image taken from the camera feed. */
     Mat temp;
     Moments moment;
     int numObjects;
@@ -184,110 +188,9 @@ bool trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
     return objectFound;
 }
 
-std::tuple<Mat, std::vector<KeyPoint>> getFeatures(Mat &cameraFeed) {
-    Mat desc;
-    std::vector<KeyPoint> kp;
-
-    SurfDescriptorExtractor extractor;
-    SurfFeatureDetector det(2000);
-
-    det.detect(cameraFeed, kp);
-    extractor.compute(cameraFeed, kp, desc);
-
-    return std::make_tuple(desc, kp);
-}
-
-bool featureMatch(Mat &cameraFeed) {
-    Mat bwCameraFeed;
-    cvtColor(cameraFeed, bwCameraFeed, CV_BGR2GRAY);
-
-    auto featureTuple = getFeatures(bwCameraFeed);
-    Mat desc = std::get<0>(featureTuple);
-    std::vector<KeyPoint> kp = std::get<1>(featureTuple);
-
-    //FlannBasedMatcher matcher;
-    BFMatcher matcher;
-    /*std::vector<DMatch> matches;*/
-    std::vector<std::vector<DMatch>> matches;
-    std::vector<DMatch> good_matches;
-
-    /*double max_dist = 0;
-    double min_dist = 100;*/
-
-    if (!desc.empty() && !trainingDesc.empty()) {
-        //matcher.match(desc, trainingDesc, matches);
-        matcher.knnMatch(desc, trainingDesc, matches, 2);
-    } else {
-        putText(cameraFeed, "COULD NOT FIND FEATURES IN AT LEAST ONE IMAGE", Point(0,50), 1, 2, Scalar(0,0,255), 2);
-        return false;
-    }
-
-    /*for (int i = 0; i < desc.rows; i++) {
-        double dist = matches[i].distance;
-        if (dist < min_dist) {
-            min_dist = dist;
-        }
-        if (dist > max_dist) {
-            max_dist = dist;
-        }
-    }*/
-
-    std::cout << "Matches: " << matches.size() << std::endl;
-
-    for (int i = 0; i < desc.rows; i++) {
-        float ratio = 0.8;
-        /*
-        if (matches[i].distance <= max(2*min_dist, 0.02)) {
-            good_matches.push_back(matches[i]);
-        }
-        */
-        if (matches[i][0].distance < ratio*matches[i][1].distance) {
-            good_matches.push_back(matches[i][0]);
-        }
-    }
-
-    std::cout << "Good matches: " << good_matches.size() << std::endl;
-
-    int x_sum = 0;
-    int y_sum = 0;
-    for (int i = 0; i < good_matches.size(); i++) {
-        Point2f p = kp[good_matches[i].queryIdx].pt;
-        drawObject(p.x, p.y, cameraFeed);
-        x_sum += p.x;
-        y_sum += p.y;
-    }
-    if (good_matches.size() > 0) {
-        x_location = x_sum/good_matches.size();
-        y_location = y_sum/good_matches.size();
-    }
-
-    //drawObject(x_location, y_location, cameraFeed);
-
-    return true;
-}
-
-void trainDetector(int x, int y, Mat &cameraFeed) {
-    Mat roi, roi_rgb, desc;
-
-    int ROI_HEIGHT = 120; // px
-    int ROI_WIDTH = 120; // px
-
-    if (x+ROI_WIDTH > FRAME_WIDTH) {
-        ROI_WIDTH = FRAME_WIDTH-x;
-    }
-    if (y+ROI_HEIGHT > FRAME_HEIGHT) {
-        ROI_HEIGHT = FRAME_HEIGHT+y;
-    }
-
-    cvtColor(roi_rgb, roi, CV_BGR2GRAY);
-
-    imshow(trainingImage, roi);
-
-    auto featureTuple = getFeatures(roi);
-    trainingDesc = std::get<0>(featureTuple);
-}
-
 double use_center_color(Mat LAB_image) {
+    /* Set trackbars to track the color in the
+       center of the image. */
     const int l_margin = 50;
     const int a_margin = 10;
     const int b_margin = 10;
@@ -317,6 +220,9 @@ double use_center_color(Mat LAB_image) {
 }
 
 void onClick(int event, int x, int y, int flags, void *LAB_image_v) {
+    /* If the user clicks on a pixel in the main window, the
+       color of that pixel should be tracked. */
+
     if (event == EVENT_LBUTTONDOWN) {
         std::cout << "clicked!" << std::endl;
         const int l_margin = 50;
@@ -338,12 +244,11 @@ void onClick(int event, int x, int y, int flags, void *LAB_image_v) {
 
         setTrackbarPos( "B_MIN", trackbarWindowName, b - b_margin );
         setTrackbarPos( "B_MAX", trackbarWindowName, b + b_margin );
-
-        trainDetector(x, y, cameraFeed);
     }
 }
 
 void draw_center_crosshair(Mat *image) {
+    /* Draw crosshair in the center of the image. */
     int screenHeight;
     int screenWidth;
 
@@ -379,36 +284,24 @@ DegreeStruct *degrees_from_center(int x, int y) {
 }
 
 void print_object_degrees_from_center() {
+    /* Print the distance of the detected object
+       from the center in degrees. */
     DegreeStruct *degr = degrees_from_center(x_location, y_location);
     std::cout << "Horizontal: " << degr->horizontal << std::endl;
     std::cout << "Vertical: " << degr->vertical << std::endl;
     delete degr;
 }
 
-void center_camera() {
-    DegreeStruct *degr = degrees_from_center(x_location, y_location);
-
-    // Distance from center
-    Size image_size = cameraFeed.size();
-    int distance_y = (y_location - image_size.height/2);
-    int distance_x = (x_location - image_size.width/2);
-
-    double rotation_angle_abs = angle_b - atan2(distance_y, distance_x) * 180 / PI;
-    double radius_abs = angle_a - sqrt(pow(degr->horizontal, 2) + pow(degr->vertical, 2));
-
-    int rotation_angle = floor(copysign(rotation_angle_abs, distance_y));
-    int radius = floor(copysign(radius_abs, distance_x));
-
-    angle_b = rotation_angle;
-    angle_a = radius_abs;
-
-    // Adjust angles a and b
-    sendSerialString(SIO, std::to_string(rotation_angle) + "b " + std::to_string(radius) + "a");
-}
-
 void center_camera_simple() {
+    /* Simple algorithm to move the camera towards the detected
+       object. */
+
     DegreeStruct *degr = degrees_from_center(x_location, y_location);
 
+    /* The number of degrees we move the camera towards the
+       detected object depends on how far away it is, but we
+       never move it the full distance at once, for increased
+       stability. */
     if (std::abs(degr->horizontal) > 6) {
         degr->horizontal = copysign(2, degr->horizontal);
     } else if (std::abs(degr->horizontal) > 3) {
@@ -424,6 +317,8 @@ void center_camera_simple() {
         degr->vertical = 0;
     }
 
+    /* If the object is outside the bounds of the servo
+       motors, we do not move the camera. */
     if (std::abs(angle_a + degr->horizontal) > 175 || std::abs(angle_a + degr->horizontal) < 15) {
         return;
     } else if (std::abs(angle_c + degr->vertical) > 140 || std::abs(angle_c + degr->vertical) < 10) {
@@ -437,41 +332,47 @@ void center_camera_simple() {
 }
 
 int user_input(ImageStruct *image_struct) {
-	const std::string HELP_TEXT = "Commands:\n* help\n* center\n* exit\n* serial\n* distance\n* follow\n* use [features, colors]\n";
+    /* Create a simple command line to do
+       simple tasks such as sending messages
+       to the Arduino or tracking the color
+       in the center of the image. */
+
+	const std::string HELP_TEXT = "Commands:\n* help\n* center\n* exit\n* serial\n* distance\n* follow\n";
 
     std::string input = "";
     while (true) {
+        /* Main loop for command line */
         std::cout << ">";
         std::getline(std::cin, input);
         int first_space_index = input.find_first_of(" ");
         std::string command = input.substr(0, first_space_index);
         std::string argument = input.substr(first_space_index+1);
+
         // Interpret input
         if (command == "exit") {
             input_thread_done = true;
             return 0;
         } else if (command == "help" || command == "?") {
+            /* Print help message. */
             std::cout << HELP_TEXT;
         } else if (command == "center") {
+            /* Track color in center of image. */
             use_center_color(*(image_struct->LAB));
         } else if (command == "serial") {
+            /* Send command to Arduino. */
 			if (argument != "") {
 	            sendSerialString(SIO, argument);
 			} else {
 				std::cout << "No argument provided!\n";
 			}
         } else if (command == "distance") {
+            /* Calculate distance of detected object
+               from the center, in degrees. */
             print_object_degrees_from_center();
         } else if (command == "follow") {
+            /* Should the servo motors track the
+               detected object? */
             follow_object = true;
-        } else if (command == "use") {
-			if (argument == "features") {
-	            use_feature_tracking = true;
-			} else if (argument == "colors") {
-				use_feature_tracking = false;
-			} else {
-				std::cout << "No argument provided!\n";
-			}
         } else {
             std::cout << "Unrecognized input!\n";
         }
@@ -509,12 +410,12 @@ int main(int argc, char* argv[]) {
 
     try 
     {
-        capture.open(1); // Open capture object at location 0 (i.e. the first camera)
+        capture.open(1); // Open capture object at location 1 (i.e. the second camera)
         cvtColor(cameraFeed,LAB,COLOR_BGR2Lab);
     }
     catch (cv::Exception e)  
     {
-        capture.open(0);
+        capture.open(0); // If that doesn't work, use location 0 (often an integrated, immovable camera)
         cvtColor(cameraFeed,LAB,COLOR_BGR2Lab);
     }
 
@@ -549,11 +450,7 @@ int main(int argc, char* argv[]) {
 
         // Track objects
         if (trackObjects) {
-            if (use_feature_tracking) {
-                objectFound = featureMatch(cameraFeed);
-            } else {
-                objectFound = trackFilteredObject(x_location, y_location, threshold, cameraFeed);
-            }
+            objectFound = trackFilteredObject(x_location, y_location, threshold, cameraFeed);
         }
 
         // Center camera on tracked object
