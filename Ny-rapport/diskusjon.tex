@@ -54,32 +54,11 @@ Arbeidet med prosjektet kom fort igang, oppgaven var tidlig valgt ut og teknolog
 Rundt tiden da samarbeidsavtalen ble revidert ble det klart at gruppa ikke kunne komme i mål med hele oppgaven slik den var fremstilt av Kongsberg. Prosjektets tilstand ble diskutert innad i gruppen, og i samråd med faglærer ble en prototype av bildestabiliseringsriggen bestemt at ville være en bedre proporsjonert oppgave for tidsrammen.
 
 \subsection{Videre arbeid}
-
-Kongsberg så for seg en løsning der man hadde et ferdig hyllevareprodukt man kunne plassere under flyet. En videreføring av implementasjonen vil være å lage et eget kretskort med gyro, CPU og GPU. Til dette formålet kan ARM-prosessor benyttes, som også har innebygget GPU med god ytelse. Et system for overføring av data fra flyet og ned til bakkestasjonen, er et felt som ikke ble dekket i denne rapporten. 
-
-\begin{itemize}
-
-\item Implementere Gyroskop
-
-
-
-\item Kraftigere servoer for å kunne bære kameraet
-
-
-
-\item Mer nøyaktige digitale servoer for å minimere vibrasjoner og for raskere responstid
-
-\end{itemize} 
-
-\subsubsection{Mekanisk installasjon}
-
 Siden prototyperiggen presentert i denne oppgaven er for liten til å bære kameraet Konsberg ønsker å bruke i sitt LocalHawk, er en naturlig videre føring av dette prosjektet å bygge en ny rigg og forbedret rigg med større servoer og materialer mer egent vær og vind. Det neste steget vil kunne være å bruke et gyrometer, som det ble forsøkt i dette prosjektet, til å stabilisere denne riggen slik at den blir mest mulig uavhengig av flyets bevegelser. 
 
-\subsubsection{Bildegjenkjenning}
 Bildegjenkjenningen trenger fremdeles en god del arbeid før den kan brukes i faktiske forhold. Som tidligere nevnt innebærer dette nesten et selvstendig prosjekt hvor fokuset er på bearbeidingen av bilder og integrasjon av denne teknologien mot en innebygget GPU i flyet. Prototypen som er utviklet i dette prosjektet viser tydelig hvordan oppgaven med bildestabilisering kan løses som en isolert oppgave. Resultatet tar ikke for seg hvordan bilens endrede kjøreretning vil påvirke flyets krengning, og deretter hvordan dette dekkes av kameraet.
 
-\subsubsection{Mekanisk bildestabilisering}
+Kongsberg så for seg en løsningen som et hyllevareprodukt som kan plasseres under flyet. En videreføring av implementasjonen vil være å lage et eget kretskort med gyro, CPU og GPU. Til dette formålet kan ARM-prosessor benyttes, som også har innebygget GPU med god ytelse. Et felt som ikke blir dekket i denne rapporten er signaloverføringen fra flyet og til en bakkestasjon. Til dette formålet kan WiFi eller GSM-nettet bli benyttet. Et moment som må bli tatt hensyn til, er at mange tilskuere på banen kan påvirke signaloverføringen.
+
 Beslutningen om nedskalering av prosjektet medførte å påvise at riggen i prinsippet klarer å følge etter objekter. I dag er stabiliseringen litt hakkete, noe som bare betyr at det kan gjøres med for å forsøke å enten forutsi hvilken vei objektet sannsynligvis beveger seg eller å la kameraet følge litt etter slik at banen kameraet skal følge kan finstilles mer.
-
-
 
