@@ -28,7 +28,7 @@ Standard kameraer gir ut bilder i fargespekteret RGB, som fungerer godt for bild
 	\caption{Bilde fra kamera i RGB og LAB}
 \end{figure}
 
-Det ble eksperimentert med flere ulike alternativer til HSV. Av alle alternativene fungerte LAB best, mer spesifikt CIE L*a*b*-standarden. En LAB-farge består av tre akser -- \emph{Lightness} og to fargespesiserende akser, \emph{a} og \emph{b}. LAB-fargerommet er laget for å korrespondere bedre med måten mennesker oppfatter farger på. Å beskrive nøyaktig hvorfor LAB fungerte bedre enn HSV for det aktuelle formålet er utenfor målet med denne oppgaven, men erfaringen tilsier at LAB tillot bedre deteksjon og følging av objekter av mange ulike farger inn og ut av skyggeområder. Valget falt dermed på LAB som erstatning for HSV. Et bilde fra kameraet i RGB og det samme bildet konvertert til LAB er vist i henholdsvis figur [\ref{fig:rgblab1}] og figur [\ref{fig:rgblab2}].
+Det ble eksperimentert med flere ulike alternativer til HSV. Av alle alternativene fungerte LAB best, mer spesifikt CIE L*a*b*-standarden, som beskrevet under Teori. Å beskrive nøyaktig hvorfor LAB fungerte bedre enn HSV for det aktuelle formålet er utenfor målet med denne oppgaven, men erfaringen tilsier at LAB tillot bedre deteksjon og følging av objekter av mange ulike farger inn og ut av skyggeområder. Valget falt dermed på LAB som erstatning for HSV. Et bilde fra kameraet i RGB og det samme bildet konvertert til LAB er vist i henholdsvis figur [\ref{fig:rgblab1}] og figur [\ref{fig:rgblab2}].
 
 \subsubsection{Deteksjon}
 
