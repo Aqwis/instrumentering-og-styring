@@ -510,12 +510,13 @@ int main(int argc, char* argv[]) {
     try 
     {
         capture.open(1); // Open capture object at location 0 (i.e. the first camera)
+        cvtColor(cameraFeed,LAB,COLOR_BGR2Lab);
     }
     catch (cv::Exception e)  
     {
         capture.open(0);
+        cvtColor(cameraFeed,LAB,COLOR_BGR2Lab);
     }
-    cvtColor(cameraFeed,LAB,COLOR_BGR2Lab);
 
     // For some reason, with some cameras, these settings
     // have no effect on the actual image size
