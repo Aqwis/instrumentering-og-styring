@@ -1,14 +1,13 @@
 \subsection{Bildegjenkjenning}
 
-Kongsberg anbefalte oss å bruke OpenCV, et åpen kildekode programvarebibliotek som brukes til bearbeiding av bilder og video. I tillegg ble vi oppfordret til å implementere programvaren i programmeringsspråket Matlab, siden Kongsberg internt bruker Matlab til prototyping. Flere på gruppa hadde erfaring med Matlab fra før, og vi så på dette som en god avgjørelse.
+Kongsberg gruppen la klare retningslinjer om at OpenCV skulle benyttes. I tillegg oppfordret Kongsberg gruppen til å implementere programvaren i programmeringsspråket Matlab, ettersom de internt bruker Matlab til prototyping. 
 
-Da vi begynte prosjektet var siste stabile utgivelse av OpenCV versjon 2.4.8, som ikke støttet programmering i Matlab. For å bruke Matlab og OpenCV sammen hadde vi da to alternativer. Versjon 3.0 av OpenCV, som var under utvikling, støtter Matlab. Dessuten fantes det et tredjeparts kompatibilitetslag, \emph{mexopencv}, som gjorde det mulig å programmere med OpenCV i Matlab. Vi forsøkte begge muligheter. \emph{mexopencv} var vanskelig å kompilere på de ulike kombinasjonene av operativsystem og Matlab-versjon de ulike gruppemedlemmene satt med. Etter å ha kompilert det fikk vi dessuten problemer med at enkelte av grafikkortene vi brukte ikke var støttet av \emph{mexopencv}. Utviklingsversjonen av OpenCV, på sin side, fikk vi overhodet ikke kompilert. Antakelig skyldes dette at kodebasen for denne versjonen var under rask utvikling og dermed ustabil.
+I prosjektets begynnende fase var siste stabile utgivelse av OpenCV versjon 2.4.8, som ikke var støttet programmering i Matlab. For å bruke Matlab og OpenCV sammen gjensto det da to alternativer. Versjon 3.0 av OpenCV, som var under utvikling, støttet Matlab. I tillegg fantes det et tredjeparts kompatibilitetslag, \emph{mexopencv}, som gjorde det mulig å programmere med OpenCV i Matlab. Begge muligheter ble undersøkt. \emph{mexopencv} skapte problemer ved kompileringen på med de ulike kombinasjonene av operativsystemene, og de ulike Matlab-versjon som gruppen hadde inne allerede. Videre hadde \emph{mexopencv} problemer med grafikkortene som ble benyttet på de ulike maskinene, som ikke var støttet. Utviklingsversjonen av OpenCV, på sin side, ville overhodet ikke kompilere. Antakelig skyldes dette at kodebasen for denne versjonen var under rask utvikling og dermed ustabil.
 
-Etter å ikke ha fått Matlab og OpenCV til å fungere sammen, valgte vi å gå for en løsning der vi i stedet for Matlab implementerte programvaren for bildegjenkjenning i C++. Vi informerte Kongsberg om dette, og de var enige i at det var en god løsning. Etter å ha skiftet språk til C++, kom vi raskt igang med utviklingen og innen få dager hadde vi utviklet en enkel løsning for bildegjenkjenning.
-
+Etter å ikke ha fått Matlab og OpenCV til å fungere sammen, ble det valgt å gå for en løsning der Matlab implementerte programvaren for bildegjenkjenning i C++. Som konsekvens av å ha skiftet språk til C++, hadde utviklingen raskt fremtog. 
 \subsubsection{Innhenting av bilde og konvertering}
 
-Fra kameraet fikk vi et bilde i fargespekteret RGB\footnote{Red, Green, Blue}, som er lite egnet til å separere ulike farger fra hverandre. Vi valgte dermed å heller benytte fargespekteret HSV\footnote{Hue, Saturation, Value}, som er hyppig brukt innen bildeprosessering. Vi konvertere hvert bilde i videoen fra RGB, som vist i figur [\ref{fig:firstiterationrgb}], til HSV, som vist i figur [\ref{fig:firstiterationhsv}], før bildene ble prosessert videre.
+Kameraet fremga et bilde i fargespekteret RGB\footnote{Red, Green, Blue}, som er lite egnet til å separere ulike farger fra hverandre. Valget ble dermed å heller benytte fargespekteret HSV\footnote{Hue, Saturation, Value}, som er hyppig brukt innen bildeprosessering. Hver bilde ble konvert i videoen fra RGB, som vist i figur [\ref{fig:firstiterationrgb}], til HSV, som vist i figur [\ref{fig:firstiterationhsv}], før bildene ble prosessert videre.
 
 \begin{figure}[!ht]
 	\centering
@@ -19,7 +18,7 @@ Fra kameraet fikk vi et bilde i fargespekteret RGB\footnote{Red, Green, Blue}, s
 	\caption{Bilde fra kamera i RGB og HSV}
 \end{figure}
 
-HSV baserer seg ikke på blanding av ulike farger, som RGB, men bruker nyanse, metningsgrad og lysverdi til å definere hver farge. Å konvertere bildet fra RGB til HSV gjør jobben med å peke ut en spesifikk farge lettere, og gjør det lettere å skille objekter fra andre. Et eksempel på et problem ved å bruke RGB er at dersom et objekt blir flyttet fra lys til skygge, endrer ikke RGB-verdiene seg langs én akse, men derimot på både R-, G- og B-aksene på en måte som er vanskelig å forutse. HSV oppfører seg mer forutsigbart -- i dette eksempelet endrer fargeverdien seg hovedsakelig i V-aksen.
+HSV baserer seg ikke på blanding av ulike farger, som RGB, men bruker nyanse, metningsgrad og lysverdi til å definere hver farge. Ved å konvertere bildet fra RGB til HSV forenkler dette jobben med å peke ut en spesifikk farge, samt forenkling av å skille objekter fra andre. Et eksempel på et problem ved å bruke RGB er at dersom et objekt blir flyttet fra lys til skygge, endrer ikke RGB-verdiene seg langs én akse, men derimot på både R-, G- og B-aksene på en måte som er vanskelig å forutse. HSV oppfører seg mer forutsigbart -- i dette eksempelet endrer fargeverdien seg hovedsakelig i V-aksen. \colorbox{yellow}{Dette lukter litt teori?}
 
 \subsubsection{Deteksjon}
 
@@ -29,13 +28,13 @@ HSV baserer seg ikke på blanding av ulike farger, som RGB, men bruker nyanse, m
 	\label{fig:sliders}
 \end{wrapfigure}
 
-Etter å ha konvertert bildet til HSV, behandlet vi bildematrisen med et filter, som vi manuelt stilte inn med maksimum- og minimumverdier for \emph{hue}, \emph{saturation} og \emph{value}, vist i figur [\ref{fig:sliders}]. Vi satt da igjen med et binært bilde, der fargene som lå mellom disse maksimums- og minimumsverdiene er gjengitt i hvitt, mens alle andre farger er gjengitt i svart, som vist i figur [\ref{fig:firstiterationbinary}].
+Etter å ha konvertert bildet til HSV, ble bildematrisen behandlet med et filter, som manuelt ble stillt inn med maksimum- og minimumverdier for \emph{hue}, \emph{saturation} og \emph{value}, som vist i figur [\ref{fig:sliders}]. Resultatet av dette var et binært bilde, der fargene som lå mellom disse maksimums- og minimumsverdiene er gjengitt i hvitt, mens alle andre farger er gjengitt i svart, som vist i figur [\ref{fig:firstiterationbinary}].
 
-Nå som vi hadde et binært bilde, var det neste steget å velge ut ett objekt fra bildet slik at det kunne trackes. Med objekt menes her et sammenhengende hvitt område i det binære bildet. Algoritmen vi skrev valgte ut det største objektet, og returnerte objektets midtpunkt. Dersom det var for mye støy i bildet, det vil si for mange ulike objekter, returnerte algoritmen ikke et punkt.
+Ved at et binært bilde var prosessert, var neste steg å velge ut ett objekt fra bildet slik at det kunne spores. Definisjonen av objekt menes her et sammenhengende hvitt område i det binære bildet. Den algoritmen som ble skrevet valgte ut det største objektet, og returnerte objektets midtpunkt. Dersom det var for mye støy i bildet, det vil si for mange ulike objekter, returnerte algoritmen at objektet ikke ble funnet.
 
 \subsubsection{Smoothing}
 
-I det første steget klarte vi å fange opp et objekt, men som presentert i figur [\ref{fig:firstiterationbinary}] er det mye støy i bildet. Vi implementerte derfor en smoothingalgoritme som gikk over det binære bildet og fjernet mindre ansamlinger med punkter og fremhevet de som var større. Dette førte til at vi fikk et renere bilde, med færre og tydeligere objekter. Resultatet av smoothingen er presentert i figur [\ref{fig:seconditerationbinary}].
+Objektet ble i det første steget fanget opp, men som presentert i figur [\ref{fig:firstiterationbinary}] er det mye støy i bildet. En smoothingalgoritme ble derfor implementert, noe som gikk over det binære bildet og fjernet mindre ansamlinger med punkter og fremhevet de som var større. Dette førte til et renere bilde, med færre og tydeligere objekter. Resultatet av smoothingen er presentert i figur [\ref{fig:seconditerationbinary}].
 
 \begin{figure}[!ht]
 	\centering
@@ -55,9 +54,9 @@ Smoothingen fremhevet de store objektene i bildet. Dette gjorde det betydelig le
 	\caption{En oversikt over de tilgjengelige kommandoene i kommandolinjegrensesnittet}
 	\label{fig:commandmenu}
 \end{wrapfigure}
-Etter at vi hadde jobbet en del med systemet fant vi ut at det var tungvindt å hver gang manuelt stille inn hvilke farger som skulle følges ved hjelp av sliderne. Løsningen ble da at vi implementerte et enkelt kommandolinjegrensesnitt, der vi ved hjelp av kommandoen \texttt{center} kunne be programmet om å følge etter fargen som befant seg i sentrum av bildet. Grensesnittet er vist i figur [\ref{fig:commandmenu}]. Etter hvert som vi la til flere funksjoner i programmet, utvidet vi kommandolinjegrensesnittet med flere kommandoer.
+Bestemmelsen av fargene i objektet ble automatisert ved at det ble implementert et enkelt kommandolinjegrensesnitt, der ved hjelp av kommandoen \texttt{center} kunne en be programmet om å følge etter fargen som befant seg i sentrum av bildet. Grensesnittet er vist i figur [\ref{fig:commandmenu}]. Kommandolinjegrensesnittet ble oppdatert ved utvidelse av nye funksjoner til programmet. 
 
-For å gjøre det enklere å følge spesifikke objekter i kamerabildet, implementerte vi senere en funksjon som lot oss klikke på objekter i bildet for å følge dem. Både denne funksjonaliteten og \texttt{center}-kommandoen fungerte slik at fargeverdien til punktet som var i sentrum av bildet eller som ble klikket på ble hentet inn, og at sliderne automatisk ble satt til denne verdien pluss og minus en margverdi. Gode margverdier ble funnet eksperimentelt, og vi kom fram til at en marg på mellom $20$ og $30$ for hver av aksene \emph{hue}, \emph{saturation} og \emph{value} fungerte godt i de fleste situasjoner.
+For å gjøre det enklere å følge spesifikke objekter i kamerabildet, ble det implementert en funksjon som lot oss klikke på objekter i bildet for å følge dem. Både denne funksjonaliteten og \texttt{center}-kommandoen fungerte slik at fargeverdien til punktet som var i sentrum av bildet eller som ble klikket på ble hentet inn, og at sliderne automatisk ble satt til denne verdien pluss og minus en margverdi. Gode margverdier ble funnet eksperimentelt, og det ble bestemt at en marg på mellom $20$ og $30$ for hver av aksene \emph{hue}, \emph{saturation} og \emph{value} fungerte godt.
 
 \subsection{Valg av hardware}
 
