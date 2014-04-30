@@ -1,13 +1,14 @@
 \subsection{Bildegjenkjenning}
 
-Kongsberg gruppen la klare retningslinjer om at OpenCV skulle benyttes. I tillegg oppfordret Kongsberg gruppen til å implementere programvaren i programmeringsspråket Matlab, ettersom de internt bruker Matlab til prototyping. 
+Kongsberg Gruppen la klare retningslinjer om at OpenCV skulle benyttes. I tillegg oppfordret Kongsberg Gruppen til å implementere programvaren i programmeringsspråket Matlab, ettersom de internt bruker Matlab til prototyping.
 
-Ved prosjektets start var siste stabile utgivelse av OpenCV versjon 2.4.8, som ikke var støttet programmering i Matlab. For å bruke Matlab og OpenCV sammen gjensto det to alternativer. Versjon 3.0 av OpenCV, som var under utvikling, støttet Matlab. I tillegg fantes det et tredjeparts kompatibilitetslag, \emph{mexopencv}, som gjorde det mulig å programmere med OpenCV i Matlab. Begge muligheter ble undersøkt. \emph{mexopencv} skapte problemer ved kompileringen på med de ulike kombinasjonene av operativsystemene, og de ulike Matlab-versjon som gruppen hadde inne allerede. Videre hadde \emph{mexopencv} problemer med grafikkortene på de ulike maskinene fordi det ikke var støtte for disse. Utviklingsversjonen av OpenCV, på sin side, ville overhodet ikke kompilere. Antakelig skyldes dette at kodebasen for denne versjonen var under rask utvikling og dermed ustabil.
+I prosjektets begynnende fase var siste stabile utgivelse av OpenCV versjon 2.4.8, som ikke støttet programmering i Matlab. For å bruke Matlab og OpenCV sammen gjensto det da to alternativer. Versjon 3.0 av OpenCV, som var under utvikling, støttet Matlab. I tillegg fantes det et tredjeparts kompatibilitetslag, \emph{mexopencv}, som gjorde det mulig å programmere med OpenCV i Matlab.
 
-Etter å ikke ha fått Matlab og OpenCV til å fungere sammen, ble det valgt å gå for en løsning der Matlab implementerte programvaren for bildegjenkjenning i C++. 
+Begge muligheter ble undersøkt. mexopencv viste seg å være problematisk å kompilere på de ulike kombinasjonene av operativsystemer og Matlab-versjoner gruppedmedlemmene satt med. Videre hadde mexopencv problemer med grafikkortene som ble benyttet på gruppens datamaskiner. Utviklingsversjonen av OpenCV, på sin side, ville overhodet ikke kompilere. Antakelig skyldes dette at kodebasen for denne versjonen var under rask utvikling og dermed ustabil. Etter å ikke ha fått Matlab og OpenCV til å fungere sammen, ble det valgt å heller implementere bildeprosesseringsalgoritmene i C++. Kongsberg ble informert om dette, og var fornøyd med løsningen.
+
 \subsubsection{Innhenting av bilde og konvertering}
 
-Kameraet fremga et bilde i fargespekteret RGB, som er lite egnet til å separere ulike farger fra hverandre. Valget ble dermed å benytte fargespekteret HSV, som er hyppig brukt innen bildeprosessering. Hvert bilde ble konvertert i videoen fra RGB, som vist i figur [\ref{fig:firstiterationrgb}], til HSV, som vist i figur [\ref{fig:firstiterationhsv}], før bildene ble prosessert videre.
+Kameraet ga ut bilder i fargespekteret RGB, som fungerer godt for bilderedigering i forbrukerprogrmavare som Photoshop, men som er lite egnet til bildeprosesseringsformål. Valget falt dermed på å heller benytte fargespekteret HSV, som er hyppig brukt innen bildeprosessering. Hvert bilde i videoen ble konvertert fra RGB til HSV før det ble prosessert videre. I figur [\ref{fig:firstiterationrgb}] og figur [\ref{fig:firstiterationhsv}] er det samme bildet vist henholdsvis før og etter konvertering fra RGB til HSV.
 
 \begin{figure}[!ht]
 	\centering
@@ -26,13 +27,14 @@ Kameraet fremga et bilde i fargespekteret RGB, som er lite egnet til å separere
 	\label{fig:sliders}
 \end{wrapfigure}
 
-Etter å ha konvertert bildet til HSV, ble bildematrisen behandlet med et filter, som manuelt ble stilt inn med maksimum- og minimumsverdier for \emph{hue}, \emph{saturation} og \emph{value}, som vist i figur [\ref{fig:sliders}]. Resultatet av dette var et binært bilde, der fargene som lå mellom disse maksimums- og minimumsverdiene er gjengitt i hvitt, mens alle andre farger er gjengitt i svart, som vist i figur [\ref{fig:firstiterationbinary}].
+Etter å ha konvertert bildet til HSV, ble bildematrisen behandlet med et filter som manuelt ble stilt inn med maksimum- og minimumsverdier for \emph{hue}, \emph{saturation} og \emph{value}, som vist i figur [\ref{fig:sliders}]. Resultatet av dette var et binært bilde, der fargene med H-, S-, og V-verdier mellom disse maksimums- og minimumsverdiene er gjengitt i hvitt, mens alle andre farger er gjengitt i svart, som vist i figur [\ref{fig:firstiterationbinary}].
 
-Neste steg i prosessen var å velge et objekt i bildet som skulle spores. Definisjonen av objekt menes her et sammenhengende hvitt område i det binære bildet. Den algoritmen som ble skrevet valgte ut det største objektet og returnerte objektets midtpunkt. Dersom det var for mye støy i bildet, det vil si for mange ulike objekter, returnerte algoritmen at objektet ikke ble funnet.
+Å konvertere bildet til HSV før prosessering (...)
+
+Neste steg var nå å velge ut ett objekt fra bildet slik at det kunne spores. Definisjonen av et \emph{objekt} er her et sammenhengende hvitt område i det binære bildet. Metoden som ble valgt var å velge ut det største objektet, og returnere dets midtpunkt. Dersom det er for mye støy i bildet, det vil si for mange ulike objekter, returnerer algoritmen at objektet ikke ble funnet.
 
 \subsubsection{Smoothing}
-
-Objektet ble i det første steget fanget opp, men som presentert i figur [\ref{fig:firstiterationbinary}] er det mye støy i bildet. En smoothing-algoritme ble derfor implementert. Algoritmen går over det binære bildet og fjerner mindre ansamlinger med punkter og fremhever de større. Dette førte til et renere bilde, med færre og tydeligere objekter. Resultatet av smoothingen er presentert i figur [\ref{fig:seconditerationbinary}].
+Det var nå mulig å detektere et valgt objekt og returnere koordinatene til dette objektet, men som presentert i figur [\ref{fig:firstiterationbinary}] er det mye støy i bildet. En smoothingalgoritme ble derfor implementert. Denne algoritmen gikk over det binære bildet og fjernet mindre ansamlinger av punkter og fremhevet de som var større. Dette førte til et renere bilde, med færre og tydeligere objekter. Resultatet av smoothingen er presentert i figur [\ref{fig:seconditerationbinary}].
 
 \begin{figure}[!ht]
 	\centering
@@ -43,18 +45,20 @@ Objektet ble i det første steget fanget opp, men som presentert i figur [\ref{f
 	\caption{Resultatet av filtrering av bilde før og etter smoothing}
 \end{figure}
 
-Smoothingen fremhevet de store objektene i bildet. Dette gjorde det betydelig lettere å fange opp det bestemte, gitt riktig innstilling av fargefiltrene, ettersom små objekter i bildet med samme farge som objektet ble eliminert.
+Smoothingen fremhevet de store objektene i bildet. Dette gjorde det betydelig lettere å fange opp kun det objektet, gitt riktig innstilling av fargefiltrene, da små objekter i bildet med samme farge som objektet ble eliminert.
 
 \subsubsection{Brukergrensesnitt}
+
 \begin{wrapfigure}[12]{r}{0.3\textwidth}
 	\centering
 	\includegraphics[width=\linewidth]{img/command-menu.png}
 	\caption{En oversikt over de tilgjengelige kommandoene i kommandolinjegrensesnittet}
 	\label{fig:commandmenu}
 \end{wrapfigure}
-Bestemmelsen av fargene i objektet ble automatisert ved at det ble implementert et enkelt kommandolinjegrensesnitt. Ved hjelp av kommandoen \texttt{center} kunne en be programmet om å følge etter fargen som befant seg i sentrum av bildet. Grensesnittet er vist i figur [\ref{fig:commandmenu}]. Kommandolinjegrensesnittet ble oppdatert ved utvidelse av nye funksjoner til programmet. 
 
-For å gjøre det enklere å følge spesifikke objekter i kamerabildet, ble det implementert en funksjon som lot oss følge et objekt ved å klikke på det. Både denne funksjonaliteten og \textit{center}-kommandoen fungerte slik at fargeverdien til punktet i sentrum av bildet, eller som ble klikket på, ble hentet inn. Sliderne ble så automatisk satt til denne verdien pluss og minus en margverdi. Gode margverdier ble funnet eksperimentelt, og det ble bestemt at en marg på mellom $20$ og $30$ for hver av aksene \emph{hue}, \emph{saturation} og \emph{value} fungerte godt.
+Bestemmelsen av fargene i objektet ble automatisert ved at det ble implementert et enkelt kommandolinjegrensesnitt. Her kunne en med kommandoen \texttt{center} be programmet om å følge etter fargen som befant seg i sentrum av bildet. Grensesnittet er vist i figur [\ref{fig:commandmenu}]. Kommandolinjegrensesnittet ble utvidet etter hvert som flere funksjoner ble implementert i programmet.
+
+For å gjøre det enklere å følge spesifikke objekter i kamerabildet, ble det implementert en funksjon som lot oss klikke på objekter i bildet for å følge dem. Både denne funksjonaliteten og \texttt{center}-kommandoen fungerte slik at fargeverdien til punktet som var i sentrum av bildet eller som ble klikket på ble hentet inn, og at sliderne automatisk ble satt til denne verdien pluss og minus en margverdi. Gode margverdier ble funnet eksperimentelt, og det ble bestemt at en marg på mellom $20$ og $30$ for hver av aksene \emph{hue}, \emph{saturation} og \emph{value} fungerte godt.
 
 \subsection{Valg av hardware}
 
@@ -136,4 +140,3 @@ Fra kameraleverandøren ble det innhentet informasjon om størrelsen på kamerae
 Det siste steget var å sende bevegelseskommandoene til Arduino-kortet, som kontrollerte servoene. Opprinnelig ble riggen bedt om å etter hvert nytt bilde fra kamera bevege seg hele avstanden i grader mellom sentrum av bildet og objektet. Dette førte til svært stor ustabilitet og oscillasjoner rundt de detekterte objektene. Dette ble løst ved å sette en begrensning på bevegelsen, der riggen aldri ble tillatt å bevege seg mer enn 2 eller 1 grad om gangen, avhengig av hvor nært objektet var sentrum av bildet.
 
 Det ble senere oppdaget at punktet OpenCV beregnet som midten av det detekterte objektet gjerne varierte tilfeldig selv om objektet sto i ro, noe som førte til unødvendige bevegelser av riggen. Det ble dermed spesifisert i koden at dersom objektet var under 3 grader under sentrum, skulle riggen ikke bevege seg. En annen ting som ble bemerket var at motorene ikke opererte perfekt innenfor hele området $0$ til $180$ grader. Servomotor 1 hadde et ideelt bevegelsesområde på omtrent $15$ til $175$ grader, mens servomotor 3 kunne bevege seg mellom rundt $10$ og $140$ grader uten problemer. En sperre ble implementert som gjorde at dersom det var nødvendig for motorene å bevege seg utenfor disse intervallene for å følge et objekt, ble bevegelsene ikke gjennomført. Med disse begrensningene på riggens bevegelse på plass, fungerte objektfølgingen tilfredsstillende, uten for mye ustabilitet og med grei fart.
-
