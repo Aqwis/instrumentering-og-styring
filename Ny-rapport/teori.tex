@@ -71,8 +71,8 @@ Raspberry Pi er en minidatamaskin basert på en 32-bits ARM-arkitektur. Linux er
 \subsubsection{Sammenligning mellom Arduino og Raspberry Pi}
 En sammenlikning mellom Arduino Uno og Raspberry Pi model B er gitt i tabell [\ref{tab:ArdRas}]
 
-\begin{table}[h!]
-\caption{Sammenligning mellom Arduino og Raspberry Pi \cite{ArduinoSpec,RpiSpec} \colorbox{yellow}{Kilde!}}
+\begin{table}[H]
+\caption{Sammenligning mellom Arduino og Raspberry Pi \cite{ArduinoSpec,RpiSpec}}
 \centering
 \begin{tabular}{ |c |c |c| }
 	\hline
@@ -92,10 +92,9 @@ En sammenlikning mellom Arduino Uno og Raspberry Pi model B er gitt i tabell [\r
 	\label{tab:ArdRas}
 \end{table}
 
-Med tanke på spesifikasjoner er Raspberry Pi mye kraftigere enn Arduino Uno med klart raskere prossesor og mye mer minne. En annen fordel er at Raspberry Pi inneholder en GPU, noe Arduino Uno ikke gjør. Dette betyr at Raspberry Pi potensielt kan utføre bildegjenkjenning og styre servoene samtidig. På den andre siden har Raspberry Pi kun én PWM-port, noe som betyr at hvis denne skal styre servoer må to I/O-porter implementeres som PWM-porter i software. Dette vil resultere i mer programmeringsarbeid. En annen ulempe med Raspberry Pi i forhold til Arduino er strømforbruket som er 140\% høyere ved stand-by.\colorbox{yellow}{Kilde?} Kongsberg Gruppen har også sagt at de vil sende opp en egen GPU i flyet, og bildegjennkjenningen kan gjøres på denne. Med dette i tankene falt valget på Arduino Uno for å kontrollere servoene.
+Med tanke på spesifikasjoner er Raspberry Pi mye kraftigere enn Arduino Uno med klart raskere prossesor og mye mer minne. En annen fordel er at Raspberry Pi inneholder en GPU, noe Arduino Uno ikke gjør. Dette betyr at Raspberry Pi potensielt kan utføre bildegjenkjenning og styre servoene samtidig. På den andre siden har Raspberry Pi kun én PWM-port, noe som betyr at hvis denne skal styre servoer må to I/O-porter implementeres som PWM-porter i software. Dette vil resultere i mer programmeringsarbeid. En annen ulempe med Raspberry Pi i forhold til Arduino er strømforbruket som er 140\% høyere ved stand-by.\cite{ArduinoSpec,RpiSpec} Kongsberg Gruppen påpeker også at de vil sende opp en egen GPU i flyet, som betyr at bildegjennkjenningen kan gjøres i flyet. Med dette i tankene falt valget på Arduino Uno for å kontrollere servoene.
 
 \subsubsection{Kommunikasjonsprotokoll}
-\colorbox{yellow}{OBS!:} Skal vi si noe om at vi benytter oss av USB? Dette er noe Sven ville vi skulle poengtere. Hva er fordeler og ulemper.
 
 Som nevnt kan det sendes kommandoer til Arduino kortet serielt gjennom en serieport, som også kalles en UART. Det finnes to slike serieporter på Arduino-kortet, og disse er USB-porten og I/O-port 0 (RX) og 1 (TX). I dette prosjektet vil USB-porten bli benyttet for å kommunisere mellom en datamaskin og Arduinokortet. Fordelen med å bruke USB-porten er at det er enkelt, at alle nye datamaskiner har en USB-port og det er ikke nødvendig å lage en egen protokoll med \emph{header}, \emph{error correction} og så videre. En ulempe er at denne protokollen er standard slik at den ikke kan endres for å passe kun dette prosjektet og på denne måten minke mengde \emph{overhead}.
 
