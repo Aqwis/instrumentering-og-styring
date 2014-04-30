@@ -1,6 +1,6 @@
 \subsection{Bildegjenkjenning}
 
-Kongsberg Gruppen la klare retningslinjer om at OpenCV skulle benyttes. I tillegg oppfordret Kongsberg Gruppen til å implementere programvaren i programmeringsspråket Matlab, ettersom de internt bruker Matlab til prototyping.
+Kongsberg la klare retningslinjer om at OpenCV skulle benyttes. I tillegg oppfordret Kongsberg til å implementere programvaren i programmeringsspråket Matlab, ettersom de internt bruker Matlab til prototyping.
 
 I prosjektets begynnende fase var siste stabile utgivelse av OpenCV versjon 2.4.8, som ikke støttet programmering i Matlab. For å bruke Matlab og OpenCV sammen gjensto det da to alternativer. Versjon 3.0 av OpenCV, som var under utvikling, støttet Matlab. I tillegg fantes det et tredjeparts kompatibilitetslag, \emph{mexopencv}, som gjorde det mulig å programmere med OpenCV i Matlab.
 
@@ -130,7 +130,7 @@ Riggen ble sammenstilt med målene på Kongsbergs prototypefly som utgangspunkt 
 	\label{fig:RiggBilde}
 \end{figure}
 
-Servomotorene styres av et PWM-signal som genereres av en Arduino UNO. Biblioteket \texttt{Servo.lib} brukes for å kontrollere servoene gjennom tre I/O porter. Servo 1 er koblet til port 9, servo 2 er koblet til port 6 og servo 3 er koblet til port 3. Ved målinger viste det seg at hver servo kan trekke opp mot 250mA under last. Det ble valgt å bruke en ekstern 6V batteripakke med fire seriekoblede 1.5V AA batterier, koblet inn som vist i figur [\ref{fig:ArduSkjem}], i stedet for å la servoene trekke forsyningsstrøm rett fra $5$ V-pinnen til arduinokortet. Arduinokortet bruker strøm fra USB, som ikke kan levere mer enn $500$ mA på grunn av en innebygget sikring i kortet. Dermed kan ikke arduinokortet levere de ca. $750$ mA som trengs når alle servoene går med stor last samtidig.
+Servomotorene styres av et PWM-signal som genereres av en Arduino UNO. Biblioteket \texttt{Servo.lib} \cite{ServoLib} brukes for å kontrollere servoene gjennom tre I/O porter. Servo 1 er koblet til port 9, servo 2 er koblet til port 6 og servo 3 er koblet til port 3. Ved målinger viste det seg at hver servo kan trekke opp mot 250mA under last. Det ble valgt å bruke en ekstern 6V batteripakke med fire seriekoblede 1.5V AA batterier, koblet inn som vist i figur [\ref{fig:ArduSkjem}], i stedet for å la servoene trekke forsyningsstrøm rett fra $5$ V-pinnen til arduinokortet. Arduinokortet bruker strøm fra USB, som ikke kan levere mer enn $500$ mA på grunn av en innebygget sikring i kortet. Dermed kan ikke arduinokortet levere de ca. $750$ mA som trengs når alle servoene går med stor last samtidig.
 
 \begin{figure}[h!]
 	\centering
@@ -139,7 +139,7 @@ Servomotorene styres av et PWM-signal som genereres av en Arduino UNO. Bibliotek
 	\label{fig:ArduSkjem}
 \end{figure}  
 
-Kommandoer sendes til Arduino via USB-porten. Kommandoer kan sendes som \texttt{Char} på formen \texttt{100a120b40c}, hvor tallene foran \texttt{c} forteller posisjon til servo 1, tallene for \texttt{b} gir posisjon til servo 2 og tallene foran \texttt{c} posisjonenen til servo 3. Dermed vil strengen \texttt{100a120b40c} flytte servo 1 til 100 grader, servo 2 til 120 grader og servo 3 til 40 grader. De gyldige vinklene er fra 0 til 180 grader. Dersom \texttt{200a} sendes vil servo 1 stoppe på 180 grader. 
+Kommandoer sendes til Arduino via USB-porten. Kommandoer kan sendes som \texttt{Char} på formen \texttt{100a120b40c}, hvor tallene foran \texttt{c} forteller posisjon til servo 1, tallene for \texttt{b} gir posisjon til servo 2 og tallene foran \texttt{c} posisjonenen til servo 3. Dermed vil strengen \texttt{100a120b40c} flytte servo 1 til 100 grader, servo 2 til 120 grader og servo 3 til 40 grader. De gyldige vinklene er fra 0 til 180 grader. Dersom \texttt{200a} sendes vil servo 1 stoppe på 180 grader. Den fullstendige koden brukt i Arduino ligger i vedlegg A.
 
 \subsection{Styring av rigg}
 
