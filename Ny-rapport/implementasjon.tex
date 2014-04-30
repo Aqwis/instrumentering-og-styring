@@ -45,7 +45,7 @@ Objektet ble i det første steget fanget opp, men som presentert i figur [\ref{f
 	\caption{Resultatet av filtrering av bilde før og etter smoothing}
 \end{figure}
 
-Smoothingen fremhevet de store objektene i bildet. Dette gjorde det betydelig lettere å fange opp kun det objektet vi var ute etter å følge, gitt riktig innstilling av fargefilterne, fordi små objekter i bildet med samme farge som objektet vi ville følge ble fjernet.
+Smoothingen fremhevet de store objektene i bildet. Dette gjorde det betydelig lettere å fange opp kun det objektet, gitt riktig innstilling av fargefilterne, da små objekter i bildet med samme farge som objektet ble eliminert.
 
 \subsubsection{Brukergrensesnitt}
 \begin{wrapfigure}[12]{r}{0.3\textwidth}
@@ -125,7 +125,7 @@ Servomotorene styres av et PWM-signal som genereres av en Arduino UNO. Bibliotek
 	\label{fig:ArduSkjem}
 \end{figure}  
 
-Kommandoer sendes til Arduino via USB-porten. Kommandoer kan sendes som \texttt{Char} på formen \texttt{100a120b40c}, hvor tallene foran \texttt{c} forteller posisjon til servo 1, tallene for \texttt{b} gir posisjon til servo 2 og tallene foran \texttt{c} posisjonenen til servo 3. Dermed vil strengen \texttt{100a120b40c} flytte servo 1 til 100 grader, servo 2 til 120 grader og servo 3 til 40 grader. De gyldige vinklene er fra 0 til 180 grader. Hvis \texttt{200a} sendes vil servo 1 stoppe på 180 grader. 
+Kommandoer sendes til Arduino via USB-porten. Kommandoer kan sendes som \texttt{Char} på formen \texttt{100a120b40c}, hvor tallene foran \texttt{c} forteller posisjon til servo 1, tallene for \texttt{b} gir posisjon til servo 2 og tallene foran \texttt{c} posisjonenen til servo 3. Dermed vil strengen \texttt{100a120b40c} flytte servo 1 til 100 grader, servo 2 til 120 grader og servo 3 til 40 grader. De gyldige vinklene er fra 0 til 180 grader. Dersom \texttt{200a} sendes vil servo 1 stoppe på 180 grader. 
 
 \subsection{Styring av rigg}
 
