@@ -3,7 +3,7 @@
 \begin{frame}
 \frametitle{Styring av servorigg - Arduino}
 \lstset{language=C++,
-inputencoding=utf8,
+				inputencoding=utf8,
                 keywordstyle=\color{blue},
                 stringstyle=\color{red},
                 commentstyle=\color{green},
@@ -35,8 +35,9 @@ void loop(){
   
   if (Serial.available()){
     char abc=Serial.read(); 
-//abc skal se ut som dette 111a222b333c hvor tallene før a er vinkelen til servo_1 tallene mellom a og b er vinkelen til servo_2 osv.
- //Det er også mulig å sende komando til en eller to av servoene av gangen også, ved f.eks "100a" eller "50a120c"
+//abc skal se ut som dette 111a222b333c hvor tallene foran a er vinkelen 
+//til servo_1 tallene mellom a og b er vinkelen til servo_2 osv.
+//Det er også mulig å sende komando til en eller to av servoene av gangen også, ved f.eks "100a" eller "50a120c"
     
     //Setter verdiene til servoene og sender de til servoene.
     switch(abc) {
