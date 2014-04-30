@@ -1,9 +1,9 @@
 \subsection{Bildeprosessering}
 
 \subsubsection{Fargerepresentasjon}
-Prosessering av bilder som er lagret i RGB spekteret er tungvindt. Et eksempel på et problem ved å bruke RGB er at dersom et objekt blir flyttet fra lys til skygge, endrer ikke RGB-verdiene seg langs én akse, men derimot på både R-, G- og B-aksene på en måte som er vanskelig å forutse.
+Prosessering av bilder som er lagret i RGB\footnote{Red, Green, Blue} spekteret er tungvindt. Et eksempel på et problem ved å bruke RGB er at dersom et objekt blir flyttet fra lys til skygge, endrer ikke RGB-verdiene seg langs én akse, men derimot på både R-, G- og B-aksene på en måte som er vanskelig å forutse.
 
-HSV baserer seg ikke på blanding av ulike farger, som RGB, men bruker nyanse, metningsgrad og lysverdi til å definere hver farge. Ved å konvertere bildet fra RGB til HSV forenkler dette jobben med å peke ut en spesifikk farge, samt forenkling av å skille objekter fra andre. HSV oppfører seg mer forutsigbart; i dette eksempelet endrer fargeverdien seg hovedsakelig i V-aksen. 
+HSV\footnote{Hue, Saturation, Value} baserer seg ikke på blanding av ulike farger, som RGB, men bruker nyanse, metningsgrad og lysverdi til å definere hver farge. Ved å konvertere bildet fra RGB til HSV forenkler dette jobben med å peke ut en spesifikk farge, samt forenkling av å skille objekter fra andre. HSV oppfører seg mer forutsigbart; i dette eksempelet endrer fargeverdien seg hovedsakelig i V-aksen. 
 
 \subsubsection{Objektdetektering}
 For å opparbeide en forståelse for hvordan gjenkjenning av bilder må utføres, må gjenkjenningsprosessen utføres stegvis. Uten noen tidligere erfaring på området begynte kunne en enkel gemometrisk figur i en klar farge, for eksempel en gul ball, mot en mørk bakgrunn med god belysning benyttes. En mørk bakgrunn og en klar farge er enkle å skille fra hverandre, og objektet trer godt frem slik at det kan behandles og en posisjon kan fastsettes.

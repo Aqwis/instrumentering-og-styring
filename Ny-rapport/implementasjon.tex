@@ -7,7 +7,7 @@ I prosjektets begynnende fase var siste stabile utgivelse av OpenCV versjon 2.4.
 Etter å ikke ha fått Matlab og OpenCV til å fungere sammen, ble det valgt å gå for en løsning der Matlab implementerte programvaren for bildegjenkjenning i C++. 
 \subsubsection{Innhenting av bilde og konvertering}
 
-Kameraet fremga et bilde i fargespekteret RGB\footnote{Red, Green, Blue}, som er lite egnet til å separere ulike farger fra hverandre. Valget ble dermed å heller benytte fargespekteret HSV\footnote{Hue, Saturation, Value}, som er hyppig brukt innen bildeprosessering. Hver bilde ble konvert i videoen fra RGB, som vist i figur [\ref{fig:firstiterationrgb}], til HSV, som vist i figur [\ref{fig:firstiterationhsv}], før bildene ble prosessert videre.
+Kameraet fremga et bilde i fargespekteret RGB, som er lite egnet til å separere ulike farger fra hverandre. Valget ble dermed å heller benytte fargespekteret HSV, som er hyppig brukt innen bildeprosessering. Hver bilde ble konvert i videoen fra RGB, som vist i figur [\ref{fig:firstiterationrgb}], til HSV, som vist i figur [\ref{fig:firstiterationhsv}], før bildene ble prosessert videre.
 
 \begin{figure}[!ht]
 	\centering
